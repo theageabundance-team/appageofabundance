@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Journey — Abundance Time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8c96a;
+      --gold-pale:   #f5e6b8;
+      --gold-dim:    #7a5f28;
+      --gold-glow:   rgba(201,168,76,0.18);
+      --bg:          #0a0a0c;
+      --bg2:         #0e0e12;
+      --bg3:         #141418;
+      --bg4:         #1a1a20;
+      --text:        #f0e8d8;
+      --text-dim:    #8a7a60;
+      --text-mid:    #c8b898;
+      --radius:      12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* Radial golden glow at top */
+    body::after {
+      content: '';
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV DESKTOP ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 68px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .nav-logo { display:flex; align-items:center; gap:9px; text-decoration:none; }
+    .nav-logo-text {
+      font-family: 'Cinzel', serif;
+      font-size:1.05rem; font-weight:700;
+      color: var(--gold); letter-spacing:0.05em;
+    }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a {
+      text-decoration:none; color:var(--text-dim); font-size:0.92rem;
+      letter-spacing:0.02em; transition:color 0.2s;
+      font-family: 'Crimson Pro', Georgia, serif;
+    }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a.active { color: var(--gold); border-bottom:2px solid var(--gold); padding-bottom:2px; }
+    .nav-right { display:flex; align-items:center; gap:1rem; }
+    .nav-icon-btn {
+      background:none; border:none; color:var(--text-dim); font-size:1.15rem;
+      cursor:pointer; padding:6px; border-radius:50%;
+      transition:color 0.2s, background 0.2s; position:relative;
+    }
+    .nav-icon-btn:hover { color:var(--text); background:rgba(255,255,255,0.06); }
+    .notif-dot { position:absolute; top:4px; right:4px; width:8px; height:8px; background:#e74c3c; border-radius:50%; border:2px solid var(--bg); }
+    .nav-avatar {
+      width:36px; height:36px; border-radius:50%;
+      background:linear-gradient(135deg,#e67e22,#c0392b);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Cinzel',serif; font-size:0.8rem; font-weight:700;
+      color:#fff; cursor:pointer;
+    }
+    .nav-username { font-size:0.88rem; color:var(--text-dim); }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      align-items: center; justify-content: space-between;
+      padding: 0 1.2rem; height: 62px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .mobile-nav-right { display:flex; align-items:center; gap:12px; }
+
+    /* ── BOTTOM NAV MOBILE ── */
+    .bottom-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,12,0.97);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(201,168,76,0.15);
+    }
+    .bottom-nav-inner {
+      display: flex; justify-content: space-around; align-items: center;
+      height: 62px; padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .bottom-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      text-decoration: none; color: var(--text-dim);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.7rem; letter-spacing: 0.04em;
+      padding: 8px 20px; flex: 1; transition: color 0.2s;
+    }
+    .bottom-nav-item.active { color: var(--gold); }
+    .bottom-nav-item .nav-icon { font-size: 1.3rem; }
+
+    /* ── PAGE ── */
+    .page {
+      position: relative; z-index: 1;
+      padding-top: 68px;
+      padding-bottom: 80px;
+    }
+
+    /* ── HERO STRIP ── */
+    .journey-hero {
+      padding: 52px 5% 44px;
+      text-align: center;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+    }
+    .journey-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+      margin-bottom: 14px;
+    }
+    .journey-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700; color: var(--gold-pale);
+      letter-spacing: 0.03em; line-height: 1.1;
+      margin-bottom: 12px;
+      text-shadow: 0 0 60px rgba(201,168,76,0.3);
+    }
+    .journey-subtitle {
+      font-size: 1.1rem; color: var(--text-mid);
+      font-style: italic; max-width: 480px; margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── CONNECTION COUNTER ── */
+    .counter-wrap {
+      display: flex; justify-content: center;
+      padding: 44px 5% 36px;
+    }
+    .counter-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 20px;
+      padding: 36px 52px;
+      text-align: center;
+      position: relative; overflow: hidden;
+      max-width: 480px; width: 100%;
+    }
+    .counter-card::before {
+      content: '';
+      position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .counter-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+      margin-bottom: 10px;
+    }
+    .counter-number {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1; margin-bottom: 4px;
+      filter: drop-shadow(0 0 20px rgba(201,168,76,0.4));
+    }
+    .counter-unit {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.8;
+      margin-bottom: 28px;
+    }
+    .counter-message {
+      font-size: 1rem; color: var(--text-mid);
+      font-style: italic; line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* Progress to next milestone */
+    .next-milestone {
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px; padding: 14px 18px;
+      text-align: left;
+    }
+    .next-milestone-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 8px;
+    }
+    .next-milestone-name {
+      font-size: 0.9rem; color: var(--text-mid); margin-bottom: 10px;
+    }
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px; height: 6px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-light));
+      border-radius: 999px;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .progress-text {
+      font-size: 0.75rem; color: var(--text-dim);
+      margin-top: 6px; text-align: right;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-block { padding: 44px 5% 12px; }
+    .section-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.65; margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
+      margin: 0 5% 32px;
+    }
+
+    /* ── MILESTONES TIMELINE ── */
+    .milestones-wrap { padding: 0 5% 8px; }
+    .milestone-item {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+    }
+    .milestone-item:last-child { border-bottom: none; }
+
+    /* Vertical line connecting milestones */
+    .milestone-line {
+      position: absolute; left: 19px; top: 52px;
+      width: 2px; height: calc(100% - 32px);
+      background: linear-gradient(to bottom, rgba(201,168,76,0.3), rgba(201,168,76,0.05));
+    }
+    .milestone-item:last-child .milestone-line { display: none; }
+
+    .milestone-icon-wrap {
+      flex-shrink: 0;
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .milestone-icon-wrap.done {
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+      box-shadow: 0 0 20px rgba(201,168,76,0.35);
+    }
+    .milestone-icon-wrap.current {
+      background: linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.15));
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 24px rgba(201,168,76,0.3);
+      animation: pulse-gold 2s ease-in-out infinite;
+    }
+    .milestone-icon-wrap.locked {
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+    @keyframes pulse-gold {
+      0%, 100% { box-shadow: 0 0 24px rgba(201,168,76,0.3); }
+      50% { box-shadow: 0 0 36px rgba(201,168,76,0.5); }
+    }
+    .milestone-icon { font-size: 1.1rem; }
+    .milestone-icon.locked-icon { font-size: 0.9rem; opacity: 0.3; }
+
+    .milestone-content { flex: 1; padding-top: 6px; }
+    .milestone-day {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .milestone-day.done { color: var(--gold); }
+    .milestone-day.current { color: var(--gold-light); }
+    .milestone-day.locked { color: var(--text-dim); }
+    .milestone-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem; font-weight: 600; line-height: 1.3;
+      margin-bottom: 5px;
+    }
+    .milestone-name.done { color: var(--text); }
+    .milestone-name.current { color: var(--gold-pale); }
+    .milestone-name.locked { color: var(--text-dim); opacity: 0.6; }
+    .milestone-desc {
+      font-size: 0.88rem; line-height: 1.55; color: var(--text-dim);
+    }
+    .milestone-desc.current { color: var(--text-mid); }
+    .milestone-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 8px; padding: 4px 12px; border-radius: 999px;
+      font-size: 0.72rem; font-family: 'Cinzel', serif; letter-spacing: 0.06em;
+    }
+    .milestone-badge.done {
+      background: rgba(201,168,76,0.15); color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.25);
+    }
+    .milestone-badge.current {
+      background: rgba(201,168,76,0.1); color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.2);
+      animation: pulse-gold 2s ease-in-out infinite;
+    }
+    .milestone-badge.locked {
+      background: rgba(255,255,255,0.03); color: var(--text-dim);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ── GIFTS GRID ── */
+    .gifts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 0 5% 8px;
+    }
+    .gift-card {
+      background: var(--bg3);
+      border-radius: var(--radius);
+      padding: 24px 16px 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.28s, box-shadow 0.28s;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .gift-card.unlocked {
+      border-color: rgba(201,168,76,0.2);
+      background: linear-gradient(135deg, rgba(201,168,76,0.06), var(--bg3));
+    }
+    .gift-card.unlocked:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(201,168,76,0.15);
+      border-color: rgba(201,168,76,0.4);
+    }
+    .gift-card.locked {
+      opacity: 0.55; cursor: default;
+    }
+
+    /* Golden shimmer on unlocked */
+    .gift-card.unlocked::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.06), transparent);
+      animation: shimmer 3.5s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+
+    .gift-symbol {
+      font-size: 2.2rem; line-height: 1;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .gift-card.locked .gift-symbol {
+      filter: grayscale(1);
+      opacity: 0.2;
+    }
+    .gift-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.04em; line-height: 1.3;
+      margin-bottom: 6px;
+    }
+    .gift-card.unlocked .gift-name { color: var(--gold-pale); }
+    .gift-card.locked .gift-name { color: var(--text-dim); }
+    .gift-source {
+      font-size: 0.72rem; color: var(--text-dim);
+      font-style: italic;
+    }
+    .gift-card.locked .gift-source { opacity: 0.5; }
+    .gift-status {
+      display: inline-block; margin-top: 10px;
+      padding: 3px 10px; border-radius: 999px;
+      font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.08em;
+    }
+    .gift-card.unlocked .gift-status {
+      background: rgba(201,168,76,0.15); color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.25);
+    }
+    .gift-card.locked .gift-status {
+      background: rgba(255,255,255,0.03); color: var(--text-dim);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.58rem;
+    }
+    .btn-redeem {
+      display: block; width: 100%; margin-top: 12px;
+      padding: 9px 12px; border-radius: 8px;
+      font-family: 'Cinzel', serif; font-size: 0.7rem;
+      font-weight: 600; letter-spacing: 0.06em;
+      cursor: pointer; transition: all 0.2s; border: none;
+      background: linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.15));
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold-pale);
+    }
+    .btn-redeem:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.45), rgba(201,168,76,0.25));
+      box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+      transform: translateY(-1px);
+    }
+    .btn-redeem.redeemed {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.08);
+      color: var(--text-dim); cursor: default;
+      transform: none; box-shadow: none;
+    }
+    .btn-claim {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 10px; padding: 8px 16px; border-radius: 8px;
+      font-family: 'Cinzel', serif; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.06em;
+      cursor: pointer; transition: all 0.2s;
+      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.12));
+      border: 1px solid rgba(201,168,76,0.38);
+      color: var(--gold-pale);
+    }
+    .btn-claim:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.42), rgba(201,168,76,0.22));
+      box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+      transform: translateY(-1px);
+    }
+    .btn-claim.redeemed {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.08);
+      color: var(--text-dim); cursor: default;
+      transform: none; box-shadow: none;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+    /* ── MOBILE ── */
+    @media(max-width: 768px) {
+      nav:not(.bottom-nav) { display: none !important; }
+      .mobile-nav { display: flex; }
+      .bottom-nav { display: flex; flex-direction: column; }
+      .page { padding-top: 62px; padding-bottom: calc(62px + 20px); }
+      .counter-card { padding: 28px 24px; }
+      .gifts-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .journey-title { font-size: 1.9rem; }
+    }
+
+    /* ── FADE IN ANIMATION ── */
+    .fade-in {
+      opacity: 0; transform: translateY(16px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV DESKTOP -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span style="font-size:1.3rem;">👑</span>
+    <span class="nav-logo-text">Abundance Time</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">My Products</a></li>
+    <li><a href="journey.html" class="active">Journey</a></li>
+    <li><a href="journal.html">Journal</a></li>
+    <li><a href="#">Support</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon-btn">🔍</button>
+    <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
+    <div class="nav-avatar">F</div>
+    <span class="nav-username">fulano</span>
+  </div>
+</nav>
+
+<!-- NAV MOBILE -->
+<div class="mobile-nav">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span style="font-size:1.2rem;">👑</span>
+    <span class="nav-logo-text" style="font-size:0.95rem;">Abundance Time</span>
+  </div>
+  <div class="mobile-nav-right">
+    <button class="nav-icon-btn">🔍</button>
+    <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
+    <div class="nav-avatar">F</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="journey-hero fade-in">
+    <div class="journey-eyebrow">Your Sacred Path</div>
+    <h1 class="journey-title">My Journey</h1>
+    <p class="journey-subtitle">Every day you return, your connection deepens. Your path is being written.</p>
+  </div>
+
+  <!-- CONNECTION COUNTER -->
+  <div class="counter-wrap fade-in delay-1">
+    <div class="counter-card">
+      <div class="counter-label">Days of Connection</div>
+      <div class="counter-number" id="day-count">7</div>
+      <div class="counter-unit">Days</div>
+      <div class="counter-message" id="counter-msg">
+        "Seven is the number of divine completion.<br>You have walked a full sacred cycle."
+      </div>
+      <div class="next-milestone">
+        <div class="next-milestone-label">Next Milestone</div>
+        <div class="next-milestone-name" id="next-name">Day 15 — The Gift of Perseverance</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progress-text">7 of 15 days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="section-block fade-in delay-2">
+    <div class="section-eyebrow">Sacred Milestones</div>
+    <div class="section-title">Your Path of Days</div>
+  </div>
+  <div class="section-divider"></div>
+
+  <div class="milestones-wrap fade-in delay-2" id="milestones-list"></div>
+
+  <!-- MODULE GIFTS -->
+  <div class="section-block fade-in delay-3">
+    <div class="section-eyebrow">Gifts Received</div>
+    <div class="section-title">Gifts of the Spirit</div>
+  </div>
+  <div class="section-divider"></div>
+
+  <div class="gifts-grid fade-in delay-4" id="gifts-grid"></div>
+
+  <div style="height: 40px;"></div>
+
+</div>
+
+<!-- BOTTOM NAV MOBILE -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="journey.html" class="bottom-nav-item active">
+      <span class="nav-icon">✨</span>
+      <span>Journey</span>
+    </a>
+    <a href="journal.html" class="bottom-nav-item">
+      <span class="nav-icon">📖</span>
+      <span>Journal</span>
+    </a>
+  </div>
+</nav>
+
+<script>
+// ── STATE (simulated: 7 days, 2 modules completed) ──
+const USER = {
+  days: 7,
+  completedModules: ['age-of-abundance', 'king-solomon']
+};
+
+// ── MILESTONES ──
+const MILESTONES = [
+  {
+    day: 3,
+    name: 'First Steps of Faith',
+    desc: 'You chose to return. Three days of intention — the seed has been planted.',
+    gift: 'Gift of Intention',
+    icon: '🌱'
+  },
+  {
+    day: 7,
+    name: 'The Sacred Week',
+    desc: 'Seven days — the number of divine completion. You have walked a full sacred cycle.',
+    gift: 'Gift of Faithfulness',
+    icon: '⭐'
+  },
+  {
+    day: 15,
+    name: 'The Gift of Perseverance',
+    desc: 'Halfway to transformation. Those who persist through the middle are the ones who arrive.',
+    gift: 'Gift of Perseverance',
+    icon: '🔥'
+  },
+  {
+    day: 21,
+    name: 'The New Soul',
+    desc: 'Twenty-one days to form a new habit. You are no longer the same person who began.',
+    gift: 'Gift of Renewal',
+    icon: '🦋'
+  },
+  {
+    day: 40,
+    name: 'The Desert Overcomer',
+    desc: 'Forty days — as Jesus fasted, as Moses waited, as the waters rose and fell. You have overcome.',
+    gift: 'Gift of Mastery',
+    icon: '👑'
+  }
+];
+
+// ── MODULE GIFTS ──
+const MODULE_GIFTS = [
+  { id:'age-of-abundance',  symbol:'☀️', name:'Blessing of Divine Abundance',   source:'The Age of Abundance'      },
+  { id:'king-solomon',      symbol:'📜', name:"Gift of Solomon's Wisdom",        source:"King Solomon's Prosperity" },
+  { id:'7-frequencies',     symbol:'🎵', name:'Blessing of Sacred Frequencies',  source:'The 7 Frequencies'         },
+  { id:'sacred-protocol',   symbol:'🛡️', name:'Gift of Spiritual Protection',    source:'Sacred Protocol'           },
+  { id:'secret-of-power',   symbol:'⚡', name:'Blessing of Inner Power',         source:'The Secret of Power'       },
+  { id:'powerful-numbers',  symbol:'🔢', name:'Gift of Sacred Numbers',          source:'Powerful Numbers'          },
+  { id:'mindset-reset',     symbol:'🧠', name:'Blessing of the Renewed Mind',    source:'Mindset Reset Formula'     },
+];
+
+// ── RENDER MILESTONES ──
+function getStatuses() {
+  let foundCurrent = false;
+  return MILESTONES.map(m => {
+    if (USER.days >= m.day) return 'done';
+    if (!foundCurrent) { foundCurrent = true; return 'current'; }
+    return 'locked';
+  });
+}
+
+const statuses = getStatuses();
+
+const milestonesList = document.getElementById('milestones-list');
+milestonesList.innerHTML = MILESTONES.map((m, i) => {
+  const s = statuses[i];
+  const iconHtml = s === 'locked'
+    ? `<span class="milestone-icon locked-icon">🔒</span>`
+    : `<span class="milestone-icon">${m.icon}</span>`;
+  let badgeHtml = '';
+  if (s === 'done') {
+    badgeHtml = `<button class="btn-claim redeemed" disabled>✦ Gift Claimed</button>`;
+  } else if (s === 'current') {
+    badgeHtml = `<button class="btn-claim" onclick="claimMilestone(this)">🎁 Claim Your Gift</button>`;
+  } else {
+    badgeHtml = `<span class="milestone-badge locked">🔒 Reach day ${m.day} to unlock your gift</span>`;
+  }
+  return `
+    <div class="milestone-item">
+      ${i < MILESTONES.length - 1 ? '<div class="milestone-line"></div>' : ''}
+      <div class="milestone-icon-wrap ${s}">${iconHtml}</div>
+      <div class="milestone-content">
+        <div class="milestone-day ${s}">Day ${m.day}</div>
+        <div class="milestone-name ${s}">${m.name}</div>
+        <div class="milestone-desc ${s}">${m.desc}</div>
+        ${badgeHtml}
+      </div>
+    </div>
+  `;
+}).join('');
+
+// ── RENDER GIFTS GRID ──
+const giftsGrid = document.getElementById('gifts-grid');
+giftsGrid.innerHTML = MODULE_GIFTS.map((g) => {
+  const earned = USER.completedModules.includes(g.id);
+  return `
+    <div class="gift-card ${earned ? 'unlocked' : 'locked'}">
+      <span class="gift-symbol">${g.symbol}</span>
+      <div class="gift-name">${g.name}</div>
+      <div class="gift-source">${g.source}</div>
+      <span class="gift-status">${earned ? '✦ Received' : '🔒 Complete the module to receive'}</span>
+    </div>
+  `;
+}).join('');
+
+// ── CLAIM MILESTONE GIFT ──
+function claimMilestone(btn) {
+  btn.textContent = '✦ Gift Claimed';
+  btn.classList.add('redeemed');
+  btn.disabled = true;
+}
+
+// ── PROGRESS BAR ──
+const nextMilestone = MILESTONES.find(m => USER.days < m.day);
+if (nextMilestone) {
+  const prevDay = MILESTONES.filter(m => m.day <= USER.days).reduce((a, m) => Math.max(a, m.day), 0);
+  const pct = ((USER.days - prevDay) / (nextMilestone.day - prevDay)) * 100;
+  setTimeout(() => {
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }, 600);
+  document.getElementById('next-name').textContent = `Day ${nextMilestone.day} — ${nextMilestone.name}`;
+  document.getElementById('progress-text').textContent = `${USER.days} of ${nextMilestone.day} days`;
+} else {
+  document.getElementById('next-name').textContent = 'All milestones completed 🎉';
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-text').textContent = 'Journey complete';
+}
+
+// Counter message
+const currentMilestone = [...MILESTONES].reverse().find(m => USER.days >= m.day);
+if (currentMilestone) {
+  document.getElementById('counter-msg').innerHTML = `"${currentMilestone.desc}"`;
+}
+</script>
+</body>
+</html>
