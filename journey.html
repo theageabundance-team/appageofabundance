@@ -475,9 +475,9 @@
     /* ── MOBILE ── */
     @media(max-width: 768px) {
       nav:not(.bottom-nav) { display: none !important; }
-      .mobile-nav { display: flex; }
+      .mobile-nav { display: none !important; }
       .bottom-nav { display: flex; flex-direction: column; }
-      .page { padding-top: 62px; padding-bottom: calc(62px + 20px); }
+      .page { padding-top: 20px; padding-bottom: calc(62px + 20px); }
       .counter-card { padding: 28px 24px; }
       .gifts-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .journey-title { font-size: 1.9rem; }
@@ -615,36 +615,31 @@ const MILESTONES = [
   {
     day: 3,
     name: 'First Steps of Faith',
-    desc: 'You chose to return. Three days of intention — the seed has been planted.',
-    gift: 'Gift of Intention',
+    desc: 'You took the first step. Heaven noticed.',
     icon: '🌱'
   },
   {
     day: 7,
     name: 'The Sacred Week',
-    desc: 'Seven days — the number of divine completion. You have walked a full sacred cycle.',
-    gift: 'Gift of Faithfulness',
+    desc: 'Seven days of faithfulness. God sees every morning you chose to return.',
     icon: '⭐'
   },
   {
     day: 15,
-    name: 'The Gift of Perseverance',
-    desc: 'Halfway to transformation. Those who persist through the middle are the ones who arrive.',
-    gift: 'Gift of Perseverance',
+    name: 'Through the Middle',
+    desc: 'You have walked through the middle — the place where most turn back. God is proud of you.',
     icon: '🔥'
   },
   {
     day: 21,
-    name: 'The New Soul',
-    desc: 'Twenty-one days to form a new habit. You are no longer the same person who began.',
-    gift: 'Gift of Renewal',
+    name: 'The New Creation',
+    desc: 'Twenty-one days. You are no longer the same person who began this journey. He has been renewing you.',
     icon: '🦋'
   },
   {
     day: 40,
     name: 'The Desert Overcomer',
-    desc: 'Forty days — as Jesus fasted, as Moses waited, as the waters rose and fell. You have overcome.',
-    gift: 'Gift of Mastery',
+    desc: 'Forty days. You have done what few do. "Well done, good and faithful servant." — Matthew 25:21',
     icon: '👑'
   }
 ];
@@ -737,10 +732,12 @@ if (nextMilestone) {
   document.getElementById('progress-text').textContent = 'Journey complete';
 }
 
-// Counter message
+// Counter message — uses the milestone desc of the last reached milestone
 const currentMilestone = [...MILESTONES].reverse().find(m => USER.days >= m.day);
 if (currentMilestone) {
   document.getElementById('counter-msg').innerHTML = `"${currentMilestone.desc}"`;
+} else {
+  document.getElementById('counter-msg').innerHTML = `"Every journey begins with a single step. Yours has begun."`;
 }
 </script>
 </body>
