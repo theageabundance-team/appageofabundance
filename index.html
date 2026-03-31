@@ -343,12 +343,126 @@
       .need-help { font-size:0.9rem; }
     }
 
-    @media(max-width:400px) {
-      :root {
-        --card-w: calc(100vw * 0.72);
-      }
+    /* ── BOTTOM NAV MOBILE ── */
+    .bottom-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,15,0.97);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      padding: 0 0 env(safe-area-inset-bottom, 0);
     }
-  </style>
+    .bottom-nav-inner {
+      display: flex; justify-content: space-around; align-items: center;
+      height: 62px;
+    }
+    .bottom-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      text-decoration: none; color: var(--text-dim);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.7rem; letter-spacing: 0.04em;
+      padding: 8px 20px; border-radius: 10px;
+      transition: color 0.2s; flex: 1;
+    }
+    .bottom-nav-item.active { color: var(--gold); }
+    .bottom-nav-item span.nav-icon { font-size: 1.3rem; }
+
+    /* ── PRACTICE CARDS ── */
+    .practice-card {
+      flex: 0 0 200px; width: 200px;
+      background: var(--bg3);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: var(--radius);
+      padding: 20px 18px 18px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: transform 0.28s, box-shadow 0.28s, border-color 0.28s;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .practice-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .practice-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      border-color: rgba(201,168,76,0.35);
+    }
+    .practice-icon {
+      font-size: 1.8rem; line-height: 1;
+    }
+    .practice-type {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.8;
+    }
+    .practice-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--text); line-height: 1.35;
+    }
+    .practice-desc {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.82rem; color: var(--text-dim);
+      line-height: 1.5; flex: 1;
+    }
+    .practice-action {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.8rem; color: var(--gold);
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 6px; padding: 7px 12px;
+      cursor: pointer; transition: all 0.18s; width: 100%;
+      justify-content: center; margin-top: 2px;
+    }
+    .practice-action:hover { background: rgba(201,168,76,0.18); }
+
+    /* ── EXPAND CARD (upsell) ── */
+    .expand-card {
+      flex: 0 0 var(--card-w); width: var(--card-w);
+      background: var(--bg3); border-radius: var(--radius); overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: transform 0.28s, box-shadow 0.28s, border-color 0.28s;
+      cursor: pointer; position: relative;
+    }
+    .expand-card:hover {
+      transform: translateY(-6px) scale(1.015);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+      border-color: rgba(201,168,76,0.25);
+    }
+    .expand-card .card-img-wrap { aspect-ratio: 3/4; }
+    .expand-card .card-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; display:block; }
+    .expand-card:hover .card-img-wrap img { transform:scale(1.06); }
+    .lock-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.3) 60%, transparent 100%);
+      display: flex; align-items: flex-end; padding: 14px;
+    }
+    .lock-badge {
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 999px; padding: 4px 12px;
+      font-family: 'Cinzel', serif; font-size: 0.65rem;
+      color: var(--gold); letter-spacing: 0.06em;
+    }
+    .expand-card .card-body { padding: 12px 12px 14px; }
+    .btn-unlock {
+      width: 100%; padding: 10px; border-radius: 7px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.12));
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold); font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: all 0.18s; margin-top: 8px;
+    }
+    .btn-unlock:hover { background: linear-gradient(135deg, rgba(201,168,76,0.38), rgba(201,168,76,0.2)); }
+
+    @media(max-width:768px) {
+      .bottom-nav { display: block; }
+      main { padding-bottom: calc(62px + env(safe-area-inset-bottom, 0px) + 20px); }
+      .practice-card { flex: 0 0 180px; width: 180px; }
+    }
 </head>
 <body>
 
@@ -361,9 +475,8 @@
   <ul class="nav-links">
     <li><a href="#" class="active">Home</a></li>
     <li><a href="#">My Products</a></li>
-    <li><a href="#">Marketplace</a></li>
-    <li><a href="#">Achievements</a></li>
-    <li><a href="#">Favorites</a></li>
+    <li><a href="journey.html">Journey</a></li>
+    <li><a href="journal.html">Journal</a></li>
     <li><a href="#">Support</a></li>
   </ul>
   <div class="nav-right">
@@ -468,33 +581,55 @@
   </div>
   <div class="divider"></div>
 
-  <!-- NEW RELEASES -->
+  <!-- TODAY'S PRACTICE -->
   <div class="row-section">
     <div class="row-header">
-      <h2 class="row-title">New Releases</h2>
-      <div class="row-nav">
-        <button class="row-nav-btn" onclick="scrollRow('nr',-1)">‹</button>
-        <button class="row-nav-btn" onclick="scrollRow('nr',1)">›</button>
+      <div>
+        <h2 class="row-title">Today's Practice</h2>
+        <p style="font-family:'Crimson Pro',Georgia,serif;font-size:0.88rem;color:var(--text-dim);margin-top:4px;" id="todays-date"></p>
       </div>
     </div>
-    <div class="cards-viewport"><div class="cards-track" id="track-nr"></div></div>
+    <div class="cards-viewport">
+      <div class="cards-track" id="track-practice"></div>
+    </div>
   </div>
   <div class="divider"></div>
 
-  <!-- FEATURED THIS WEEK -->
+  <!-- EXPAND YOUR JOURNEY -->
   <div class="row-section">
     <div class="row-header">
-      <h2 class="row-title">Featured This Week</h2>
+      <div>
+        <h2 class="row-title">Expand Your Journey</h2>
+        <p style="font-family:'Crimson Pro',Georgia,serif;font-size:0.88rem;color:var(--text-dim);margin-top:4px;">Deepen your practice with these sacred teachings</p>
+      </div>
       <div class="row-nav">
-        <button class="row-nav-btn" onclick="scrollRow('fw',-1)">‹</button>
-        <button class="row-nav-btn" onclick="scrollRow('fw',1)">›</button>
+        <button class="row-nav-btn" onclick="scrollRow('expand',-1)">‹</button>
+        <button class="row-nav-btn" onclick="scrollRow('expand',1)">›</button>
       </div>
     </div>
-    <div class="cards-viewport"><div class="cards-track" id="track-fw"></div></div>
+    <div class="cards-viewport"><div class="cards-track" id="track-expand"></div></div>
   </div>
 </main>
 
-<!-- MODAL -->
+<!-- BOTTOM NAV MOBILE -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="#" class="bottom-nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="journey.html" class="bottom-nav-item">
+      <span class="nav-icon">✨</span>
+      <span>Journey</span>
+    </a>
+    <a href="journal.html" class="bottom-nav-item">
+      <span class="nav-icon">📖</span>
+      <span>Journal</span>
+    </a>
+  </div>
+</nav>
+
+
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -524,26 +659,47 @@ const DATA = {
     {title:"The Age Of Abundance",desc:"Biblical principles for attracting divine abundance into every area of your life.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"1024",dur:"4h",img:"https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=400&q=80",available:true,featured:true},
     {title:"Mindset Reset Formula",desc:"Update your mental software and unlock automatic growth, abundance and confidence.",cat:"Mindset",catClass:"cat-mindset",rating:"4.8",count:"620",dur:"2h",img:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&q=80",available:true},
   ],
-  nr:[
-    {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=400&q=80",available:true},
-    {title:"The Hidden Secrets of King Solomon's Prosperity",desc:"Unlock the ancient wisdom of King Solomon and discover the sacred principles of wealth.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.8",count:"723",dur:"2h",img:"https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80",available:true},
-    {title:"The Whisper of Faith",desc:"Faithful Whisper: Unlock Divine Blessings and Abundance Through Sacred practices and ancient wisdom.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?w=400&q=80",available:true},
-    {title:"The Age Of Abundance",desc:"The Bible says: All these blessings will come upon you and overtake you — Deuteronomy 28:2.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"950",dur:"4h",img:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80",available:true,featured:true},
-    {title:"The Sacred Chant of Arcangel Michael",desc:"A transformative journey into divine protection and spiritual purification.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"812",dur:"3h",img:"https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&q=80",available:true,featured:true},
-    {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days or less through focused divine intention.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80",available:true},
-  ],
-  fw:[
-    {title:"The Hidden Secrets of King Solomon's Prosperity",desc:"Unlock the ancient wisdom of King Solomon and discover the sacred principles of abundance.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80",available:true},
-    {title:"Powerful Numbers — Awaken Your Divine Frequency",desc:"The Call of Number — Awaken Your Divine Frequency for abundance and manifestation.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"723",dur:"2h",img:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80",available:true},
-    {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days or less through sacred daily practices.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80",available:true},
-    {title:"Mindset Reset Formula",desc:"Update your Mental Software and Unlock Automatic Growth, Abundance, Confidence.",cat:"Mindset",catClass:"cat-mindset",rating:"4.8",count:"756",dur:"2h",img:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&q=80",available:true},
-    {title:"The 7 Frequencies of Divine Acceleration",desc:"Discover and activate the seven sacred frequencies that unlock your divine potential.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.8",count:"620",dur:"2h",img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",available:true},
-    {title:"Sacred Protocol for Spiritual Cleansing",desc:"A transformative journey into divine protection and spiritual purification.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.7",count:"534",dur:"3h",img:"https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=400&q=80",available:true},
-  ],
 };
 
-const rowPos = {my:0, nr:0, fw:0};
+const EXPAND_DATA = [
+  {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=400&q=80"},
+  {title:"The Whisper of Faith",desc:"Unlock Divine Blessings and Abundance through sacred practices and ancient wisdom.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?w=400&q=80"},
+  {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80"},
+  {title:"The Sacred Chant of Archangel Michael",desc:"A transformative journey into divine protection and spiritual purification through sacred sound.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"812",dur:"3h",img:"https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?w=400&q=80"},
+  {title:"Angelic Healing Frequencies",desc:"Activate the healing power of angelic frequencies to restore balance and divine harmony.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"634",dur:"2h",img:"https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80"},
+];
 
+const PRACTICE_BANK = [
+  { icon:'🕊️', type:'Morning Meditation', title:'Stillness Before the Storm', desc:'Begin in silence. Let divine peace wash over you before the world speaks.', action:'Begin Meditation' },
+  { icon:'📖', type:'Word of the Day', title:'"Be still and know that I am God"', desc:'Psalm 46:10 — Rest in the certainty that you are held by something greater.', action:'Reflect Now' },
+  { icon:'👑', type:"Solomon's Wisdom", title:'The wise do not rush what God is building', desc:"Solomon waited 7 years to build the Temple. Your season of preparation is sacred.", action:'Read More' },
+  { icon:'🌟', type:'Daily Decree', title:'I am aligned with divine abundance', desc:'Speak this aloud three times with conviction and open hands. Feel it.', action:'Declare It' },
+];
+
+const rowPos = {my:0, expand:0};
+
+// Set today's date
+const dateEl = document.getElementById('todays-date');
+if(dateEl){
+  const d = new Date();
+  dateEl.textContent = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+}
+
+// Render Today's Practice cards
+const practiceTrack = document.getElementById('track-practice');
+if(practiceTrack){
+  practiceTrack.innerHTML = PRACTICE_BANK.map(p => `
+    <div class="practice-card">
+      <div class="practice-icon">${p.icon}</div>
+      <div class="practice-type">${p.type}</div>
+      <div class="practice-title">${p.title}</div>
+      <div class="practice-desc">${p.desc}</div>
+      <button class="practice-action">▶ ${p.action}</button>
+    </div>
+  `).join('');
+}
+
+// Render My Products
 function cardHTML(p,key,i){
   const fid=`fav-${key}-${i}`;
   return `<div class="product-card">
@@ -565,27 +721,42 @@ function cardHTML(p,key,i){
         <span>🕐 ${p.dur}</span>
       </div>
       <div class="card-actions">
-        <button class="card-btn card-btn-access" onclick="openModal(${i},'${key}')">▶ Access</button>
-        <button class="card-btn card-btn-details" onclick="openModal(${i},'${key}')">⊙ View Details</button>
+        <button class="card-btn card-btn-access" onclick="openModal(${i},'my')">▶ Access</button>
+        <button class="card-btn card-btn-details" onclick="openModal(${i},'my')">⊙ View Details</button>
       </div>
     </div>
   </div>`;
 }
 
-['my','nr','fw'].forEach(k=>{
-  document.getElementById('track-'+k).innerHTML=DATA[k].map((p,i)=>cardHTML(p,k,i)).join('');
-});
-
-function getCardW(key){
-  const track=document.getElementById('track-'+key);
-  const card=track.querySelector('.product-card');
-  if(!card) return 228;
-  return card.offsetWidth + parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap')||'18');
+// Render Expand Your Journey cards
+function expandCardHTML(p,i){
+  return `<div class="expand-card">
+    <div class="card-img-wrap">
+      <img src="${p.img}" alt="${p.title}" loading="lazy"/>
+      <div class="lock-overlay">
+        <span class="lock-badge">🔒 Not Unlocked</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="cat-pill ${p.catClass}">${p.cat}</span>
+      <div class="card-title">${p.title}</div>
+      <div class="card-desc">${p.desc}</div>
+      <div class="card-meta">
+        <span class="stars">★ ${p.rating}</span>
+        <span>(${p.count})</span>
+        <span>🕐 ${p.dur}</span>
+      </div>
+      <button class="btn-unlock">✨ Unlock This Teaching</button>
+    </div>
+  </div>`;
 }
+
+document.getElementById('track-my').innerHTML = DATA.my.map((p,i)=>cardHTML(p,'my',i)).join('');
+document.getElementById('track-expand').innerHTML = EXPAND_DATA.map((p,i)=>expandCardHTML(p,i)).join('');
 
 function scrollRow(key,dir){
   const track=document.getElementById('track-'+key);
-  const cards=track.querySelectorAll('.product-card');
+  const cards=track.querySelectorAll('.product-card,.expand-card,.practice-card');
   if(!cards.length)return;
   const gap=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap'))||18;
   const cardW=cards[0].offsetWidth+gap;
@@ -594,6 +765,7 @@ function scrollRow(key,dir){
   const step=visible*cardW;
   const totalW=cards.length*cardW;
   const maxPos=Math.max(0,totalW-vw);
+  if(!rowPos[key]) rowPos[key]=0;
   rowPos[key]=Math.max(0,Math.min(rowPos[key]+dir*step,maxPos));
   track.style.transform=`translateX(-${rowPos[key]}px)`;
 }
