@@ -371,8 +371,70 @@
     .bottom-nav-item.active { color: var(--gold); }
     .bottom-nav-item span.nav-icon { font-size: 1.3rem; }
 
-    /* ── PRACTICE CARDS — same layout as product-card ── */
-    .practice-card {
+    /* ── PRACTICE DONE / PENDING STATES ── */
+    .practice-done-overlay {
+      position:absolute; inset:0; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:6px;
+      animation:fadeIn 0.4s ease;
+    }
+    .pdo-check {
+      width:48px; height:48px; border-radius:50%;
+      background:rgba(0,0,0,0.35); border:2px solid rgba(255,255,255,0.6);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; color:#fff; font-weight:700;
+    }
+    .pdo-text {
+      font-family:'Cinzel',serif; font-size:10px; letter-spacing:.14em;
+      text-transform:uppercase; color:#fff; opacity:.9;
+    }
+    .practice-pending-bar {
+      position:absolute; bottom:0; left:0; right:0;
+      background:rgba(10,8,15,0.75); padding:6px 10px;
+      display:flex; align-items:center; gap:6px;
+    }
+    .ppb-dot {
+      width:6px; height:6px; border-radius:50%;
+      background:#e8b84b; display:inline-block; flex-shrink:0;
+      animation:pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .ppb-text {
+      font-family:'Cinzel',serif; font-size:9px; letter-spacing:.12em;
+      text-transform:uppercase; color:#c9a84c; opacity:.85;
+    }
+
+    /* ── COMPLETION BANNER ── */
+    .practice-complete-banner {
+      margin:0 0 20px;
+      animation:fadeIn 0.6s ease;
+    }
+    .pcb-inner {
+      background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.04));
+      border:1px solid rgba(201,168,76,0.35);
+      border-left:3px solid #c9a84c;
+      border-radius:4px; padding:20px 24px; text-align:center;
+    }
+    .pcb-stars {
+      font-size:13px; color:#c9a84c; letter-spacing:.3em; margin-bottom:8px; opacity:.7;
+    }
+    .pcb-title {
+      font-family:'Cinzel',serif; font-size:16px; color:#c9a84c;
+      font-weight:600; margin-bottom:6px;
+    }
+    .pcb-text {
+      font-size:14px; color:var(--text-dim); margin-bottom:8px; line-height:1.6;
+    }
+    .pcb-verse {
+      font-style:italic; font-size:13px; color:rgba(201,168,76,0.65);
+    }
+
+    /* ── DONE BUTTON STATE ── */
+    .card-btn-done {
+      background:rgba(201,168,76,0.08) !important;
+      border:1px solid rgba(201,168,76,0.3) !important;
+      color:#c9a84c !important;
+      cursor:default !important;
+    }
       flex: 0 0 var(--card-w); width: var(--card-w);
       background: var(--bg3); border-radius: var(--radius); overflow: hidden;
       border: 1px solid rgba(255,255,255,0.07);
@@ -662,45 +724,100 @@ const EXPAND_DATA = [
   {title:"Angelic Healing Frequencies",desc:"Activate the healing power of angelic frequencies to restore balance and divine harmony.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"634",dur:"2h",img:"https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80"},
 ];
 
+const DAILY_FOCUS_DATA = [
+  {0:{theme:'Rest & Surrender',title:'Total Surrender'},1:{theme:'Prosperity',title:'Identify Open Doors'},2:{theme:'Mindset',title:'Government of Speech'},3:{theme:'Connection',title:'Selective Silence'},4:{theme:'Abundance',title:'Flow Consciousness'},5:{theme:'Protection',title:'Preserving Your Peace'},6:{theme:'Vision',title:'Royal Posture'}},
+  {0:{theme:'Rest & Renewal',title:"The Mind's Sabbath"},1:{theme:'Prosperity',title:'Seed Mentality'},2:{theme:'Mindset',title:'Emotional Sovereignty'},3:{theme:'Connection',title:'Spiritual Discernment'},4:{theme:'Abundance',title:'Gratitude Anchor'},5:{theme:'Protection',title:'Noise Fast'},6:{theme:'Vision',title:'Legacy Thinking'}},
+  {0:{theme:'Rest & Faith',title:'Faith in the Invisible'},1:{theme:'Prosperity',title:'Sacred Boldness'},2:{theme:'Mindset',title:'Destroying the Impostor'},3:{theme:'Connection',title:'Synchronization'},4:{theme:'Abundance',title:'Capacity to Receive'},5:{theme:'Protection',title:'Boundaries of Light'},6:{theme:'Vision',title:'Writing the Future'}},
+  {0:{theme:'Rest & Celebration',title:'Celebrating the Creator'},1:{theme:'Prosperity',title:'Financial Stewardship'},2:{theme:'Mindset',title:'Divine Resilience'},3:{theme:'Connection',title:'Intuitive Action'},4:{theme:'Abundance',title:'Living in Overflow'},5:{theme:'Protection',title:'Armor of Light'},6:{theme:'Vision',title:'The Finished Work'}},
+];
+
+function getWeekIdx(){
+  let s=localStorage.getItem('abundance_start_date');
+  if(!s){s=new Date().toISOString().split('T')[0];localStorage.setItem('abundance_start_date',s);}
+  const start=new Date(s+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);
+  return Math.floor(Math.floor((today-start)/86400000)/7)%4;
+}
+const todayStr = new Date().toISOString().split('T')[0];
+const todayDOW = new Date().getDay();
+const weekIdx = getWeekIdx();
+const todayFocus = DAILY_FOCUS_DATA[weekIdx][todayDOW];
+
+const DONE_KEYS = ['daily_focus_done','divine_truth_done','solomons_wisdom_done','daily_decree_done'];
+function isDone(key){ return localStorage.getItem(key) === todayStr; }
+function allDone(){ return DONE_KEYS.every(k => isDone(k)); }
+
 const PRACTICE_BANK = [
-  { type:'Morning Meditation', title:'Stillness Before the Storm', desc:'Begin in silence. Let divine peace wash over you before the world speaks.', action:'Begin', catLabel:'Meditation', catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80' },
-  { type:'Word of the Day', title:'"Be still and know that I am God"', desc:'Psalm 46:10 — Rest in the certainty that you are held by something greater.', action:'Reflect', catLabel:'Scripture', catClass:'cat-mindset', img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80' },
-  { type:"Solomon's Wisdom", title:'The wise do not rush what God is building', desc:"Solomon waited 7 years to build the Temple. Your season of preparation is sacred.", action:'Read', catLabel:'Wisdom', catClass:'cat-premium', img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80' },
-  { type:'21-Day Challenge', title:'The Manifestation Challenge', desc:'21 days of intention, prayer, surrender and faith. Start your sacred journey today.', action:'Start', catLabel:'Challenge', catClass:'cat-spirituality', img:'images/21daymanifestation.png', player:'player-21-days.html' },
-  { type:'Daily Decree', title:'I am aligned with divine abundance', desc:'Speak this aloud three times with conviction and open hands. Feel it.', action:'Declare', catLabel:'Decree', catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80' },
+  {type:'Daily Focus',   title:todayFocus.title,  desc:'Your divine assignment for today. Set your intention and align with Heaven\'s frequency.',     catLabel:todayFocus.theme, catClass:'cat-premium',      img:'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80', player:'player-daily-focus.html',    doneKey:'daily_focus_done',    emoji:'🎯', accentColor:'#c9a84c'},
+  {type:'Divine Truth',  title:'Today\'s Scripture', desc:'A living word for this exact moment in your journey. Open your heart and receive.',             catLabel:'Scripture',       catClass:'cat-mindset',      img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80', player:'player-divine-truth.html',   doneKey:'divine_truth_done',   emoji:'✝️', accentColor:'#3a85c4'},
+  {type:"Solomon's Wisdom",title:"The King's Teaching",desc:'Ancient wisdom for your modern challenges. What Solomon knew that changed everything.',       catLabel:'Wisdom',          catClass:'cat-premium',      img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80',  player:'player-solomons-wisdom.html',doneKey:'solomons_wisdom_done',emoji:'👑', accentColor:'#3a9e6e'},
+  {type:'Daily Decree',  title:'Speak It Into Existence', desc:'Your daily declaration of power. Speak this aloud with conviction and open hands.',          catLabel:'Decree',          catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80', player:'player-daily-decree.html',   doneKey:'daily_decree_done',   emoji:'📜', accentColor:'#9a2a3e'},
 ];
 
 const rowPos = {my:0, expand:0};
 
 // Set today's date
 const dateEl = document.getElementById('todays-date');
-if(dateEl){
-  const d = new Date();
-  dateEl.textContent = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-}
+if(dateEl){ const d=new Date(); dateEl.textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
 
-// Render Today's Practice cards — same style as product cards
+// Render Today's Practice cards
 const practiceTrack = document.getElementById('track-practice');
 if(practiceTrack){
-  practiceTrack.innerHTML = PRACTICE_BANK.map((p,i) => `
-    <div class="product-card" ${p.player ? `onclick="navigateTo('${p.player}')" style="cursor:pointer;"` : ''}>
+  const done = PRACTICE_BANK.map(p => isDone(p.doneKey));
+  const allComplete = done.every(Boolean);
+
+  // Completion banner
+  const practiceSection = practiceTrack.closest('.row-section');
+  if(practiceSection){
+    // Remove any existing banner
+    const existing = practiceSection.querySelector('.practice-complete-banner');
+    if(existing) existing.remove();
+
+    if(allComplete){
+      const banner = document.createElement('div');
+      banner.className = 'practice-complete-banner';
+      banner.innerHTML = `
+        <div class="pcb-inner">
+          <div class="pcb-stars">✦ ✦ ✦</div>
+          <div class="pcb-title">Today's Practice Complete</div>
+          <div class="pcb-text">You have walked in alignment today. Heaven has registered your faithfulness.</div>
+          <div class="pcb-verse">"Well done, good and faithful servant." — Matthew 25:23</div>
+        </div>`;
+      practiceSection.querySelector('.row-header').after(banner);
+    }
+  }
+
+  practiceTrack.innerHTML = PRACTICE_BANK.map((p,i) => {
+    const d = done[i];
+    return `
+    <div class="product-card practice-card-wrap" onclick="navigateTo('${p.player}')" style="cursor:pointer;position:relative;${d ? `border-color:${p.accentColor};box-shadow:0 0 0 1px ${p.accentColor}33;` : ''}">
       <div class="card-img-wrap">
         <img src="${p.img}" alt="${p.title}" loading="lazy"/>
         <div class="card-badges">
-          <span class="badge badge-gold" style="font-size:0.68rem;padding:3px 9px;">✦ ${p.type}</span>
-          ${p.player ? '<span class="badge badge-green" style="font-size:0.68rem;padding:3px 9px;">✓ Available</span>' : ''}
+          <span class="badge badge-gold" style="font-size:0.68rem;padding:3px 9px;">${p.emoji} ${p.type}</span>
         </div>
+        ${d
+          ? `<div class="practice-done-overlay" style="background:linear-gradient(135deg,${p.accentColor}dd,${p.accentColor}99);">
+               <div class="pdo-check">✓</div>
+               <div class="pdo-text">Done Today</div>
+             </div>`
+          : `<div class="practice-pending-bar">
+               <span class="ppb-dot"></span>
+               <span class="ppb-text">Not done yet</span>
+             </div>`
+        }
       </div>
       <div class="card-body">
         <span class="cat-pill ${p.catClass}">${p.catLabel}</span>
         <div class="card-title">${p.title}</div>
         <div class="card-desc">${p.desc}</div>
         <div class="card-actions">
-          <button class="card-btn card-btn-access" ${p.player ? `onclick="event.stopPropagation();navigateTo('${p.player}')"` : ''}>▶ ${p.action}</button>
+          <button class="card-btn ${d ? 'card-btn-done' : 'card-btn-access'}" onclick="event.stopPropagation();navigateTo('${p.player}')">
+            ${d ? '✓ Completed' : '▶ Begin'}
+          </button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // Render My Products
