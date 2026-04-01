@@ -53,34 +53,35 @@
     .gift-banner {
       position: fixed; top: 0; left: 0; right: 0; z-index: 300;
       background: linear-gradient(90deg, rgba(10,10,15,0.98), rgba(20,15,5,0.98));
-      padding: 10px 2rem;
-      height: 64px;
+      padding: 10px 1.5rem;
+      height: auto; min-height: 72px;
       display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 7px;
+      flex-direction: column; gap: 8px;
     }
     .gift-banner-text {
       font-family: 'Cinzel', serif;
-      font-size: 0.7rem; letter-spacing: 0.1em;
+      font-size: 0.9rem; letter-spacing: 0.06em;
       color: var(--text-mid);
       display: flex; align-items: center; gap: 10px;
       flex-wrap: wrap; justify-content: center;
+      text-align: center;
     }
     .gift-pill {
       background: rgba(201,168,76,0.12);
       border: 1px solid rgba(201,168,76,0.3);
       border-radius: 999px;
-      padding: 3px 12px;
+      padding: 5px 14px;
       color: var(--gold);
-      font-size: 0.68rem; letter-spacing: 0.08em;
+      font-size: 0.88rem; letter-spacing: 0.06em;
       display: flex; align-items: center; gap: 6px;
     }
-    /* Progress bar replacing dots */
+    /* Progress bar */
     .gift-progress-wrap {
-      width: 100%; max-width: 320px;
+      width: 100%; max-width: 340px;
       display: flex; align-items: center; gap: 10px;
     }
     .gift-progress-bar {
-      flex: 1; height: 4px; border-radius: 999px;
+      flex: 1; height: 5px; border-radius: 999px;
       background: rgba(255,255,255,0.08);
       overflow: hidden;
     }
@@ -93,18 +94,19 @@
     }
     .gift-progress-label {
       font-family: 'Cinzel', serif;
-      font-size: 0.6rem; letter-spacing: 0.1em;
+      font-size: 0.78rem; letter-spacing: 0.08em;
       color: var(--text-dim); white-space: nowrap;
     }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 64px; left: 0; right: 0; z-index: 200;
-      height: 52px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 48px;
       display: flex; align-items: center;
       padding: 0 1.5rem;
       background: rgba(10,10,15,0.95);
       backdrop-filter: blur(20px);
+      /* top set dynamically by JS */
     }
     .nav-left { display: flex; align-items: center; gap: 16px; }
     .nav-back {
@@ -506,7 +508,7 @@
     @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
 
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); top: 116px; }
+      .sidebar { transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,0.7); }
       .main-content { margin-left: 0; }
       .content-area { padding: 20px 16px 100px; }
@@ -514,17 +516,14 @@
       nav { padding: 0 1rem; }
       .lesson-nav { flex-direction: column; }
       .btn-lesson-nav { width: 100%; justify-content: center; }
-      .gift-banner { height: auto; min-height: 68px; padding: 10px 1rem; }
-      .gift-banner-text { font-size: 0.65rem; gap: 6px; }
       .gift-progress-wrap { max-width: 100%; }
-      .layout { padding-top: 116px; }
     }
   </style>
 </head>
 <body>
 
 <!-- GIFT BANNER -->
-<div class="gift-banner">
+<div class="gift-banner" id="gift-banner">
   <div class="gift-banner-text">
     Complete all lessons to receive your spiritual gift
     <span class="gift-pill">👼 Blessing of the Archangel</span>
@@ -704,6 +703,21 @@ const GIFT_NAME = 'Blessing of the Archangel';
 
 let currentLesson = parseInt(localStorage.getItem('current_lesson_' + MODULE_ID) || '0');
 let currentRating = 0;
+
+// ── POSITION NAV BELOW BANNER DYNAMICALLY ──
+function positionNav() {
+  const banner = document.getElementById('gift-banner');
+  const nav = document.querySelector('nav');
+  const layout = document.querySelector('.layout');
+  const sidebar = document.getElementById('sidebar');
+  const bannerH = banner.offsetHeight;
+  nav.style.top = bannerH + 'px';
+  const totalTop = bannerH + 48;
+  layout.style.paddingTop = totalTop + 'px';
+  sidebar.style.top = totalTop + 'px';
+}
+positionNav();
+window.addEventListener('resize', positionNav);
 
 // ── NAME ──
 const savedName = localStorage.getItem('abundance_name');
