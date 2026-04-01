@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>The 7 Frequencies of Divine Acceleration — Abundance Time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <script type="text/javascript">var s=document.createElement("script");s.src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js",s.async=!0,document.head.appendChild(s);</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8c96a;
+      --gold-pale:   #f5e6b8;
+      --gold-dim:    #7a5f28;
+      --bg:          #0a0a0f;
+      --bg2:         #0f0f18;
+      --bg3:         #13131f;
+      --bg4:         #1a1a28;
+      --text:        #f0e8d8;
+      --text-mid:    #c8b898;
+      --text-dim:    #7a6a50;
+      --border:      rgba(201,168,76,0.12);
+      --border-strong: rgba(201,168,76,0.25);
+      --radius:      12px;
+      --sidebar-w:   300px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 17px;
+      animation: pageFadeIn 0.5s ease forwards;
+    }
+    @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
+    .page-fade-out { animation: pageFadeOut 0.35s ease forwards; }
+    @keyframes pageFadeOut { to { opacity:0; transform: translateY(-8px); } }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* ── GIFT BANNER ── */
+    .gift-banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      background: linear-gradient(90deg, rgba(10,10,15,0.98), rgba(20,15,5,0.98));
+      padding: 10px 1.5rem;
+      height: auto; min-height: 72px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+    }
+    .gift-banner-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem; letter-spacing: 0.06em;
+      color: var(--text-mid);
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap; justify-content: center;
+      text-align: center;
+    }
+    .gift-pill {
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 999px;
+      padding: 5px 14px;
+      color: var(--gold);
+      font-size: 0.88rem; letter-spacing: 0.06em;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .gift-progress-wrap {
+      width: 100%; max-width: 340px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .gift-progress-bar {
+      flex: 1; height: 5px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+    }
+    .gift-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+      border-radius: 999px;
+      transition: width 0.8s ease; width: 0%;
+    }
+    .gift-progress-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; letter-spacing: 0.08em;
+      color: var(--text-dim); white-space: nowrap;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 48px;
+      display: flex; align-items: center;
+      padding: 0 1.5rem;
+      background: rgba(10,10,15,0.95);
+      backdrop-filter: blur(20px);
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative; z-index: 1;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: fixed;
+      left: 0; bottom: 0;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 2px; }
+
+    .sidebar-header {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: var(--bg2); z-index: 1;
+    }
+    .sidebar-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7; margin-bottom: 6px;
+    }
+    .sidebar-course-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--text); line-height: 1.3;
+    }
+    .sidebar-progress { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+    .progress-row {
+      display: flex; justify-content: space-between;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 8px;
+    }
+    .progress-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 999px; height: 5px; }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+      border-radius: 999px; transition: width 0.8s ease;
+    }
+    .module-list { padding: 8px 0; }
+    .module-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 20px; cursor: pointer;
+      transition: background 0.18s;
+      border-left: 3px solid transparent;
+    }
+    .module-item:hover { background: rgba(201,168,76,0.05); }
+    .module-item.active { background: rgba(201,168,76,0.08); border-left-color: var(--gold); }
+    .module-num {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 0.65rem; color: var(--text-dim);
+    }
+    .module-item.active .module-num { background: rgba(201,168,76,0.2); border-color: var(--gold); color: var(--gold); }
+    .module-item.completed .module-num { background: rgba(46,180,100,0.15); border-color: rgba(46,180,100,0.4); color: #4ecb80; }
+    .module-info { flex: 1; min-width: 0; }
+    .module-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text-mid); line-height: 1.35;
+    }
+    .module-item.active .module-name { color: var(--gold-pale); }
+
+    /* ── MAIN ── */
+    .main-content { margin-left: var(--sidebar-w); flex: 1; min-width: 0; }
+    .video-wrap { background: #000; width: 100%; }
+    .video-wrap > div { width: 100% !important; }
+    .content-area { padding: 30px 40px 80px; max-width: 860px; }
+
+    .module-header { margin-bottom: 26px; }
+    .module-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7; margin-bottom: 10px;
+    }
+    .module-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+      font-weight: 700; color: var(--text);
+      letter-spacing: 0.02em; line-height: 1.2; margin-bottom: 16px;
+    }
+    .btn-complete {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 11px 22px; border-radius: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--border-strong);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.76rem; font-weight: 600; letter-spacing: 0.08em;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-complete:hover { background: rgba(201,168,76,0.18); border-color: var(--gold); }
+    .btn-complete.done { background: rgba(46,180,100,0.12); border-color: rgba(46,180,100,0.35); color: #4ecb80; }
+
+    .deco-divider {
+      display: flex; align-items: center; gap: 12px; margin: 28px 0;
+    }
+    .deco-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border-strong), transparent); }
+    .deco-divider-sym { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); opacity: 0.4; letter-spacing: 0.2em; }
+
+    .tabs { display: flex; gap: 4px; margin-bottom: 24px; }
+    .tab-btn {
+      padding: 9px 20px; border-radius: 8px;
+      background: transparent; border: 1px solid transparent;
+      color: var(--text-dim);
+      font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.08em;
+      cursor: pointer; transition: all 0.18s;
+    }
+    .tab-btn:hover { color: var(--text-mid); }
+    .tab-btn.active { background: rgba(201,168,76,0.1); border-color: var(--border-strong); color: var(--gold); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .about-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.65; margin-bottom: 12px;
+    }
+    .about-text { font-size: 1.1rem; color: var(--text-mid); line-height: 1.8; }
+
+    /* Rating */
+    .stars-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .star-btn {
+      font-size: 1.8rem; background: none; border: none;
+      cursor: pointer; color: rgba(255,255,255,0.15);
+      transition: all 0.15s; line-height: 1;
+    }
+    .star-btn.active { color: var(--gold); }
+    .star-btn:hover { transform: scale(1.15); }
+    .rating-label { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.08em; margin-left: 6px; }
+
+    .comment-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .comment-input {
+      width: 100%; min-height: 90px;
+      background: transparent; border: none;
+      padding: 16px 18px; color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.05rem; line-height: 1.65;
+      resize: none; outline: none;
+    }
+    .comment-input::placeholder { color: var(--text-dim); font-style: italic; }
+    .comment-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
+    .btn-comment {
+      padding: 8px 20px; border-radius: 7px;
+      background: rgba(201,168,76,0.12); border: 1px solid var(--border-strong);
+      color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.08em;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-comment:hover { background: rgba(201,168,76,0.22); }
+
+    .comments-list { margin-top: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .comment-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px 18px;
+    }
+    .comment-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .comment-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dim), #3a2a10);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 700; color: var(--gold);
+    }
+    .comment-name { font-family: 'Cinzel', serif; font-size: 0.72rem; color: var(--text-mid); }
+    .comment-stars { color: var(--gold); font-size: 0.75rem; margin-left: auto; }
+    .comment-text { font-size: 1rem; color: var(--text-mid); line-height: 1.65; }
+
+    /* Notes */
+    .notes-textarea {
+      width: 100%; min-height: 180px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 16px 18px; color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.05rem; line-height: 1.7;
+      resize: vertical; outline: none; transition: border-color 0.2s;
+    }
+    .notes-textarea::placeholder { color: var(--text-dim); font-style: italic; }
+    .notes-textarea:focus { border-color: rgba(201,168,76,0.35); }
+    .btn-save-notes {
+      margin-top: 10px; padding: 10px 22px; border-radius: 8px;
+      background: rgba(201,168,76,0.1); border: 1px solid var(--border-strong);
+      color: var(--gold); font-family: 'Cinzel', serif;
+      font-size: 0.72rem; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-save-notes:hover { background: rgba(201,168,76,0.2); }
+
+    /* Lesson nav */
+    .lesson-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 44px; padding-top: 22px;
+      border-top: 1px solid var(--border); gap: 12px;
+    }
+    .btn-lesson-nav {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 22px; border-radius: 10px;
+      border: 1px solid var(--border-strong); background: transparent;
+      color: var(--text-mid);
+      font-family: 'Cinzel', serif; font-size: 0.73rem; letter-spacing: 0.08em;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .btn-lesson-nav:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-lesson-nav.next {
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.06));
+      border-color: var(--gold); color: var(--gold-pale);
+    }
+    .btn-lesson-nav.next:hover { background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.12)); }
+    .btn-lesson-nav.disabled { opacity: 0.3; pointer-events: none; }
+
+    /* Gift modal */
+    .gift-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 600;
+      background: rgba(0,0,0,0.85);
+      align-items: center; justify-content: center;
+      padding: 24px; backdrop-filter: blur(8px);
+    }
+    .gift-modal-overlay.show { display: flex; }
+    .gift-modal {
+      background: linear-gradient(160deg, #0f0f18, #13131f);
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 24px; padding: 48px 40px;
+      max-width: 440px; width: 100%;
+      text-align: center; position: relative; overflow: hidden;
+      box-shadow: 0 0 80px rgba(201,168,76,0.15);
+      animation: modalIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes modalIn { from { opacity:0; transform: scale(0.85); } to { opacity:1; transform: scale(1); } }
+    .gift-modal::before {
+      content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .gift-modal::after {
+      content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .gift-modal-emoji {
+      font-size: 4rem; line-height: 1; margin-bottom: 20px; display: block;
+      animation: floatIcon 2.5s ease-in-out infinite;
+    }
+    @keyframes floatIcon { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .gift-modal-eyebrow {
+      font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7; margin-bottom: 12px;
+    }
+    .gift-modal-title {
+      font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 700;
+      color: var(--gold-pale); letter-spacing: 0.03em; line-height: 1.2; margin-bottom: 16px;
+      text-shadow: 0 0 40px rgba(201,168,76,0.4);
+    }
+    .gift-modal-text { font-size: 1.1rem; color: var(--text-mid); font-style: italic; line-height: 1.75; margin-bottom: 32px; }
+    .gift-modal-verse { font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.06em; color: var(--gold); opacity: 0.6; margin-bottom: 32px; }
+    .gift-modal-btns { display: flex; flex-direction: column; gap: 12px; }
+    .btn-gift-journey {
+      padding: 14px 24px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      border: none; color: #fff;
+      font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+      text-decoration: none; display: block;
+    }
+    .btn-gift-journey:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,168,76,0.4); }
+    .btn-gift-stay {
+      padding: 12px 24px; border-radius: 10px; background: transparent;
+      border: 1px solid var(--border-strong); color: var(--text-dim);
+      font-family: 'Cinzel', serif; font-size: 0.78rem; letter-spacing: 0.08em;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-gift-stay:hover { border-color: var(--gold); color: var(--text-mid); }
+
+    .sidebar-toggle {
+      display: none; position: fixed; bottom: 24px; right: 24px; z-index: 300;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+      border: none; cursor: pointer;
+      align-items: center; justify-content: center; font-size: 1.3rem;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+    }
+
+    .fade-in { opacity:0; transform:translateY(14px); animation:fadeUp 0.55s ease forwards; }
+    .delay-1 { animation-delay:0.1s; }
+    .delay-2 { animation-delay:0.2s; }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,0.7); }
+      .main-content { margin-left: 0; }
+      .content-area { padding: 20px 16px 100px; }
+      .sidebar-toggle { display: flex; }
+      nav { padding: 0 1rem; }
+      .lesson-nav { flex-direction: column; }
+      .btn-lesson-nav { width: 100%; justify-content: center; }
+      .gift-progress-wrap { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- GIFT BANNER -->
+<div class="gift-banner" id="gift-banner">
+  <div class="gift-banner-text">
+    Complete all lessons to receive your spiritual gift
+    <span class="gift-pill">⚡ Gift of Divine Acceleration</span>
+  </div>
+  <div class="gift-progress-wrap">
+    <div class="gift-progress-bar">
+      <div class="gift-progress-fill" id="gift-progress-fill"></div>
+    </div>
+    <div class="gift-progress-label" id="gift-progress-label">0 of 8</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-back" onclick="fadeOut(event, 'index.html')">← Back to Home</a>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout" id="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-eyebrow">Course Content</div>
+      <div class="sidebar-course-title">The 7 Frequencies of Divine Acceleration</div>
+    </div>
+    <div class="sidebar-progress">
+      <div class="progress-row">
+        <span>Progress</span>
+        <span id="progress-label">0 of 8 complete</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="module-list" id="module-list"></div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="video-wrap fade-in" id="video-container"></div>
+    <div class="content-area">
+      <div class="module-header fade-in delay-1">
+        <div class="module-eyebrow" id="lesson-eyebrow">Intro · Spirituality</div>
+        <h1 class="module-title" id="lesson-title">The Power of Divine Frequencies</h1>
+        <button class="btn-complete" id="btn-complete" onclick="markComplete()">
+          <span id="complete-icon">◯</span>
+          <span id="complete-text">Mark as Complete</span>
+        </button>
+      </div>
+
+      <div class="deco-divider">
+        <div class="deco-divider-line"></div>
+        <div class="deco-divider-sym">✦ ✦ ✦</div>
+        <div class="deco-divider-line"></div>
+      </div>
+
+      <div class="tabs fade-in delay-2">
+        <button class="tab-btn active" onclick="switchTab('description', this)">Description</button>
+        <button class="tab-btn" onclick="switchTab('reviews', this)">Reviews</button>
+        <button class="tab-btn" onclick="switchTab('notes', this)">My Notes</button>
+      </div>
+
+      <div class="tab-content active" id="tab-description">
+        <div class="about-label">✦ About This Lesson</div>
+        <p class="about-text" id="lesson-desc">Discover the seven sacred frequencies that God wired into creation — and learn how to align your life with each one to accelerate your divine destiny.</p>
+      </div>
+
+      <div class="tab-content" id="tab-reviews">
+        <div class="about-label">✦ Rate This Lesson</div>
+        <div class="stars-row">
+          <button class="star-btn" onclick="setRating(1)">★</button>
+          <button class="star-btn" onclick="setRating(2)">★</button>
+          <button class="star-btn" onclick="setRating(3)">★</button>
+          <button class="star-btn" onclick="setRating(4)">★</button>
+          <button class="star-btn" onclick="setRating(5)">★</button>
+          <span class="rating-label" id="rating-label">Tap to rate</span>
+        </div>
+        <div class="comment-box">
+          <textarea class="comment-input" id="comment-input"
+            placeholder="Share what this lesson meant to you… your testimony may inspire others."></textarea>
+          <div class="comment-footer">
+            <button class="btn-comment" onclick="submitComment()">✦ Share</button>
+          </div>
+        </div>
+        <div class="comments-list" id="comments-list"></div>
+      </div>
+
+      <div class="tab-content" id="tab-notes">
+        <div class="about-label">✦ Your Personal Notes</div>
+        <textarea class="notes-textarea" id="notes-input"
+          placeholder="Write what touched your heart in this lesson…"></textarea>
+        <button class="btn-save-notes" onclick="saveNotes()">✦ Save Notes</button>
+      </div>
+
+      <div class="lesson-nav fade-in delay-2">
+        <button class="btn-lesson-nav" id="btn-prev" onclick="goLesson(-1)">← Previous</button>
+        <button class="btn-lesson-nav next" id="btn-next" onclick="goLesson(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR TOGGLE -->
+<button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- GIFT MODAL -->
+<div class="gift-modal-overlay" id="gift-modal">
+  <div class="gift-modal">
+    <span class="gift-modal-emoji">⚡</span>
+    <div class="gift-modal-eyebrow">✦ Spiritual Gift Received ✦</div>
+    <div class="gift-modal-title">Gift of Divine Acceleration</div>
+    <p class="gift-modal-text">
+      You have completed all seven frequencies.<br>
+      Your divine acceleration has begun — nothing can stop what God has set in motion for you.
+    </p>
+    <div class="gift-modal-verse">"Those who hope in the Lord will renew their strength." — Isaiah 40:31</div>
+    <div class="gift-modal-btns">
+      <a href="journey.html" class="btn-gift-journey">✦ See My Gift in the Journey</a>
+      <button class="btn-gift-stay" onclick="closeGiftModal()">Continue Exploring</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LESSONS = [
+  {
+    id: '7freq-intro',
+    title: 'The Power of Divine Frequencies',
+    eyebrow: 'Intro · Spirituality',
+    desc: 'Discover the seven sacred frequencies that God wired into creation — and learn how to align your life with each one to accelerate your divine destiny.',
+    videoHTML: `<div id="ifr_698d4be5ceb26906d001c662_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d4be5ceb26906d001c662" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d4be5ceb26906d001c662/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-1',
+    title: '01. The Awakening',
+    eyebrow: 'Frequency 1 of 7 · Spirituality',
+    desc: 'The first divine frequency — the frequency of awakening. When God activates this in your life, your eyes are opened to what was always there but hidden from you.',
+    videoHTML: `<div id="ifr_698d3e194b4e962da5d8826e_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d3e194b4e962da5d8826e" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d3e194b4e962da5d8826e/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-2',
+    title: '02. The Desert Breakthrough',
+    eyebrow: 'Frequency 2 of 7 · Spirituality',
+    desc: 'The second frequency is born in the desert — the place of silence, waiting and testing. Every breakthrough in Scripture was preceded by a desert. Yours is no different.',
+    videoHTML: `<div id="ifr_698d3fd511e55d52a5bedc93_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d3fd511e55d52a5bedc93" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d3fd511e55d52a5bedc93/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-3',
+    title: '03. The Isaac Code',
+    eyebrow: 'Frequency 3 of 7 · Spirituality',
+    desc: 'Isaac sowed in famine and reaped a hundredfold. The Isaac Code is the frequency of supernatural provision — blessing that defies natural logic and confounds those around you.',
+    videoHTML: `<div id="ifr_698d40e38e130030763a8b1b_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d40e38e130030763a8b1b" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d40e38e130030763a8b1b/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-4',
+    title: '04. The Jericho Resonance',
+    eyebrow: 'Frequency 4 of 7 · Spirituality',
+    desc: 'The walls of Jericho fell not by force but by frequency. Learn how praise, obedience and divine timing create a resonance that collapses every wall standing before your promise.',
+    videoHTML: `<div id="ifr_698d42a2f67b832f6dae41e5_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d42a2f67b832f6dae41e5" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d42a2f67b832f6dae41e5/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-5',
+    title: '05. The Flow of Peter',
+    eyebrow: 'Frequency 5 of 7 · Spirituality',
+    desc: 'Peter fished all night and caught nothing. One word from Jesus and the nets were overflowing. The fifth frequency is radical obedience — casting your net where He says, not where it makes sense.',
+    videoHTML: `<div id="ifr_698d439b11e55d52a5bee4fd_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d439b11e55d52a5bee4fd" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d439b11e55d52a5bee4fd/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-6',
+    title: '06. The Throne Frequency',
+    eyebrow: 'Frequency 6 of 7 · Spirituality',
+    desc: 'When you access the Throne Frequency, you enter the realm where God governs all things. Prayers prayed from this frequency do not return empty — they move heaven and rearrange earth.',
+    videoHTML: `<div id="ifr_698d45f7f67b832f6dae4926_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:55% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d45f7f67b832f6dae4926" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d45f7f67b832f6dae4926/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  },
+  {
+    id: '7freq-7',
+    title: '07. The Seal of Manifestation',
+    eyebrow: 'Frequency 7 of 7 · Spirituality',
+    desc: 'The seventh and final frequency is the Seal — where what was spoken in heaven becomes visible on earth. When all seven frequencies align, manifestation is not a matter of if, but when.',
+    videoHTML: `<div id="ifr_698d46d1725525410347c9f0_wrapper" style="margin:0 auto;width:100%;"><div style="position:relative;padding:56.25% 0 0 0;"><iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_698d46d1725525410347c9f0" style="position:absolute;top:0;left:0;width:100%;height:100%;" referrerpolicy="origin" onload="this.onload=null,this.src='https://scripts.converteai.net/f8e465b5-f483-4d08-be19-bc14de388e59/players/698d46d1725525410347c9f0/v4/embed.html'+(location.search||'?')+'&vl='+encodeURIComponent(location.href)"></iframe></div></div>`
+  }
+];
+
+const MODULE_ID = '7-frequencies';
+let currentLesson = parseInt(localStorage.getItem('current_lesson_' + MODULE_ID) || '0');
+let currentRating = 0;
+
+// ── POSITION NAV BELOW BANNER DYNAMICALLY ──
+function positionNav() {
+  const banner = document.getElementById('gift-banner');
+  const nav = document.querySelector('nav');
+  const layout = document.getElementById('layout');
+  const sidebar = document.getElementById('sidebar');
+  const bannerH = banner.offsetHeight;
+  nav.style.top = bannerH + 'px';
+  const totalTop = bannerH + 48;
+  layout.style.paddingTop = totalTop + 'px';
+  sidebar.style.top = totalTop + 'px';
+}
+positionNav();
+window.addEventListener('resize', positionNav);
+
+// ── NAME ──
+const savedName = localStorage.getItem('abundance_name');
+
+// ── HELPERS ──
+function isCompleted(id) {
+  return (JSON.parse(localStorage.getItem('completed_lessons') || '[]')).includes(id);
+}
+function getCompletedCount() {
+  const done = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+  return LESSONS.filter(l => done.includes(l.id)).length;
+}
+
+// ── RENDER LESSON ──
+function renderLesson(idx) {
+  currentLesson = idx;
+  localStorage.setItem('current_lesson_' + MODULE_ID, idx);
+  const lesson = LESSONS[idx];
+
+  document.getElementById('video-container').innerHTML = lesson.videoHTML;
+  document.getElementById('lesson-eyebrow').textContent = lesson.eyebrow;
+  document.getElementById('lesson-title').textContent = lesson.title;
+  document.getElementById('lesson-desc').textContent = lesson.desc;
+
+  const done = isCompleted(lesson.id);
+  const btn = document.getElementById('btn-complete');
+  document.getElementById('complete-icon').textContent = done ? '✓' : '◯';
+  document.getElementById('complete-text').textContent = done ? 'Completed' : 'Mark as Complete';
+  btn.className = 'btn-complete' + (done ? ' done' : '');
+
+  document.getElementById('btn-prev').className = 'btn-lesson-nav' + (idx === 0 ? ' disabled' : '');
+  document.getElementById('btn-next').className = 'btn-lesson-nav next' + (idx === LESSONS.length - 1 ? ' disabled' : '');
+
+  document.getElementById('notes-input').value = localStorage.getItem('notes_' + lesson.id) || '';
+  currentRating = parseInt(localStorage.getItem('rating_' + lesson.id) || '0');
+  renderStars();
+  renderComments();
+  renderSidebar();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function renderSidebar() {
+  document.getElementById('module-list').innerHTML = LESSONS.map((l, i) => `
+    <div class="module-item ${i === currentLesson ? 'active' : ''} ${isCompleted(l.id) ? 'completed' : ''}"
+      onclick="renderLesson(${i})">
+      <div class="module-num">${isCompleted(l.id) ? '✓' : (i === 0 ? '▶' : i)}</div>
+      <div class="module-info">
+        <div class="module-name">${l.title}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateProgress() {
+  const count = getCompletedCount();
+  const total = LESSONS.length;
+  const pct = (count / total) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${count} of ${total} complete`;
+  document.getElementById('gift-progress-fill').style.width = pct + '%';
+  document.getElementById('gift-progress-label').textContent = `${count} of ${total}`;
+}
+
+function markComplete() {
+  const lesson = LESSONS[currentLesson];
+  if (isCompleted(lesson.id)) return;
+  const done = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+  done.push(lesson.id);
+  localStorage.setItem('completed_lessons', JSON.stringify(done));
+  document.getElementById('complete-icon').textContent = '✓';
+  document.getElementById('complete-text').textContent = 'Completed';
+  document.getElementById('btn-complete').className = 'btn-complete done';
+  updateProgress();
+  renderSidebar();
+
+  if (getCompletedCount() === LESSONS.length) {
+    const gifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
+    if (!gifts.includes(MODULE_ID)) {
+      gifts.push(MODULE_ID);
+      localStorage.setItem('abundance_gifts', JSON.stringify(gifts));
+    }
+    setTimeout(() => document.getElementById('gift-modal').classList.add('show'), 800);
+  }
+}
+
+function goLesson(dir) {
+  const next = currentLesson + dir;
+  if (next < 0 || next >= LESSONS.length) return;
+  renderLesson(next);
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setRating(n) {
+  currentRating = n;
+  localStorage.setItem('rating_' + LESSONS[currentLesson].id, n);
+  renderStars();
+}
+function renderStars() {
+  document.querySelectorAll('.star-btn').forEach((s, i) => s.className = 'star-btn' + (i < currentRating ? ' active' : ''));
+  const labels = ['Tap to rate', 'Not for me', 'It was ok', 'Good', 'Very good', 'Life-changing ✦'];
+  document.getElementById('rating-label').textContent = labels[currentRating];
+}
+
+function submitComment() {
+  const text = document.getElementById('comment-input').value.trim();
+  if (!text) return;
+  const name = savedName ? savedName.split(' ')[0] : 'Member';
+  const key = 'comments_' + LESSONS[currentLesson].id;
+  const comments = JSON.parse(localStorage.getItem(key) || '[]');
+  comments.unshift({ name, text, rating: currentRating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
+  localStorage.setItem(key, JSON.stringify(comments));
+  document.getElementById('comment-input').value = '';
+  renderComments();
+}
+
+function renderComments() {
+  const key = 'comments_' + LESSONS[currentLesson].id;
+  const comments = JSON.parse(localStorage.getItem(key) || '[]');
+  const demo = [
+    { name: 'Dorothy', text: 'The Jericho lesson broke something open in me. I have been circling my promise for years. No more.', rating: 5, date: 'Mar 29' },
+    { name: 'Robert', text: 'The Isaac Code is exactly what I needed to hear. Sowing in famine takes courage. This teaching gave me that courage.', rating: 5, date: 'Mar 27' },
+  ];
+  const all = [...comments, ...demo];
+  document.getElementById('comments-list').innerHTML = all.map(c => `
+    <div class="comment-card">
+      <div class="comment-top">
+        <div class="comment-avatar">${c.name[0]}</div>
+        <div class="comment-name">${c.name} · ${c.date}</div>
+        ${c.rating ? `<div class="comment-stars">${'★'.repeat(c.rating)}</div>` : ''}
+      </div>
+      <div class="comment-text">${c.text}</div>
+    </div>
+  `).join('');
+}
+
+function saveNotes() {
+  localStorage.setItem('notes_' + LESSONS[currentLesson].id, document.getElementById('notes-input').value);
+  const btn = document.querySelector('.btn-save-notes');
+  btn.textContent = '✦ Saved';
+  setTimeout(() => btn.textContent = '✦ Save Notes', 1800);
+}
+
+function closeGiftModal() {
+  document.getElementById('gift-modal').classList.remove('show');
+}
+
+function fadeOut(e, url) {
+  e.preventDefault();
+  document.body.classList.add('page-fade-out');
+  setTimeout(() => window.location.href = url, 350);
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+renderLesson(currentLesson);
+</script>
+</body>
+</html>
