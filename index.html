@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Abundance Time</title>
 
   <!-- Preload crítico para fontes aparecerem no mobile -->
@@ -117,7 +117,7 @@
 
     /* ── HERO ── */
     .hero {
-      position:relative; width:100%; height:100vh; min-height:580px; overflow:hidden;
+      position:relative; width:100%; height:75vh; min-height:480px; overflow:hidden;
     }
     .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1s ease; pointer-events:none; }
     .hero-slide.active { opacity:1; pointer-events:auto; }
@@ -136,11 +136,11 @@
       display:none;
     }
     .hero-fade {
-      position:absolute; bottom:0; left:0; right:0; height:280px;
+      position:absolute; bottom:0; left:0; right:0; height:140px;
       background:linear-gradient(to top,var(--bg) 0%,transparent 100%);
     }
     .hero-content {
-      position:absolute; bottom:165px; left:5%; max-width:560px;
+      position:absolute; bottom:80px; left:5%; max-width:560px;
     }
     .hero-badges { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
     .badge {
@@ -149,7 +149,7 @@
       font-size:0.8rem; font-weight:700; letter-spacing:0.03em;
       font-family: 'Crimson Pro', Georgia, serif;
     }
-    .badge-green  { background:rgba(46,204,113,0.2);  color:#2ecc71; border:1px solid rgba(46,204,113,0.4); }
+    .badge-green  { background:#1a9e50; color:#fff; border:1px solid #1a9e50; }
     .badge-orange { background:rgba(230,126,34,0.2);  color:#e67e22; border:1px solid rgba(230,126,34,0.4); }
     .badge-purple { background:rgba(139,92,246,0.2);  color:#a78bfa; border:1px solid rgba(139,92,246,0.4); }
     .badge-gold   { background:rgba(201,168,76,0.2);  color:var(--gold); border:1px solid rgba(201,168,76,0.4); }
@@ -201,7 +201,7 @@
 
     /* ── MAIN ── */
     main { background:var(--bg); padding-bottom:80px; }
-    .need-help-wrap { padding:26px var(--pad) 0; }
+    .need-help-wrap { padding:10px var(--pad) 0; }
     .need-help {
       display:inline-flex; align-items:center; gap:8px;
       background:var(--bg3); border:1px solid rgba(255,255,255,0.08);
@@ -229,7 +229,7 @@
     .row-nav-btn:hover { background:rgba(255,255,255,0.1); color:var(--text); }
 
     /* ── TRACK / VIEWPORT ── */
-    .cards-viewport { overflow:hidden; padding:6px 0 20px; }
+    .cards-viewport { overflow:hidden; padding:6px 0 20px; touch-action:pan-y; }
     .cards-track {
       display:flex; gap:var(--gap); padding:0 var(--pad);
       transition:transform 0.42s cubic-bezier(0.25,0.46,0.45,0.94);
@@ -463,6 +463,17 @@
     @media(max-width:400px) {
       :root { --card-w: calc(100vw * 0.72); }
     }
+
+    /* ── PAGE FADE IN ── */
+    .fade-section {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -502,7 +513,7 @@
 </div>
 
 <!-- HERO -->
-<div class="hero">
+<div class="hero fade-section">
   <div class="hero-slide active" id="slide-0">
     <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1800&q=85');"></div>
     <div class="hero-overlay"></div>
@@ -563,13 +574,13 @@
 
 <!-- MAIN -->
 <main>
-  <div class="need-help-wrap">
+  <div class="need-help-wrap fade-section">
     <button class="need-help">⓪ Need Help?</button>
   </div>
   <div class="divider"></div>
 
   <!-- MY PRODUCTS -->
-  <div class="row-section">
+  <div class="row-section fade-section">
     <div class="row-header">
       <h2 class="row-title">My Products</h2>
       <div class="row-nav">
@@ -582,7 +593,7 @@
   <div class="divider"></div>
 
   <!-- TODAY'S PRACTICE -->
-  <div class="row-section">
+  <div class="row-section fade-section">
     <div class="row-header">
       <div>
         <h2 class="row-title">Today's Practice</h2>
@@ -596,7 +607,7 @@
   <div class="divider"></div>
 
   <!-- EXPAND YOUR JOURNEY -->
-  <div class="row-section">
+  <div class="row-section fade-section">
     <div class="row-header">
       <div>
         <h2 class="row-title">Expand Your Journey</h2>
@@ -816,6 +827,36 @@ function goToSlide(n){
 }
 function changeSlide(d){goToSlide(cur+d);}
 auto=setInterval(()=>goToSlide(cur+1),6000);
+
+// ── SWIPE GESTURE ──
+document.querySelectorAll('.cards-viewport').forEach(viewport => {
+  let startX = 0, startY = 0, isDragging = false;
+  const track = viewport.querySelector('.cards-track');
+  const key = track ? track.id.replace('track-','') : null;
+  if (!key) return;
+
+  viewport.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isDragging = true;
+  }, { passive: true });
+
+  viewport.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      scrollRow(key, dx < 0 ? 1 : -1);
+    }
+    isDragging = false;
+  }, { passive: true });
+});
+
+// ── PAGE FADE IN ──
+const fadeSections = document.querySelectorAll('.fade-section');
+fadeSections.forEach((el, i) => {
+  setTimeout(() => el.classList.add('visible'), i * 150);
+});
 </script>
 </body>
 </html>
