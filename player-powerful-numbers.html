@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Powerful Numbers — Divine Frequency | Age of Abundance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c96d;
+      --gold-dim: rgba(201,168,76,0.1);
+      --gold-border: rgba(201,168,76,0.22);
+      --bg: #1a0a0e;
+      --bg2: #220d12;
+      --card: #2a1018;
+      --card2: #311218;
+      --accent: #7a1e2e;
+      --accent-dim: rgba(122,30,46,0.25);
+      --text: #f2ebe4;
+      --text-dim: #c4a89a;
+      --text-muted: #7a6058;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:'DM Sans',sans-serif; font-size:17px; line-height:1.75;
+      min-height:100vh; opacity:0; animation:fadeIn 0.7s ease forwards;
+    }
+    body.page-fade-out { animation:fadeOut 0.35s ease forwards; }
+    @keyframes fadeIn { to{opacity:1} }
+    @keyframes fadeOut { to{opacity:0} }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:999;
+    }
+    .banner {
+      background:var(--bg2); border-bottom:1px solid var(--gold-border);
+      padding:14px 24px; display:flex; align-items:center;
+      justify-content:space-between; gap:16px; position:sticky; top:0; z-index:200;
+    }
+    .gift-badge {
+      background:var(--gold-dim); border:1px solid var(--gold-border);
+      border-radius:3px; padding:6px 14px; display:flex; align-items:center; gap:10px;
+    }
+    .gift-badge-icon { font-size:18px; }
+    .gift-badge-text { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); line-height:1.2; }
+    .gift-badge-sub { font-size:11px; color:var(--text-dim); font-family:'DM Sans',sans-serif; letter-spacing:0; text-transform:none; font-weight:400; }
+    .back-btn { display:flex; align-items:center; gap:6px; color:var(--text-dim); text-decoration:none; font-family:'Cinzel',serif; font-size:10px; letter-spacing:.12em; text-transform:uppercase; transition:color .2s; white-space:nowrap; }
+    .back-btn:hover { color:var(--gold); }
+    .hero { text-align:center; padding:68px 24px 56px; position:relative; overflow:hidden; }
+    .hero-glow { position:absolute; top:-60px; left:50%; transform:translateX(-50%); width:700px; height:420px; background:radial-gradient(ellipse,rgba(122,30,46,.18) 0%,rgba(201,168,76,.04) 50%,transparent 75%); pointer-events:none; }
+    .hero-eyebrow { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.28em; color:var(--gold); text-transform:uppercase; margin-bottom:18px; opacity:.7; }
+    .hero-title { font-family:'Cinzel',serif; font-size:clamp(32px,6vw,56px); font-weight:700; color:var(--gold); line-height:1.12; margin-bottom:10px; }
+    .hero-subtitle { font-size:clamp(16px,2.5vw,20px); color:var(--text-dim); font-style:italic; margin-bottom:30px; }
+    .hero-divider { width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:0 auto 36px; }
+    .hero-intro { max-width:700px; margin:0 auto; font-size:17px; color:var(--text-dim); line-height:1.9; }
+    .hero-intro strong { color:var(--text); font-weight:600; }
+    .hero-intro .hl { color:var(--gold); font-weight:600; }
+    .section-nav { display:flex; justify-content:center; gap:6px; padding:36px 24px 0; flex-wrap:wrap; }
+    .snav-btn { background:transparent; border:1px solid var(--gold-border); color:var(--text-dim); font-family:'Cinzel',serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:10px 20px; border-radius:2px; cursor:pointer; transition:all .2s; }
+    .snav-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .snav-btn.active { background:var(--gold-dim); border-color:var(--gold); color:var(--gold); }
+    .section { max-width:940px; margin:0 auto; padding:68px 24px; border-top:1px solid rgba(255,255,255,.04); }
+    .section-header { text-align:center; margin-bottom:48px; }
+    .section-tag { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.22em; color:var(--gold); text-transform:uppercase; opacity:.6; margin-bottom:10px; }
+    .section-title { font-family:'Cinzel',serif; font-size:clamp(22px,4vw,32px); color:var(--gold); margin-bottom:12px; font-weight:600; }
+    .section-desc { font-size:16px; color:var(--text-dim); max-width:520px; margin:0 auto; line-height:1.75; }
+    .section-line { width:50px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:18px auto 0; }
+    .numbers-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px; margin-bottom:28px; }
+    .num-card { background:var(--card); border:1px solid rgba(201,168,76,.18); border-radius:4px; padding:24px 12px 16px; text-align:center; cursor:pointer; transition:all .25s ease; position:relative; overflow:hidden; }
+    .num-card::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,rgba(122,30,46,.3) 0%,transparent 70%); opacity:0; transition:opacity .3s; }
+    .num-card:hover::before,.num-card.active::before { opacity:1; }
+    .num-card:hover,.num-card.active { border-color:var(--gold); transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.4); }
+    .num-card.master { border-color:rgba(201,168,76,.38); }
+    .num-display { font-family:'Cinzel',serif; font-size:40px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:6px; position:relative; }
+    .num-card.master .num-display { background:linear-gradient(160deg,var(--gold) 0%,var(--gold-light) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .num-name { font-size:11px; color:var(--text-muted); line-height:1.3; }
+    .num-tap { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(201,168,76,.3); margin-top:9px; }
+    .num-detail { display:none; background:var(--card2); border:1px solid var(--gold); border-top:3px solid var(--accent); border-radius:4px; padding:36px 32px 32px; position:relative; animation:revealDown .35s ease; }
+    .num-detail.visible { display:block; }
+    @keyframes revealDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+    .detail-bg-num { position:absolute; top:12px; right:22px; font-family:'Cinzel',serif; font-size:90px; font-weight:900; color:var(--gold); opacity:.05; line-height:1; pointer-events:none; user-select:none; }
+    .detail-close { position:absolute; top:14px; right:18px; background:none; border:none; color:var(--text-muted); font-size:22px; cursor:pointer; line-height:1; transition:color .2s; z-index:2; }
+    .detail-close:hover { color:var(--gold); }
+    .detail-heading { font-family:'Cinzel',serif; font-size:24px; font-weight:600; color:var(--gold); margin-bottom:24px; }
+    .detail-layers { display:flex; flex-direction:column; gap:16px; }
+    .detail-layer { padding:18px 20px; border-left:2px solid var(--accent); background:rgba(122,30,46,.1); border-radius:0 3px 3px 0; }
+    .layer-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); opacity:.65; margin-bottom:8px; }
+    .layer-text { font-size:16px; color:var(--text); line-height:1.82; }
+    .layer-text em { color:var(--gold-light); font-style:italic; }
+    .decree { background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.25); border-radius:3px; padding:18px 22px; text-align:center; font-size:17px; color:var(--gold-light); line-height:1.7; font-style:italic; }
+    .signals-list { display:flex; flex-direction:column; gap:8px; }
+    .signal { background:var(--card); border:1px solid rgba(201,168,76,.18); border-radius:4px; overflow:hidden; transition:border-color .2s; }
+    .signal.open { border-color:rgba(201,168,76,.5); }
+    .signal-head { display:flex; align-items:center; gap:16px; padding:18px 22px; cursor:pointer; user-select:none; }
+    .signal-num { font-family:'Cinzel',serif; font-size:20px; font-weight:700; color:var(--gold); min-width:72px; }
+    .signal-title { font-size:16px; font-weight:600; color:var(--text); flex:1; }
+    .signal-arrow { font-size:12px; color:var(--gold); opacity:.5; transition:transform .3s; }
+    .signal.open .signal-arrow { transform:rotate(180deg); }
+    .signal-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+    .signal.open .signal-body { max-height:400px; }
+    .signal-inner { padding:0 22px 22px; }
+    .signal-sep { height:1px; background:rgba(201,168,76,.15); margin-bottom:18px; }
+    .signal-msg { font-size:16px; color:var(--text-dim); line-height:1.85; margin-bottom:14px; }
+    .signal-msg strong { color:var(--text); font-weight:600; }
+    .signal-verse { font-style:italic; color:var(--gold); font-size:15px; padding-left:16px; border-left:2px solid rgba(201,168,76,.4); line-height:1.6; }
+    .calc-wrap { max-width:580px; margin:0 auto; }
+    .calc-card { background:var(--card); border:1px solid rgba(201,168,76,.18); border-radius:6px; padding:44px 36px; text-align:center; }
+    .calc-intro { font-size:16px; color:var(--text-dim); margin-bottom:30px; line-height:1.75; }
+    .calc-intro strong { color:var(--gold); }
+    .calc-field-label { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); opacity:.7; margin-bottom:14px; }
+    .date-input-wrap { display:flex; gap:10px; justify-content:center; margin-bottom:28px; flex-wrap:wrap; align-items:center; }
+    .date-input-wrap input { background:var(--bg2); border:1px solid rgba(201,168,76,.2); border-radius:3px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:20px; text-align:center; padding:13px 8px; transition:border-color .2s; outline:none; -moz-appearance:textfield; }
+    .date-input-wrap input::-webkit-inner-spin-button,.date-input-wrap input::-webkit-outer-spin-button { -webkit-appearance:none; }
+    .date-input-wrap input:focus { border-color:var(--gold); }
+    .date-input-wrap input::placeholder { color:var(--text-muted); }
+    .input-mm,.input-dd { width:74px; }
+    .input-yyyy { width:104px; }
+    .date-sep { font-family:'Cinzel',serif; font-size:24px; color:var(--gold); opacity:.35; }
+    .calc-btn { background:linear-gradient(135deg,#8a1e2e,#b02840); color:#f2ebe4; font-family:'Cinzel',serif; font-size:12px; letter-spacing:.18em; text-transform:uppercase; font-weight:600; border:none; border-radius:3px; padding:16px 38px; cursor:pointer; transition:all .25s; box-shadow:0 4px 16px rgba(122,30,46,.3); }
+    .calc-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(122,30,46,.45); }
+    .calc-error { display:none; color:#e07070; font-size:14px; margin-top:14px; }
+    .calc-error.visible { display:block; }
+    .calc-result { display:none; margin-top:36px; animation:revealDown .4s ease; }
+    .calc-result.visible { display:block; }
+    .result-num-display { font-family:'Cinzel',serif; font-size:80px; font-weight:900; background:linear-gradient(160deg,var(--gold) 0%,var(--gold-light) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; margin-bottom:6px; }
+    .result-name { font-family:'Cinzel',serif; font-size:18px; color:var(--text); margin-bottom:28px; }
+    .result-sep { height:1px; background:rgba(201,168,76,.15); margin-bottom:24px; }
+    .result-layers { display:flex; flex-direction:column; gap:14px; text-align:left; }
+    .result-layer { padding:16px 18px; border-left:2px solid var(--accent); background:rgba(122,30,46,.12); border-radius:0 3px 3px 0; }
+    .result-layer-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); opacity:.6; margin-bottom:7px; }
+    .result-layer-text { font-size:15px; color:var(--text); line-height:1.8; }
+    .result-layer-text em { color:var(--gold-light); font-style:italic; }
+    .result-decree { background:rgba(201,168,76,.07); border:1px solid rgba(201,168,76,.22); border-radius:3px; padding:18px 20px; font-style:italic; color:var(--gold-light); font-size:16px; line-height:1.7; text-align:center; margin-top:16px; }
+    .gift-section { text-align:center; padding:64px 24px 88px; border-top:1px solid rgba(255,255,255,.04); position:relative; overflow:hidden; }
+    .gift-section::before { content:''; position:absolute; bottom:-80px; left:50%; transform:translateX(-50%); width:500px; height:300px; background:radial-gradient(ellipse,rgba(122,30,46,.15) 0%,transparent 70%); pointer-events:none; }
+    .gift-pre { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); opacity:.6; margin-bottom:16px; }
+    .gift-title { font-family:'Cinzel',serif; font-size:clamp(20px,4vw,30px); color:var(--gold); margin-bottom:14px; }
+    .gift-desc { font-size:16px; color:var(--text-dim); max-width:480px; margin:0 auto 36px; line-height:1.75; }
+    .claim-btn { background:linear-gradient(135deg,#a07830,var(--gold)); color:#1a0a0e; font-family:'Cinzel',serif; font-size:13px; letter-spacing:.18em; text-transform:uppercase; font-weight:700; border:none; border-radius:3px; padding:20px 52px; cursor:pointer; transition:all .25s; }
+    .claim-btn:hover { transform:translateY(-3px); box-shadow:0 14px 40px rgba(201,168,76,.28); }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,4,6,.9); z-index:500; align-items:center; justify-content:center; padding:24px; }
+    .modal-overlay.visible { display:flex; }
+    .modal { background:var(--card2); border:1px solid var(--gold); border-top:3px solid var(--accent); border-radius:6px; padding:50px 40px; text-align:center; max-width:480px; width:100%; animation:revealDown .4s ease; }
+    .modal-emoji { font-size:54px; margin-bottom:20px; }
+    .modal-title { font-family:'Cinzel',serif; font-size:26px; color:var(--gold); margin-bottom:12px; }
+    .modal-text { font-size:16px; color:var(--text-dim); line-height:1.75; margin-bottom:28px; }
+    .modal-gift { background:var(--gold-dim); border:1px solid var(--gold-border); border-radius:4px; padding:16px 20px; margin-bottom:28px; }
+    .modal-gift-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); opacity:.65; margin-bottom:5px; }
+    .modal-gift-name { font-size:16px; color:var(--text); font-weight:600; }
+    .modal-btns { display:flex; flex-direction:column; gap:10px; }
+    .modal-btn-primary { background:linear-gradient(135deg,#8a1e2e,#b02840); color:#f2ebe4; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; border:none; border-radius:3px; padding:16px 24px; cursor:pointer; text-decoration:none; display:block; transition:opacity .2s; }
+    .modal-btn-primary:hover { opacity:.88; }
+    .modal-btn-secondary { background:transparent; border:1px solid var(--gold-border); color:var(--text-dim); font-family:'Cinzel',serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; border-radius:3px; padding:14px 24px; cursor:pointer; transition:all .2s; }
+    .modal-btn-secondary:hover { border-color:var(--gold); color:var(--gold); }
+    @media(max-width:600px){.calc-card{padding:28px 18px}.modal{padding:36px 22px}.num-detail{padding:28px 18px 24px}.numbers-grid{grid-template-columns:repeat(3,1fr)}.signal-num{min-width:56px;font-size:17px}}
+
+    /* ── PARTICLES ── */
+    .particle {
+      position:fixed; pointer-events:none; z-index:1000;
+      border-radius:50%; animation:particleFly 1.2s ease-out forwards;
+    }
+    @keyframes particleFly {
+      0%   { transform:translate(0,0) scale(1); opacity:1; }
+      100% { transform:translate(var(--tx),var(--ty)) scale(0); opacity:0; }
+    }
+    .flash-overlay {
+      position:fixed; inset:0; pointer-events:none; z-index:998;
+      background:radial-gradient(ellipse at center, rgba(201,168,76,0.18) 0%, transparent 70%);
+      opacity:0; animation:flashPulse 0.8s ease-out forwards;
+    }
+    @keyframes flashPulse {
+      0%   { opacity:0; }
+      20%  { opacity:1; }
+      100% { opacity:0; }
+    }
+    .result-num-display.pop {
+      animation:numPop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes numPop {
+      0%   { transform:scale(0.5); opacity:0; }
+      60%  { transform:scale(1.15); opacity:1; }
+      100% { transform:scale(1); opacity:1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <div class="gift-badge">
+      <span class="gift-badge-icon">🔢</span>
+      <div>
+        <div class="gift-badge-text">Your Gift</div>
+        <div class="gift-badge-text gift-badge-sub">Gift of Divine Frequency</div>
+      </div>
+    </div>
+    <a href="index.html" class="back-btn" onclick="navigateTo(event,'index.html')">← Back to Home</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <p class="hero-eyebrow">Module · Divine Frequency</p>
+    <h1 class="hero-title">Powerful Numbers</h1>
+    <p class="hero-subtitle">The Hidden Language of Heaven</p>
+    <div class="hero-divider"></div>
+    <div class="hero-intro">
+      <p>God did not create the universe by chance. He ordered everything <strong>by weight, measure, and number.</strong>
+      From the petals of a flower to the orbits of planets, all creation follows a divine sequence.
+      When you see repeated numbers — on clocks, plates, receipts — it is not coincidence.
+      It is the <span class="hl">Holy Spirit calling your attention to a specific frequency.</span>
+      This is your guide to decode what Heaven is saying.</p>
+    </div>
+  </section>
+
+  <nav class="section-nav">
+    <button class="snav-btn active" onclick="scrollToSection('oracle',this)">🏛 Frequency Oracle</button>
+    <button class="snav-btn" onclick="scrollToSection('signals',this)">🕐 God's Clock</button>
+    <button class="snav-btn" onclick="scrollToSection('calculator',this)">🔑 Your Number</button>
+  </nav>
+
+  <section class="section" id="oracle">
+    <div class="section-header">
+      <p class="section-tag">Section 1</p>
+      <h2 class="section-title">🏛 The Frequency Oracle</h2>
+      <p class="section-desc">Each number is a portal of divine meaning. Tap the number you keep seeing — and receive its revelation.</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="numbers-grid" id="numbersGrid"></div>
+    <div class="num-detail" id="numDetail">
+      <span class="detail-bg-num" id="detailBgNum"></span>
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+      <h3 class="detail-heading" id="detailHeading"></h3>
+      <div class="detail-layers" id="detailLayers"></div>
+    </div>
+  </section>
+
+  <section class="section" id="signals">
+    <div class="section-header">
+      <p class="section-tag">Section 2</p>
+      <h2 class="section-title">🕐 God's Clock</h2>
+      <p class="section-desc">When you see repeating sequences on the clock or anywhere — this is what Heaven is whispering to you.</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="signals-list" id="signalsList"></div>
+  </section>
+
+  <section class="section" id="calculator">
+    <div class="section-header">
+      <p class="section-tag">Section 3</p>
+      <h2 class="section-title">🔑 Your Numerical Signature</h2>
+      <p class="section-desc">Enter your date of birth and discover the number God encoded into your life before you were born.</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="calc-wrap">
+      <div class="calc-card">
+        <p class="calc-intro">Every date of birth contains a divine number — calculated by reducing all digits to a single root. This is your <strong>Governance Number</strong>: the frequency God assigned to your purpose.</p>
+        <p class="calc-field-label">Your Date of Birth</p>
+        <div class="date-input-wrap">
+          <input class="input-mm" type="number" id="inputMM" placeholder="MM" min="1" max="12"/>
+          <span class="date-sep">/</span>
+          <input class="input-dd" type="number" id="inputDD" placeholder="DD" min="1" max="31"/>
+          <span class="date-sep">/</span>
+          <input class="input-yyyy" type="number" id="inputYYYY" placeholder="YYYY" min="1900" max="2025"/>
+        </div>
+        <button class="calc-btn" onclick="calculateNumber()">Reveal My Number</button>
+        <p class="calc-error" id="calcError">Please enter a valid date of birth.</p>
+        <div class="calc-result" id="calcResult">
+          <div class="result-num-display" id="resultNum"></div>
+          <div class="result-name" id="resultName"></div>
+          <div class="result-sep"></div>
+          <div class="result-layers" id="resultLayers"></div>
+          <div class="result-decree" id="resultDecree"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gift-section">
+    <p class="gift-pre">You have completed this module</p>
+    <h2 class="gift-title">Receive Your Gift of Divine Frequency</h2>
+    <p class="gift-desc">You now carry the knowledge to decode the language Heaven speaks every single day.</p>
+    <button class="claim-btn" onclick="claimGift()">✦ Claim My Gift ✦</button>
+  </section>
+
+  <div class="modal-overlay" id="giftModal">
+    <div class="modal">
+      <div class="modal-emoji">🔢</div>
+      <h2 class="modal-title">Gift Unlocked!</h2>
+      <p class="modal-text">You have received the <strong style="color:var(--gold)">Gift of Divine Frequency</strong>. Heaven's language is now open to you.</p>
+      <div class="modal-gift">
+        <div class="modal-gift-label">Your New Gift</div>
+        <div class="modal-gift-name">🔢 Gift of Divine Frequency</div>
+      </div>
+      <div class="modal-btns">
+        <a href="journey.html" class="modal-btn-primary" onclick="navigateTo(event,'journey.html')">View My Journey</a>
+        <button class="modal-btn-secondary" onclick="closeModal()">Stay Here</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const NUMBERS=[{n:1,name:"The Source",essence:"The number of God's unity and new beginnings. It carries the frequency of pioneership — the courage to move first, to begin, to initiate. The Lord says: <em>\"Behold, I make all things new.\"</em> (Revelation 21:5)",biblical:"On the first day, God spoke light into existence from nothing. Number 1 is the frequency of creative authority — when you see it, God is giving you permission to start again.",decree:"\"I am aligned with the frequency of new beginnings. By the authority of Heaven, I declare: what was stuck in my life begins moving NOW.\""},{n:2,name:"The Alignment",essence:"The number of union, witness, and partnership. Two are better than one — God never intended you to walk alone. It is the frequency of divine confirmation and covenant.",biblical:"<em>\"A cord of three strands is not quickly broken.\"</em> (Ecclesiastes 4:12) God sends His Word with two witnesses to establish every matter. Number 2 confirms what He has already spoken.",decree:"\"I am in alignment with Heaven's partnerships. I attract divine connections and sacred agreements that multiply my purpose.\""},{n:3,name:"The Manifestation",essence:"The number of the Trinity and resurrection. Jesus rose on the <em>third</em> day — it is where ideas become matter, where the invisible becomes visible. Number 3 is the frequency of answered prayer.",biblical:"God is Father, Son, and Holy Spirit — three in one perfect harmony. When you see 3, something in the spiritual realm is about to break through into the physical.",decree:"\"What I have prayed for in faith is now manifesting. The resurrection frequency is active in my life. My breakthrough is real.\""},{n:4,name:"The Foundation",essence:"The number of the physical world — four cardinal directions, four seasons, four corners of the earth. It is the frequency of stability, structure, and concrete work on solid ground.",biblical:"On the fourth day God created the sun, moon, and stars — the structures that govern time itself. Number 4 calls you to build what will last.",decree:"\"I build with divine wisdom. My foundations are unshakeable because God is the architect of everything I am establishing.\""},{n:5,name:"The Grace",essence:"The number of God's grace and divine favor — five loaves fed five thousand, five wounds of Christ. It is the frequency of supernatural provision and unexpected blessing.",biblical:"<em>\"My grace is sufficient for you.\"</em> (2 Corinthians 12:9) Number 5 signals that what you cannot achieve by effort, God will accomplish by grace. A divine upgrade is near.",decree:"\"I receive the overflow of divine grace. What I could not do by strength, God accomplishes for me with ease and abundance.\""},{n:6,name:"The Humanity",essence:"Man was created on the sixth day — it is the number of human labor, service, and responsibility. It calls you to care for what God has entrusted to you with faithfulness and love.",biblical:"Six days of labor precede the Sabbath rest. Number 6 reminds you that your work has eternal meaning when done for God's glory.",decree:"\"Everything I build with my hands carries divine purpose. My service is worship and my labor creates legacy.\""},{n:7,name:"The Perfection",essence:"The Seal of God's perfection — seven days of creation, seven promises, seven seals. It is the frequency of completion, rest, and the end of a season of testing.",biblical:"On the seventh day, God rested. Number 7 announces: <em>a cycle of trials has ended and Heaven's rest has arrived.</em> You have passed the test.",decree:"\"I enter the rest of God. Every incomplete cycle in my life is now sealed and perfected by His hand. It is finished.\""},{n:8,name:"The New Beginning",essence:"The number of resurrection and new covenants — eight people survived the flood, Jesus rose on the eighth day. It is the frequency of financial abundance and breakthrough.",biblical:"Circumcision happened on the eighth day as a sign of new covenant. Number 8 declares: <em>the old has passed, a new era of overflow is beginning for you.</em>",decree:"\"I stand at the threshold of my new beginning. Every door of financial blessing and abundance is now open to me by covenant right.\""},{n:9,name:"The Harvest",essence:"The number of fruit, completion, and the gifts of the Holy Spirit — nine fruits, nine gifts. It is the frequency of harvest season: what you planted in faith is ready to be gathered.",biblical:"<em>\"Let us not grow weary in doing good, for in due season we will reap if we do not give up.\"</em> (Galatians 6:9) Number 9 says your due season has arrived.",decree:"\"My harvest is here. I receive the full fruit of every seed of faith, prayer, and sacrifice I have sown. The season of reaping is now.\""},{n:11,name:"The Awakening",master:true,essence:"A Master Number — the frequency of spiritual awakening and prophetic sight. It carries double the energy of 1, calling you to a higher level of awareness and divine assignment.",biblical:"Joseph was the eleventh son — the dreamer who could see what others could not. Number 11 calls you to step into your prophetic gift and trust the visions God is giving you.",decree:"\"My spiritual eyes are open. I see what God sees and I move in the prophetic frequency of divine revelation and purpose.\""},{n:22,name:"The Builder",master:true,essence:"The Master Builder — double the foundation of 4. This is the frequency of those called to build something that outlasts them: ministries, businesses, families, legacies.",biblical:"Solomon's Temple was built with precision and divine blueprints. Number 22 calls you to build something eternal — not for today, but for the generations.",decree:"\"I am a master builder in God's hands. The vision He has given me will outlast my lifetime and bless generations I will never meet.\""},{n:33,name:"The Master Teacher",master:true,essence:"The highest Master Number — the age of Christ's ministry and sacrifice. It is the frequency of complete surrender, divine love, and the call to pour out your life for others.",biblical:"Jesus began his public ministry and completed his mission at 33. Number 33 calls you into your highest calling — to serve, to teach, and to love without reservation.",decree:"\"I walk in the frequency of Christ's love. I pour myself out freely, knowing that what is given in love returns multiplied from Heaven's storehouse.\""}];
+    const SIGNALS=[{seq:"11:11 / 111",name:"The Awakening Portal",msg:"This is God's spiritual alarm clock. When you see 11:11, Heaven is saying: <strong>\"Pay attention to what you are thinking right now — I am ready to act on your declarations.\"</strong> It is a portal of immediate creative power. Whatever you declare in faith in this moment carries extraordinary authority.",verse:"\"The Spirit of the Lord is upon me...\" — Luke 4:18 | What you speak now, Heaven moves on."},{seq:"222 / 22:22",name:"The Structure",msg:"Do not be discouraged. Your prayers are not lost. The 222 announces that <strong>the structure is being built in the invisible realm</strong> — you simply cannot see it yet. Your seeds are germinating underground. What looks like silence is divine preparation.",verse:"\"Faith is the substance of things hoped for, the evidence of things not seen.\" — Hebrews 11:1"},{seq:"333 / 03:33",name:"The Trinity's Protection",msg:"You are completely surrounded by the Trinity — Father, Son, and Holy Spirit. The 333 is Heaven's assurance: <strong>no evil can touch what you are building right now.</strong> Advance with boldness. You have a divine escort that never rests.",verse:"\"The Lord is my shepherd; I shall not want.\" — Psalm 23:1"},{seq:"444",name:"The Army of Angels",msg:"Psalm 91 in numerical form. When you see 444, God is telling you that <strong>His angels have been given charge over you</strong> — four directions, fully surrounded. Complete angelic protection in every dimension of your life.",verse:"\"He will command His angels concerning you to guard you in all your ways.\" — Psalm 91:11"},{seq:"555",name:"The Grace Shift",msg:"Prepare for a sudden and dramatic change of scenery. The 555 is <strong>the frequency of God's grace in motion</strong> — what was stuck is about to move at supernatural speed. Not by effort, but by divine mercy. A holy override is happening in your circumstances.",verse:"\"My grace is sufficient for you, for my power is made perfect in weakness.\" — 2 Corinthians 12:9"},{seq:"666",name:"The Realignment",msg:"Do not fear this number — <strong>God is calling you back to balance.</strong> You may be overworked or overly focused on material things. The 666 is Heaven's loving correction: return to the Sabbath, to rest, to the first things. Reorder your priorities.",verse:"\"Seek first the kingdom of God and His righteousness, and all these things will be added.\" — Matthew 6:33"},{seq:"777",name:"The Divine Seal",msg:"A season of testing has officially ended. The 777 is <strong>Heaven's seal of approval on a completed cycle</strong> — you have passed. What follows is God's Sabbath rest: abundance, celebration, and the opening of a brand new chapter.",verse:"\"Well done, good and faithful servant... Enter into the joy of your master.\" — Matthew 25:23"},{seq:"888",name:"The Overflow Gate",msg:"The gates of financial and material abundance are opening. The 888 is <strong>the frequency of resurrection applied to your finances</strong> — what was dead is coming back to life. New income streams and covenant provision are being activated by Heaven.",verse:"\"And my God will supply every need of yours according to His riches in glory.\" — Philippians 4:19"},{seq:"1111",name:"The Master Portal",msg:"The most powerful awakening signal. When you see 1111, you are at <strong>a portal between two eras of your life</strong>. God is closing one chapter and opening another simultaneously. Pay close attention to every thought, prayer, and desire in the days ahead.",verse:"\"Behold, I am doing a new thing; now it springs forth, do you not perceive it?\" — Isaiah 43:19"}];
+    const GOVERNANCE=[{n:1,name:"The Pioneer",archetype:"You carry the frequency of Abraham — called to leave everything familiar and go first into the unknown. You are made to initiate, to lead, and to open doors for others.",promise:"<em>\"I will make you into a great nation, and I will bless you... and all peoples on earth will be blessed through you.\"</em> — Genesis 12:2–3",decree:"\"I walk in the frequency of divine pioneership. I am called to go first, and Heaven clears every path before me.\""},{n:2,name:"The Connector",archetype:"You carry the frequency of Ruth — faithfulness, loyalty, and the power of covenant relationships. You are a bridge builder who brings harmony where there is division.",promise:"<em>\"Where you go I will go, and where you stay I will stay.\"</em> — Ruth 1:16 | Your loyalty is your superpower.",decree:"\"I attract divine partnerships. Every relationship in my life is ordered by God and bears eternal fruit.\""},{n:3,name:"The Manifestor",archetype:"You carry the frequency of the resurrection — your gift is turning ideas into reality. Like the disciples who witnessed Pentecost, you make happen what others only dream about.",promise:"<em>\"Ask and it will be given to you; seek and you will find.\"</em> — Matthew 7:7 | Your prayers manifest quickly.",decree:"\"I am a manifestor of divine ideas. What I speak in faith, Heaven moves to fulfill. I carry the resurrection frequency.\""},{n:4,name:"The Builder",archetype:"You carry the frequency of Nehemiah — who looked at broken walls and saw a finished city. You are called to build things that last: businesses, families, ministries, communities.",promise:"<em>\"Unless the Lord builds the house, the builders labor in vain.\"</em> — Psalm 127:1 | God is your co-builder.",decree:"\"Everything I build is established by God's hand. My foundations are eternal and my structures shelter generations.\""},{n:5,name:"The Free One",archetype:"You carry the frequency of David — the shepherd boy who became king by grace, not pedigree. Freedom, adventure, and supernatural favor mark your entire path.",promise:"<em>\"For freedom Christ has set us free.\"</em> — Galatians 5:1 | You are the embodiment of divine liberty.",decree:"\"I move in the frequency of divine freedom. Grace opens every door. I am not bound by what others call impossible.\""},{n:6,name:"The Servant-King",archetype:"You carry the frequency of Solomon — the leader who serves, the king who listens. Your greatest power is deployed through caring for others with excellence and love.",promise:"<em>\"Whoever wants to become great among you must be your servant.\"</em> — Matthew 20:26 | Service is your crown.",decree:"\"My service is worship. I lead with love, I build with excellence, and everything I touch prospers.\""},{n:7,name:"The Seeker",archetype:"You carry the frequency of Solomon the wise — who asked for understanding above all else. You are a deep thinker called to wisdom that transcends the natural mind.",promise:"<em>\"If any of you lacks wisdom, let him ask God, who gives generously to all.\"</em> — James 1:5",decree:"\"I carry the frequency of divine wisdom. In every decision, I hear clearly. In every season, I discern correctly.\""},{n:8,name:"The Abundant One",archetype:"You carry the frequency of Joseph — from prison to palace, from pit to provision. Abundance and resurrection are woven into your DNA. You are called to steward enormous blessing.",promise:"<em>\"The blessing of the Lord makes rich, and He adds no sorrow with it.\"</em> — Proverbs 10:22",decree:"\"I carry the frequency of divine abundance. Overflow is my inheritance. I am a steward of Heaven's unlimited resources.\""},{n:9,name:"The Harvester",archetype:"You carry the frequency of Paul — whose entire life became a seed for the harvest of nations. Your life produces fruit in others. You are called to give, to pour out, to multiply.",promise:"<em>\"He who sows bountifully will also reap bountifully.\"</em> — 2 Corinthians 9:6 | Your harvest is eternal.",decree:"\"I carry the frequency of the eternal harvest. Everything I give multiplies. My life is a seed that feeds generations.\""}];
+
+    function renderNumbers(){const grid=document.getElementById('numbersGrid');NUMBERS.forEach(num=>{const card=document.createElement('div');card.className='num-card'+(num.master?' master':'');card.innerHTML=`<div class="num-display">${num.n}</div><div class="num-name">${num.name}</div><div class="num-tap">Tap to reveal</div>`;card.addEventListener('click',()=>showDetail(num,card));grid.appendChild(card);})}
+    let activeCard=null;
+    function showDetail(num,card){const detail=document.getElementById('numDetail');if(activeCard===card&&detail.classList.contains('visible')){closeDetail();return;}if(activeCard)activeCard.classList.remove('active');activeCard=card;card.classList.add('active');document.getElementById('detailBgNum').textContent=num.n;document.getElementById('detailHeading').textContent=`${num.n} — ${num.name}`;document.getElementById('detailLayers').innerHTML=`<div class="detail-layer"><div class="layer-label">✦ The Divine Essence</div><div class="layer-text">${num.essence}</div></div><div class="detail-layer"><div class="layer-label">📖 The Biblical Mirror</div><div class="layer-text">${num.biblical}</div></div><div class="detail-layer"><div class="layer-label">🔥 Activation Decree — Speak This Aloud</div><div class="decree">${num.decree}</div></div>`;detail.classList.add('visible');setTimeout(()=>detail.scrollIntoView({behavior:'smooth',block:'nearest'}),80);}
+    function closeDetail(){document.getElementById('numDetail').classList.remove('visible');if(activeCard){activeCard.classList.remove('active');activeCard=null;}}
+    function renderSignals(){const list=document.getElementById('signalsList');SIGNALS.forEach(sig=>{const item=document.createElement('div');item.className='signal';item.innerHTML=`<div class="signal-head" onclick="toggleSignal(this.parentElement)"><span class="signal-num">${sig.seq}</span><span class="signal-title">${sig.name}</span><span class="signal-arrow">▼</span></div><div class="signal-body"><div class="signal-inner"><div class="signal-sep"></div><p class="signal-msg">${sig.msg}</p><p class="signal-verse">${sig.verse}</p></div></div>`;list.appendChild(item);});}
+    function toggleSignal(el){const isOpen=el.classList.contains('open');document.querySelectorAll('.signal.open').forEach(s=>s.classList.remove('open'));if(!isOpen)el.classList.add('open');}
+    function reduceNumber(n){if(n===11||n===22||n===33)return n;while(n>9){n=String(n).split('').reduce((a,d)=>a+parseInt(d),0);if(n===11||n===22||n===33)return n;}return n;}
+    function spawnParticles(x,y,count,colors){for(let i=0;i<count;i++){const p=document.createElement('div');p.className='particle';const size=4+Math.random()*8;const angle=Math.random()*Math.PI*2;const dist=80+Math.random()*160;const tx=Math.cos(angle)*dist+'px';const ty=(Math.sin(angle)*dist - 60)+'px';const color=colors[Math.floor(Math.random()*colors.length)];p.style.cssText=`width:${size}px;height:${size}px;background:${color};left:${x-size/2}px;top:${y-size/2}px;--tx:${tx};--ty:${ty};animation-duration:${0.8+Math.random()*0.6}s;animation-delay:${Math.random()*0.15}s`;document.body.appendChild(p);setTimeout(()=>p.remove(),1600);}}
+    function flashScreen(){const f=document.createElement('div');f.className='flash-overlay';document.body.appendChild(f);setTimeout(()=>f.remove(),900);}
+    function calculateNumber(){const mm=parseInt(document.getElementById('inputMM').value);const dd=parseInt(document.getElementById('inputDD').value);const yyyy=parseInt(document.getElementById('inputYYYY').value);const err=document.getElementById('calcError');const result=document.getElementById('calcResult');err.classList.remove('visible');result.classList.remove('visible');if(!mm||!dd||!yyyy||mm<1||mm>12||dd<1||dd>31||yyyy<1900||yyyy>2025){err.classList.add('visible');return;}const digits=`${mm}${dd}${yyyy}`.split('').map(Number);const sum=digits.reduce((a,b)=>a+b,0);const gov=reduceNumber(sum);const contentNum=gov>9?reduceNumber(gov):gov;const data=GOVERNANCE.find(g=>g.n===contentNum)||GOVERNANCE[0];const masterLabel=(gov===11||gov===22||gov===33)?' ✦ Master Number':'';document.getElementById('resultNum').textContent=gov;document.getElementById('resultName').textContent=data.name+masterLabel;document.getElementById('resultLayers').innerHTML=`<div class="result-layer"><div class="result-layer-label">Your Biblical Archetype</div><div class="result-layer-text">${data.archetype}</div></div><div class="result-layer"><div class="result-layer-label">📖 Your Promise</div><div class="result-layer-text">${data.promise}</div></div>`;document.getElementById('resultDecree').innerHTML=data.decree;result.classList.add('visible');const btn=document.querySelector('.calc-btn');const br=btn.getBoundingClientRect();spawnParticles(br.left+br.width/2,br.top+br.height/2,28,['#c9a84c','#e8c96d','#fff8e7','#7a1e2e','#b02840']);flashScreen();setTimeout(()=>{const numEl=document.getElementById('resultNum');numEl.classList.remove('pop');void numEl.offsetWidth;numEl.classList.add('pop');},200);setTimeout(()=>result.scrollIntoView({behavior:'smooth',block:'nearest'}),80);}
+    function claimGift(){let gifts=JSON.parse(localStorage.getItem('abundance_gifts')||'[]');if(!gifts.includes('powerful-numbers')){gifts.push('powerful-numbers');localStorage.setItem('abundance_gifts',JSON.stringify(gifts));}const claimBtn=document.querySelector('.claim-btn');const br=claimBtn.getBoundingClientRect();spawnParticles(br.left+br.width/2,br.top+br.height/2,45,['#c9a84c','#e8c96d','#fff8e7','#f0d060','#ffd700','#7a1e2e']);flashScreen();setTimeout(()=>document.getElementById('giftModal').classList.add('visible'),300);}
+    function closeModal(){document.getElementById('giftModal').classList.remove('visible');}
+    function navigateTo(e,url){e.preventDefault();document.body.classList.add('page-fade-out');setTimeout(()=>window.location.href=url,350);}
+    function scrollToSection(id,btn){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.snav-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');}
+    window.addEventListener('scroll',()=>{ ['oracle','signals','calculator'].forEach((id,i)=>{const el=document.getElementById(id);const btns=document.querySelectorAll('.snav-btn');if(!el)return;const rect=el.getBoundingClientRect();if(rect.top<=140&&rect.bottom>=140){btns.forEach(b=>b.classList.remove('active'));if(btns[i])btns[i].classList.add('active');}});});
+    ['inputMM','inputDD','inputYYYY'].forEach(id=>{document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')calculateNumber();});});
+    renderNumbers();renderSignals();
+  </script>
+</body>
+</html>
