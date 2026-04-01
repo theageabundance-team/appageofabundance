@@ -515,7 +515,7 @@
 <!-- HERO -->
 <div class="hero fade-section">
   <div class="hero-slide active" id="slide-0">
-    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1800&q=85');"></div>
+    <div class="hero-bg" style="background-image:url('images/theageofabundance.png');"></div>
     <div class="hero-overlay"></div>
     <div class="hero-overlay-mobile"></div>
     <div class="hero-fade"></div>
@@ -539,36 +539,10 @@
     </div>
   </div>
 
-  <div class="hero-slide" id="slide-1">
-    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=1800&q=85');"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-overlay-mobile"></div>
-    <div class="hero-fade"></div>
-    <div class="hero-content">
-      <div class="hero-badges">
-        <span class="badge badge-green">✓ Available</span>
-        <span class="badge badge-purple">Premium</span>
-      </div>
-      <h1 class="hero-title">The 7 Frequencies of Divine Acceleration</h1>
-      <p class="hero-desc">Discover and activate the seven sacred frequencies that unlock your divine potential.</p>
-      <div class="hero-meta">
-        <span>🕐 2h</span>
-        <span class="stars">★★★★★</span>
-        <span>4.8</span>
-        <span class="cat-tag">Spirituality</span>
-      </div>
-      <div class="hero-btns">
-        <button class="btn btn-primary" onclick="openModal(1,'my')">▶ Access Content</button>
-        <button class="btn btn-secondary" onclick="openModal(1,'my')">ⓘ More Info</button>
-      </div>
-    </div>
-  </div>
-
   <button class="hero-arrow left" onclick="changeSlide(-1)">‹</button>
   <button class="hero-arrow right" onclick="changeSlide(1)">›</button>
   <div class="hero-dots">
     <div class="hero-dot active" onclick="goToSlide(0)"></div>
-    <div class="hero-dot" onclick="goToSlide(1)"></div>
   </div>
 </div>
 
@@ -668,7 +642,7 @@ const DATA = {
     {title:"The Hidden Secrets of King Solomon's Prosperity",desc:"Unlock the ancient wisdom of King Solomon and discover the sacred principles of wealth.",cat:"Spirituality",catClass:"cat-spirituality",rating:"5.0",count:"891",dur:"4h",img:"images/solomon.jpg",available:true},
     {title:"The Secret Of Power",desc:"Unlock your inner strength and discover the keys to personal power and transformation.",cat:"Mindset",catClass:"cat-mindset",rating:"4.8",count:"756",dur:"2h",img:"images/TheKeyOfPower.jpg",available:true},
     {title:"Powerful Numbers — Divine Frequency",desc:"Explore the sacred geometry of numbers and their divine frequencies for manifestation.",cat:"Premium",catClass:"cat-premium",rating:"4.9",count:"812",dur:"3h",img:"images/powerfulnumbers.png",available:true},
-    {title:"The Age Of Abundance",desc:"Biblical principles for attracting divine abundance into every area of your life.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"1024",dur:"4h",img:"https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=400&q=80",available:true,featured:true},
+    {title:"The Age Of Abundance",desc:"Biblical principles for attracting divine abundance into every area of your life.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"1024",dur:"4h",img:"images/theageofabundance.png",available:true,featured:true},
     {title:"Mindset Reset Formula",desc:"Update your mental software and unlock automatic growth, abundance and confidence.",cat:"Mindset",catClass:"cat-mindset",rating:"4.8",count:"620",dur:"2h",img:"images/mindsetreset.png",available:true},
     {title:"Dream Life Journal",desc:"A guided journal to help you design, declare and attract the life God has prepared for you.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"430",dur:"",img:"images/dreamjournal.png",available:true},
   ],
@@ -677,7 +651,7 @@ const DATA = {
 const EXPAND_DATA = [
   {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=400&q=80"},
   {title:"The Whisper of Faith",desc:"Unlock Divine Blessings and Abundance through sacred practices and ancient wisdom.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"images/whisperfaith.png"},
-  {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80"},
+  {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"images/21daymanifestation.png"},
   
   {title:"Angelic Healing Frequencies",desc:"Activate the healing power of angelic frequencies to restore balance and divine harmony.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"634",dur:"2h",img:"https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80"},
 ];
@@ -817,7 +791,7 @@ function closeModalOutside(e){ if(e.target.id==='modal-overlay')closeModal(); }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
 
 // HERO
-let cur=0,total=2,auto;
+let cur=0,total=1,auto;
 function goToSlide(n){
   document.getElementById('slide-'+cur).classList.remove('active');
   document.querySelectorAll('.hero-dot')[cur].classList.remove('active');
