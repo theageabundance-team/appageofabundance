@@ -655,10 +655,10 @@ const DATA = {
 };
 
 const EXPAND_DATA = [
+  {title:"Vision Board Academy",desc:"Learn to create powerful vision boards that accelerate your manifestation journey and align your desires with divine purpose.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"312",dur:"1h",img:"images/visionboard.png",player:"player-vision-board.html"},
   {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=400&q=80"},
   {title:"The Whisper of Faith",desc:"Unlock Divine Blessings and Abundance through sacred practices and ancient wisdom.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"images/whisperfaith.png",player:"player-whisper-faith.html"},
   {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"images/21daymanifestation.png"},
-  
   {title:"Angelic Healing Frequencies",desc:"Activate the healing power of angelic frequencies to restore balance and divine harmony.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"634",dur:"2h",img:"https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80"},
 ];
 
@@ -740,12 +740,12 @@ function navigateTo(url) {
 
 // Render Expand Your Journey cards
 function expandCardHTML(p,i){
-  return `<div class="expand-card">
+  const hasPlayer = !!p.player;
+  return `<div class="expand-card" ${hasPlayer ? `onclick="navigateTo('${p.player}')" style="cursor:pointer;"` : ''}>
     <div class="card-img-wrap">
       <img src="${p.img}" alt="${p.title}" loading="lazy"/>
-      <div class="lock-overlay">
-        <span class="lock-badge">🔒 Not Unlocked</span>
-      </div>
+      ${!hasPlayer ? `<div class="lock-overlay"><span class="lock-badge">🔒 Not Unlocked</span></div>` : ''}
+      ${hasPlayer ? `<div class="card-badges"><span class="badge badge-green" style="font-size:0.68rem;padding:3px 9px;">✓ Available</span></div>` : ''}
     </div>
     <div class="card-body">
       <span class="cat-pill ${p.catClass}">${p.cat}</span>
@@ -756,7 +756,9 @@ function expandCardHTML(p,i){
         <span>(${p.count})</span>
         <span>🕐 ${p.dur}</span>
       </div>
-      <button class="btn-unlock">✨ Unlock This Teaching</button>
+      ${hasPlayer
+        ? `<button class="card-btn card-btn-access" onclick="event.stopPropagation();navigateTo('${p.player}')">▶ Access</button>`
+        : `<button class="btn-unlock">✨ Unlock This Teaching</button>`}
     </div>
   </div>`;
 }
