@@ -516,8 +516,8 @@
   <div class="nav-right">
     <button class="nav-icon-btn">🔍</button>
     <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
-    <div class="nav-avatar">F</div>
-    <span class="nav-username">fulano</span>
+    <div class="nav-avatar" id="nav-avatar">F</div>
+    <span class="nav-username" id="nav-username">fulano</span>
   </div>
 </nav>
 
@@ -540,7 +540,7 @@
   <div class="journey-hero fade-in">
     <div class="journey-eyebrow">Your Sacred Path</div>
     <h1 class="journey-title">My Journey</h1>
-    <p class="journey-subtitle">Every day you return, your connection deepens. Your path is being written.</p>
+    <p class="journey-subtitle" id="journey-subtitle">Every day you return, your connection deepens. Your path is being written.</p>
   </div>
 
   <!-- CONNECTION COUNTER -->
@@ -604,6 +604,25 @@
 </nav>
 
 <script>
+// ── NAME — vem do login via localStorage ──
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+function applyName(name) {
+  const first = name.split(' ')[0];
+  document.getElementById('nav-username').textContent = first;
+  document.getElementById('nav-avatar').textContent = first[0].toUpperCase();
+  document.getElementById('journey-subtitle').textContent =
+    `${getGreeting()}, ${first}. Every day you return, your connection deepens.`;
+}
+
+const savedName = localStorage.getItem('abundance_name');
+if (savedName) applyName(savedName);
+
 // ── STATE (simulated: 7 days, 2 modules completed) ──
 const USER = {
   days: 7,
@@ -734,10 +753,12 @@ if (nextMilestone) {
 
 // Counter message — uses the milestone desc of the last reached milestone
 const currentMilestone = [...MILESTONES].reverse().find(m => USER.days >= m.day);
+const userName = localStorage.getItem('abundance_name');
+const firstName = userName ? ', ' + userName.split(' ')[0] : '';
 if (currentMilestone) {
-  document.getElementById('counter-msg').innerHTML = `"${currentMilestone.desc}"`;
+  document.getElementById('counter-msg').innerHTML = `"${currentMilestone.desc.replace('You ', firstName ? userName.split(' ')[0] + ', you ' : 'You ')}"`;
 } else {
-  document.getElementById('counter-msg').innerHTML = `"Every journey begins with a single step. Yours has begun."`;
+  document.getElementById('counter-msg').innerHTML = `"Every journey begins with a single step${firstName}. Yours has begun."`;
 }
 </script>
 </body>
