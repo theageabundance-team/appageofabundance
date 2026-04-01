@@ -751,13 +751,13 @@ function renderLesson(idx) {
         </a>`;
     } else {
       dlContent.innerHTML = `
-        <a href="${lesson.downloadHref}" class="download-card" download target="_blank">
+        <a href="${lesson.downloadHref}" class="download-card" target="_blank" rel="noopener">
           <div class="download-icon">📄</div>
           <div class="download-info">
             <div class="download-title">${lesson.downloadTitle}</div>
             <div class="download-meta">${lesson.downloadMeta}</div>
           </div>
-          <div class="download-btn">↓ Download</div>
+          <div class="download-btn">↓ Open PDF</div>
         </a>`;
     }
   } else {
