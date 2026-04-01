@@ -474,6 +474,14 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Page transition out */
+    .page-fade-out {
+      animation: pageFadeOut 0.4s ease forwards;
+    }
+    @keyframes pageFadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
   </style>
 </head>
 <body>
@@ -634,7 +642,7 @@
 <script>
 const DATA = {
   my:[
-    {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"images/prayersmichael.jpg",available:true},
+    {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"images/prayersmichael.jpg",available:true,player:"player.html"},
     {title:"The Sacred Chant of Archangel Michael",desc:"A transformative journey into divine protection and spiritual purification. Unlock the power of angelic frequencies.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"images/sacredprotocol.png",available:true,featured:true},
     {title:"The 7 Frequencies of Divine Acceleration",desc:"Discover and activate the seven sacred frequencies that advance your divine path.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.8",count:"723",dur:"2h",img:"images/7frequencies.png",available:true},
     {title:"The Hidden Secrets of King Solomon's Prosperity",desc:"Unlock the ancient wisdom of King Solomon and discover the sacred principles of wealth.",cat:"Spirituality",catClass:"cat-spirituality",rating:"5.0",count:"891",dur:"4h",img:"images/solomon.jpg",available:true},
@@ -696,6 +704,9 @@ if(practiceTrack){
 // Render My Products
 function cardHTML(p,key,i){
   const fid=`fav-${key}-${i}`;
+  const accessAction = p.player
+    ? `navigateTo('${p.player}')`
+    : `openModal(${i},'my')`;
   return `<div class="product-card">
     <div class="card-img-wrap">
       <img src="${p.img}" alt="${p.title}" loading="lazy"/>
@@ -715,11 +726,16 @@ function cardHTML(p,key,i){
         <span>🕐 ${p.dur}</span>
       </div>
       <div class="card-actions">
-        <button class="card-btn card-btn-access" onclick="openModal(${i},'my')">▶ Access</button>
+        <button class="card-btn card-btn-access" onclick="${accessAction}">▶ Access</button>
         <button class="card-btn card-btn-details" onclick="openModal(${i},'my')">⊙ View Details</button>
       </div>
     </div>
   </div>`;
+}
+
+function navigateTo(url) {
+  document.body.classList.add('page-fade-out');
+  setTimeout(() => window.location.href = url, 380);
 }
 
 // Render Expand Your Journey cards
