@@ -658,7 +658,7 @@ const EXPAND_DATA = [
   {title:"Vision Board Academy",desc:"Learn to create powerful vision boards that accelerate your manifestation journey and align your desires with divine purpose.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"312",dur:"1h",img:"images/visionboard.png",player:"player-vision-board.html"},
   {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"https://images.unsplash.com/photo-1508615039623-a25605d2b022?w=400&q=80"},
   {title:"The Whisper of Faith",desc:"Unlock Divine Blessings and Abundance through sacred practices and ancient wisdom.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"images/whisperfaith.png",player:"player-whisper-faith.html"},
-  {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"images/21daymanifestation.png"},
+  {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"images/21daymanifestation.png",player:"player-21day-challenge.html"},
   {title:"Angelic Healing Frequencies",desc:"Activate the healing power of angelic frequencies to restore balance and divine harmony.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"634",dur:"2h",img:"https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80"},
 ];
 
@@ -666,6 +666,7 @@ const PRACTICE_BANK = [
   { type:'Morning Meditation', title:'Stillness Before the Storm', desc:'Begin in silence. Let divine peace wash over you before the world speaks.', action:'Begin', catLabel:'Meditation', catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80' },
   { type:'Word of the Day', title:'"Be still and know that I am God"', desc:'Psalm 46:10 — Rest in the certainty that you are held by something greater.', action:'Reflect', catLabel:'Scripture', catClass:'cat-mindset', img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80' },
   { type:"Solomon's Wisdom", title:'The wise do not rush what God is building', desc:"Solomon waited 7 years to build the Temple. Your season of preparation is sacred.", action:'Read', catLabel:'Wisdom', catClass:'cat-premium', img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80' },
+  { type:'21-Day Challenge', title:'The Manifestation Challenge', desc:'21 days of intention, prayer, surrender and faith. Start your sacred journey today.', action:'Start', catLabel:'Challenge', catClass:'cat-spirituality', img:'images/21daymanifestation.png', player:'player-21-days.html' },
   { type:'Daily Decree', title:'I am aligned with divine abundance', desc:'Speak this aloud three times with conviction and open hands. Feel it.', action:'Declare', catLabel:'Decree', catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80' },
 ];
 
@@ -682,11 +683,12 @@ if(dateEl){
 const practiceTrack = document.getElementById('track-practice');
 if(practiceTrack){
   practiceTrack.innerHTML = PRACTICE_BANK.map((p,i) => `
-    <div class="product-card">
+    <div class="product-card" ${p.player ? `onclick="navigateTo('${p.player}')" style="cursor:pointer;"` : ''}>
       <div class="card-img-wrap">
         <img src="${p.img}" alt="${p.title}" loading="lazy"/>
         <div class="card-badges">
           <span class="badge badge-gold" style="font-size:0.68rem;padding:3px 9px;">✦ ${p.type}</span>
+          ${p.player ? '<span class="badge badge-green" style="font-size:0.68rem;padding:3px 9px;">✓ Available</span>' : ''}
         </div>
       </div>
       <div class="card-body">
@@ -694,7 +696,7 @@ if(practiceTrack){
         <div class="card-title">${p.title}</div>
         <div class="card-desc">${p.desc}</div>
         <div class="card-actions">
-          <button class="card-btn card-btn-access">▶ ${p.action}</button>
+          <button class="card-btn card-btn-access" ${p.player ? `onclick="event.stopPropagation();navigateTo('${p.player}')"` : ''}>▶ ${p.action}</button>
         </div>
       </div>
     </div>
