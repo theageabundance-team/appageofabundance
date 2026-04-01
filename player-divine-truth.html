@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Divine Truth | Age of Abundance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0a0a0f;--bg2:#0a0f18;--card:#0d1520;--acc:#5b9fd4;--acc-light:#8dc4e8;--acc-dim:rgba(91,159,212,0.1);--acc-border:rgba(91,159,212,0.28);--text:#f0ece0;--text-dim:#8a9aaa;--text-muted:#4a5a6a;}
+    *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh;opacity:0;animation:fadeIn 0.7s ease forwards;}
+    body.page-fade-out{animation:fadeOut 0.35s ease forwards;}
+    @keyframes fadeIn{to{opacity:1}}@keyframes fadeOut{to{opacity:0}}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
+    .banner{background:var(--bg2);border-bottom:1px solid var(--acc-border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+    .badge-wrap{background:var(--acc-dim);border:1px solid var(--acc-border);border-radius:3px;padding:6px 14px;display:flex;align-items:center;gap:10px;}
+    .badge-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);}
+    .badge-sub{font-size:11px;color:var(--text-dim);}
+    .back-btn{display:flex;align-items:center;gap:6px;color:var(--text-dim);text-decoration:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;transition:color .2s;}
+    .back-btn:hover{color:var(--acc);}
+    .hero{text-align:center;padding:60px 24px 44px;position:relative;overflow:hidden;}
+    .hero-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(91,159,212,0.1) 0%,transparent 70%);pointer-events:none;}
+    .day-pill{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-border);border-radius:20px;padding:6px 18px;margin-bottom:20px;opacity:.8;}
+    .hero-title{font-family:'Cinzel',serif;font-size:clamp(28px,6vw,50px);font-weight:700;color:var(--acc);line-height:1.15;margin-bottom:8px;}
+    .hero-sub{font-size:clamp(15px,2.5vw,18px);color:var(--text-dim);font-style:italic;margin-bottom:24px;}
+    .hero-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin:0 auto 20px;}
+    .hero-date{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);}
+    .content-wrap{max-width:680px;margin:0 auto;padding:0 24px 80px;}
+    .focus-card{background:var(--card);border:1px solid var(--acc-border);border-top:3px solid var(--acc);border-radius:6px;padding:40px 36px;margin-bottom:20px;animation:slideUp 0.5s ease forwards;opacity:0;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .card-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);opacity:.6;margin-bottom:10px;}
+    .card-theme{font-family:'Cinzel',serif;font-size:24px;font-weight:600;color:var(--acc);margin-bottom:16px;}
+    .week-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;background:var(--acc-dim);border:1px solid var(--acc-border);color:var(--acc);border-radius:2px;padding:4px 12px;margin-bottom:20px;}
+    .card-divider{height:1px;background:var(--acc-border);margin-bottom:24px;}
+    .verse-box{background:rgba(91,159,212,0.07);border-left:3px solid var(--acc);border-radius:0 4px 4px 0;padding:24px 28px;margin-bottom:16px;}
+    .verse-text{font-size:20px;color:var(--text);line-height:1.75;font-style:italic;margin-bottom:12px;}
+    .verse-ref{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);opacity:.75;}
+    .card-desc-text{font-size:16px;color:var(--text-dim);line-height:1.85;margin-bottom:32px;margin-top:20px;}
+    .done-btn{width:100%;background:transparent;border:1px solid var(--acc-border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border-radius:3px;padding:16px 24px;cursor:pointer;transition:all .25s;}
+    .done-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--acc-dim);}
+    .done-btn.done{background:var(--acc-dim);border-color:var(--acc);color:var(--acc);cursor:default;}
+    .nav-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+    .nav-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:16px 12px;text-align:center;cursor:pointer;text-decoration:none;transition:all .2s;display:block;}
+    .nav-card:hover{border-color:var(--acc-border);}
+    .nav-card-icon{font-size:22px;margin-bottom:6px;}
+    .nav-card-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);line-height:1.3;}
+    @media(max-width:600px){.focus-card{padding:28px 20px;}}
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <div class="badge-wrap"><span style="font-size:18px;">✝️</span><div><div class="badge-title">Today's Practice</div><div class="badge-sub">Divine Truth</div></div></div>
+    <a href="index.html" class="back-btn" onclick="navigateTo(event,'index.html')">← Back to Home</a>
+  </header>
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="day-pill" id="dayPill"></div>
+    <h1 class="hero-title">Divine Truth</h1>
+    <p class="hero-sub">The Word Heaven speaks over you today</p>
+    <div class="hero-divider"></div>
+    <p class="hero-date" id="heroDate"></p>
+  </section>
+  <div class="content-wrap">
+    <div class="focus-card" style="animation-delay:0.1s">
+      <div class="card-eyebrow">✝️ Today's Scripture</div>
+      <div class="card-theme" id="focusTheme"></div>
+      <div class="week-badge" id="weekBadge"></div>
+      <div class="card-divider"></div>
+      <div class="verse-box">
+        <div class="verse-text" id="verseText"></div>
+        <div class="verse-ref" id="verseRef"></div>
+      </div>
+      <div class="card-desc-text" id="focusDesc"></div>
+      <button class="done-btn" id="doneBtn" onclick="markDone()">✦ Receive This Truth</button>
+    </div>
+    <div class="nav-cards">
+      <a class="nav-card" href="player-daily-focus.html" onclick="navigateTo(event,'player-daily-focus.html')"><div class="nav-card-icon">🎯</div><div class="nav-card-label">Daily Focus</div></a>
+      <a class="nav-card" href="player-solomons-wisdom.html" onclick="navigateTo(event,'player-solomons-wisdom.html')"><div class="nav-card-icon">👑</div><div class="nav-card-label">Solomon's Wisdom</div></a>
+      <a class="nav-card" href="player-daily-decree.html" onclick="navigateTo(event,'player-daily-decree.html')"><div class="nav-card-icon">📜</div><div class="nav-card-label">Daily Decree</div></a>
+    </div>
+  </div>
+  <script>
+    const DIVINE_TRUTH=[{0:{theme:'Rest & Trust',verse:'"Come to me, all you who are weary and burdened, and I will give you rest."',ref:'Matthew 11:28',desc:'Today is a day to lay every burden at His feet. Rest is not weakness — it is trust made visible.'},1:{theme:'Prosperity',verse:'"Remember the Lord your God, for it is He who gives you the ability to produce wealth."',ref:'Deuteronomy 8:18',desc:'Your capacity to generate abundance is not your talent alone — it is a divine gift. Acknowledge the Source today.'},2:{theme:'Mindset',verse:'"For God has not given us a spirit of fear, but of power, love, and a sound mind."',ref:'2 Timothy 1:7',desc:'Every anxious thought today has no divine origin. You were wired for power, not paralysis.'},3:{theme:'Connection',verse:'"Be still, and know that I am God."',ref:'Psalm 46:10',desc:'In the stillness, God does not shout — He whispers. Today, be still enough to hear.'},4:{theme:'Abundance',verse:'"The Lord is my shepherd; I shall not want."',ref:'Psalm 23:1',desc:'Lack is not your inheritance. You have a Shepherd who never sleeps and never runs out of provision.'},5:{theme:'Protection',verse:'"Whoever dwells in the shelter of the Most High will rest in the shadow of the Almighty."',ref:'Psalm 91:1',desc:'You are not exposed. You are covered. Walk today with the confidence of someone under divine protection.'},6:{theme:'Vision',verse:'"Write down the vision and make it plain on tablets, so that whoever reads it may run with it."',ref:'Habakkuk 2:2',desc:'A vision written is a vision activated. What you can articulate clearly, God can fulfill specifically.'}},{0:{theme:'Rest & Presence',verse:'"My presence will go with you, and I will give you rest."',ref:'Exodus 33:14',desc:'You are never resting alone. His presence accompanies you into every silence, every stillness.'},1:{theme:'Prosperity',verse:'"The blessing of the Lord brings wealth, and He adds no trouble to it."',ref:'Proverbs 10:22',desc:'Divine prosperity does not come with anxiety or guilt. If your abundance brings stress, check the source.'},2:{theme:'Mindset',verse:'"Do not conform to the pattern of this world, but be transformed by the renewing of your mind."',ref:'Romans 12:2',desc:'Your mind is a battleground and a garden. What you allow to grow there determines what manifests outside.'},3:{theme:'Connection',verse:'"If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault."',ref:'James 1:5',desc:'You do not need to figure everything out. You need to ask the One who already knows everything.'},4:{theme:'Abundance',verse:'"And my God will meet all your needs according to the riches of His glory in Christ Jesus."',ref:'Philippians 4:19',desc:'Your needs are not too small or too large for Him. Every single one is already covered in His economy.'},5:{theme:'Protection',verse:'"No weapon forged against you will prevail, and you will refute every tongue that accuses you."',ref:'Isaiah 54:17',desc:'You are not defenseless. Every attack on your purpose, peace, and prosperity has already been disarmed.'},6:{theme:'Vision',verse:'"Where there is no prophetic vision the people cast off restraint, but blessed is he who keeps the law."',ref:'Proverbs 29:18',desc:'Vision is not a luxury — it is a necessity. Without it, life drifts. With it, everything aligns.'}},{0:{theme:'Rest & Security',verse:'"In peace I will lie down and sleep, for you alone, Lord, make me dwell in safety."',ref:'Psalm 4:8',desc:'You can close your eyes tonight with absolute certainty. You are guarded by One who never sleeps.'},1:{theme:'Prosperity',verse:'"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you."',ref:'Matthew 7:7',desc:'The door of abundance is not locked against you — it responds to asking, seeking, and knocking. Start today.'},2:{theme:'Mindset',verse:'"I can do all things through Christ who strengthens me."',ref:'Philippians 4:13',desc:'Your limitations are not permanent — they are temporary without Him. Every "I can\'t" becomes "I can through Christ."'},3:{theme:'Connection',verse:'"My sheep listen to my voice; I know them, and they follow me."',ref:'John 10:27',desc:'You are known and recognized by the Shepherd. His voice is always speaking — you are always able to hear it.'},4:{theme:'Abundance',verse:'"I have come that they may have life, and have it to the full."',ref:'John 10:10',desc:'Fullness — not survival, not barely enough — is what He came to give. Receive the full measure today.'},5:{theme:'Protection',verse:'"The Lord will keep you from all harm — He will watch over your life."',ref:'Psalm 121:7',desc:'Nothing that reaches you today has bypassed His awareness. You are watched over completely.'},6:{theme:'Vision',verse:'"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you."',ref:'Jeremiah 29:11',desc:'Your future is not uncertain from Heaven\'s perspective. God already sees the end from the beginning — and it is good.'}},{0:{theme:'Rest & Confidence',verse:'"In returning and rest you shall be saved; in quietness and confidence shall be your strength."',ref:'Isaiah 30:15',desc:'Striving is not your source of strength. Quiet trust in God is. Today, return to stillness and be renewed.'},1:{theme:'Prosperity',verse:'"Honor the Lord with your wealth, with the firstfruits of all your crops; then your barns will be filled to overflowing."',ref:'Proverbs 3:9-10',desc:'Honor precedes overflow. When the Source is acknowledged first, the channels never run dry.'},2:{theme:'Mindset',verse:'"The weapons we fight with are not the weapons of the world. On the contrary, they have divine power to demolish strongholds."',ref:'2 Corinthians 10:4',desc:'The mental battles you face are real — but so is the divine arsenal you have been given to win them.'},3:{theme:'Connection',verse:'"Call to me and I will answer you and tell you great and unsearchable things you do not know."',ref:'Jeremiah 33:3',desc:'God is not silent. He is waiting for your call. The answer contains things your mind has not yet imagined.'},4:{theme:'Abundance',verse:'"Now to Him who is able to do immeasurably more than all we ask or imagine, according to His power."',ref:'Ephesians 3:20',desc:'Your greatest prayer is still smaller than what God is capable of doing. Dare to ask bigger today.'},5:{theme:'Protection',verse:'"A thousand may fall at your side, ten thousand at your right hand, but it will not come near you."',ref:'Psalm 91:7',desc:'You are not statistics. You are covered by covenant. What surrounds others will not touch you.'},6:{theme:'Vision',verse:'"Now faith is confidence in what we hope for and assurance about what we do not see."',ref:'Hebrews 11:1',desc:'Faith is not pretending — it is seeing with spiritual eyes what has not yet arrived in the physical. Keep seeing.'}}];
+    const WEEK_NAMES=['Week 1 — Alignment & Foundations','Week 2 — Authority & Growth','Week 3 — Breakthrough & Expansion','Week 4 — Mastery & Victory'];
+    const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    function getContent(){let s=localStorage.getItem('abundance_start_date');if(!s){s=new Date().toISOString().split('T')[0];localStorage.setItem('abundance_start_date',s);}const start=new Date(s+'T00:00:00');const today=new Date();today.setHours(0,0,0,0);const days=Math.floor((today-start)/86400000);const wi=Math.floor(days/7)%4;const dow=today.getDay();return{data:DIVINE_TRUTH[wi][dow],wi,dow};}
+    function init(){const{data,wi,dow}=getContent();const today=new Date();document.getElementById('dayPill').textContent=DOW[dow];document.getElementById('heroDate').textContent=today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});document.getElementById('focusTheme').textContent=data.theme;document.getElementById('weekBadge').textContent=WEEK_NAMES[wi];document.getElementById('verseText').textContent=data.verse;document.getElementById('verseRef').textContent=data.ref;document.getElementById('focusDesc').textContent=data.desc;const ts=today.toISOString().split('T')[0];if(localStorage.getItem('divine_truth_done')===ts){const btn=document.getElementById('doneBtn');btn.textContent='✓ Truth Received';btn.classList.add('done');btn.disabled=true;}}
+    function markDone(){const btn=document.getElementById('doneBtn');btn.textContent='✓ Truth Received';btn.classList.add('done');btn.disabled=true;localStorage.setItem('divine_truth_done',new Date().toISOString().split('T')[0]);}
+    function navigateTo(e,url){e.preventDefault();document.body.classList.add('page-fade-out');setTimeout(()=>window.location.href=url,350);}
+    init();
+  </script>
+</body>
+</html>
