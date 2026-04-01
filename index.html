@@ -662,95 +662,11 @@ const EXPAND_DATA = [
   {title:"Angelic Healing Frequencies",desc:"Activate the healing power of angelic frequencies to restore balance and divine harmony.",cat:"Premium",catClass:"cat-premium",rating:"4.8",count:"634",dur:"2h",img:"https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80"},
 ];
 
-// ── DAILY FOCUS CONTENT (4 weeks × 7 days, indexed by [week][weekday 0=Sun])
-const DAILY_FOCUS = [
-  // Week 1 — Alignment & Foundations
-  {
-    0: { theme:'Rest & Surrender',    title:'Total Surrender',          desc:'Release control over tomorrow\'s worries. Trust that the Architect of the Universe works while you rest in His peace.' },
-    1: { theme:'Prosperity',          title:'Identify Open Doors',      desc:'Observe the opportunities already before you that fear or distraction made you ignore. Abundance begins with what you already have access to.' },
-    2: { theme:'Mindset',             title:'Government of Speech',     desc:'Monitor every word today. If it does not build, heal, or prosper — silence it. Your words are commands to your reality.' },
-    3: { theme:'Connection',          title:'Selective Silence',        desc:'God speaks in a whisper. Take 5 minutes of absolute silence today and try to hear your intuition, not your problems.' },
-    4: { theme:'Abundance',           title:'Flow Consciousness',       desc:'Look at the sky, the trees, or the traffic. Focus on quantity, not lack. Where there is movement, there is provision.' },
-    5: { theme:'Protection',          title:'Preserving Your Peace',    desc:'Today, protect your energy. Say no to toxic conversations and complaints. Your inner sanctuary is sacred.' },
-    6: { theme:'Vision',              title:'Royal Posture',            desc:'Act as if the value you desire is already in your account. How would you walk? How would you speak? Do not wait to have in order to be.' },
-  },
-  // Week 2 — Authority & Growth
-  {
-    0: { theme:'Rest & Renewal',      title:'The Mind\'s Sabbath',      desc:'Let ideas simmer on their own. Sometimes the greatest solution comes when you stop trying to solve everything.' },
-    1: { theme:'Prosperity',          title:'Seed Mentality',           desc:'Everything you do today is a seed. Focus on planting quality in your work and relationships to harvest wealth tomorrow.' },
-    2: { theme:'Mindset',             title:'Emotional Sovereignty',    desc:'Do not let external events dictate your mood. Today you decide how you feel, regardless of circumstances. You are the master, not the slave.' },
-    3: { theme:'Connection',          title:'Spiritual Discernment',    desc:'Ask for clarity to distinguish between what is "good" and what is "God\'s best" for you. Not every open door is your path.' },
-    4: { theme:'Abundance',           title:'Gratitude Anchor',         desc:'Find 10 things that are "more than enough" in your life today. Gratitude is the fuel that accelerates manifestation.' },
-    5: { theme:'Protection',          title:'Noise Fast',               desc:'Avoid bad news or social media for a few hours. Clear the channel so the voice of wisdom can be heard with clarity.' },
-    6: { theme:'Vision',              title:'Legacy Thinking',          desc:'What are you building that will outlast you? Focus on actions that generate eternal value, not just immediate pleasure.' },
-  },
-  // Week 3 — Breakthrough & Expansion
-  {
-    0: { theme:'Rest & Faith',        title:'Faith in the Invisible',   desc:'Focus on the certainty that what you planted in previous weeks has already sprouted in the spiritual world. Just await the physical manifestation.' },
-    1: { theme:'Prosperity',          title:'Sacred Boldness',          desc:'Today is the day to ask, negotiate, and advance. God did not give a spirit of cowardice. Ask for what you truly deserve, without timidity.' },
-    2: { theme:'Mindset',             title:'Destroying the Impostor',  desc:'Remember who you are in the Kingdom. You are not an accident — you are a success project. Reject any thought of incapacity today.' },
-    3: { theme:'Connection',          title:'Synchronization',          desc:'Pay attention to "coincidences." They are God acting anonymously. Write down the signs that appear on your path today.' },
-    4: { theme:'Abundance',           title:'Capacity to Receive',      desc:'Expand your inner container. Feel worthy of great sums, great loves, and great news. Do not sabotage yourself out of fear of shining.' },
-    5: { theme:'Protection',          title:'Boundaries of Light',      desc:'Protect your "Yes." Do not spend energy on what does not bring you closer to your purpose. Saying no to the world is saying yes to God.' },
-    6: { theme:'Vision',              title:'Writing the Future',       desc:'Today your focus is absolute clarity. If you do not know where you are going, any wind will do. Define your next great step.' },
-  },
-  // Week 4 — Mastery & Victory
-  {
-    0: { theme:'Rest & Celebration',  title:'Celebrating the Creator',  desc:'Use today only to admire God\'s work and give thanks. Celebration is the final seal of your abundance.' },
-    1: { theme:'Prosperity',          title:'Financial Stewardship',    desc:'Order attracts increase. Focus on organizing what you already have so that God can trust you with much more.' },
-    2: { theme:'Mindset',             title:'Divine Resilience',        desc:'If something goes wrong, change the question: "What did this come to teach me?" Transform every obstacle into a step toward the top.' },
-    3: { theme:'Connection',          title:'Intuitive Action',         desc:'Follow the first impulse of goodness or direction that comes to your heart today. God guides those who move, not those who stand still.' },
-    4: { theme:'Abundance',           title:'Living in Overflow',       desc:'Today, focus on giving. Give attention, give a compliment, give a resource. Those who overflow never run empty — the channel always renews.' },
-    5: { theme:'Protection',          title:'Armor of Light',           desc:'Mentally surround yourself with a frequency of protection. No thought of external scarcity has permission to enter your territory today.' },
-    6: { theme:'Vision',              title:'The Finished Work',        desc:'Visualize your goal as something that already happened in the past. Feel the relief and joy of someone who already arrived. The end is already guaranteed.' },
-  },
-];
-
-// ── DAILY FOCUS LOGIC ──────────────────────────────────────────────────────
-function getDailyFocus() {
-  // Get or set the app start date
-  let startStr = localStorage.getItem('abundance_start_date');
-  if (!startStr) {
-    startStr = new Date().toISOString().split('T')[0];
-    localStorage.setItem('abundance_start_date', startStr);
-  }
-  const start = new Date(startStr + 'T00:00:00');
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  // Days elapsed since start
-  const daysElapsed = Math.floor((today - start) / 86400000);
-
-  // Week index (0–3, loops every 28 days)
-  const weekIdx = Math.floor(daysElapsed / 7) % 4;
-
-  // Day of week (0=Sun, 1=Mon ... 6=Sat) — uses REAL calendar day
-  const weekday = today.getDay();
-
-  return DAILY_FOCUS[weekIdx][weekday];
-}
-
-const todayFocus = getDailyFocus();
-
-// Day-of-week label for the theme badge
-const DOW_LABELS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const todayDOW = new Date().getDay();
-
 const PRACTICE_BANK = [
-  {
-    type: 'Daily Focus',
-    title: todayFocus.title,
-    desc: todayFocus.desc,
-    theme: todayFocus.theme,
-    action: 'Set My Focus',
-    catLabel: todayFocus.theme,
-    catClass: 'cat-premium',
-    img: 'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80',
-    accent: '#c9a84c',
-    isDailyFocus: true,
-  },
+  { type:'Morning Meditation', title:'Stillness Before the Storm', desc:'Begin in silence. Let divine peace wash over you before the world speaks.', action:'Begin', catLabel:'Meditation', catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=400&q=80' },
   { type:'Word of the Day', title:'"Be still and know that I am God"', desc:'Psalm 46:10 — Rest in the certainty that you are held by something greater.', action:'Reflect', catLabel:'Scripture', catClass:'cat-mindset', img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80' },
   { type:"Solomon's Wisdom", title:'The wise do not rush what God is building', desc:"Solomon waited 7 years to build the Temple. Your season of preparation is sacred.", action:'Read', catLabel:'Wisdom', catClass:'cat-premium', img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80' },
+  { type:'21-Day Challenge', title:'The Manifestation Challenge', desc:'21 days of intention, prayer, surrender and faith. Start your sacred journey today.', action:'Start', catLabel:'Challenge', catClass:'cat-spirituality', img:'images/21daymanifestation.png', player:'player-21-days.html' },
   { type:'Daily Decree', title:'I am aligned with divine abundance', desc:'Speak this aloud three times with conviction and open hands. Feel it.', action:'Declare', catLabel:'Decree', catClass:'cat-spirituality', img:'https://images.unsplash.com/photo-1526779259212-939e64788e3c?w=400&q=80' },
 ];
 
@@ -766,29 +682,7 @@ if(dateEl){
 // Render Today's Practice cards — same style as product cards
 const practiceTrack = document.getElementById('track-practice');
 if(practiceTrack){
-  practiceTrack.innerHTML = PRACTICE_BANK.map((p,i) => {
-    if (p.isDailyFocus) {
-      return `
-    <div class="product-card" style="cursor:default;border-color:rgba(201,168,76,0.45);">
-      <div class="card-img-wrap">
-        <img src="${p.img}" alt="${p.title}" loading="lazy"/>
-        <div class="card-badges">
-          <span class="badge badge-gold" style="font-size:0.68rem;padding:3px 9px;">🎯 Daily Focus</span>
-          <span class="badge" style="font-size:0.68rem;padding:3px 9px;background:rgba(201,168,76,0.2);color:#c9a84c;border:1px solid rgba(201,168,76,0.3);">${DOW_LABELS[todayDOW]}</span>
-        </div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(0deg,rgba(10,8,15,0.95),transparent);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0.8;">${p.theme}</div>
-      </div>
-      <div class="card-body">
-        <span class="cat-pill ${p.catClass}">${p.catLabel}</span>
-        <div class="card-title">${p.title}</div>
-        <div class="card-desc">${p.desc}</div>
-        <div class="card-actions">
-          <button class="card-btn card-btn-access" onclick="markDailyFocusDone(this)">▶ ${p.action}</button>
-        </div>
-      </div>
-    </div>`;
-    }
-    return `
+  practiceTrack.innerHTML = PRACTICE_BANK.map((p,i) => `
     <div class="product-card" ${p.player ? `onclick="navigateTo('${p.player}')" style="cursor:pointer;"` : ''}>
       <div class="card-img-wrap">
         <img src="${p.img}" alt="${p.title}" loading="lazy"/>
@@ -805,32 +699,8 @@ if(practiceTrack){
           <button class="card-btn card-btn-access" ${p.player ? `onclick="event.stopPropagation();navigateTo('${p.player}')"` : ''}>▶ ${p.action}</button>
         </div>
       </div>
-    </div>`;
-  }).join('');
-}
-
-function markDailyFocusDone(btn) {
-  btn.textContent = '✓ Focus Set';
-  btn.style.background = 'rgba(201,168,76,0.15)';
-  btn.style.borderColor = 'rgba(201,168,76,0.5)';
-  btn.style.color = '#c9a84c';
-  btn.disabled = true;
-  const today = new Date().toISOString().split('T')[0];
-  localStorage.setItem('daily_focus_done', today);
-}
-
-// Restore done state if already set today
-const focusDoneDate = localStorage.getItem('daily_focus_done');
-const todayStr = new Date().toISOString().split('T')[0];
-if (focusDoneDate === todayStr) {
-  const focusBtn = practiceTrack && practiceTrack.querySelector('.card-btn-access');
-  if (focusBtn) {
-    focusBtn.textContent = '✓ Focus Set';
-    focusBtn.style.background = 'rgba(201,168,76,0.15)';
-    focusBtn.style.borderColor = 'rgba(201,168,76,0.5)';
-    focusBtn.style.color = '#c9a84c';
-    focusBtn.disabled = true;
-  }
+    </div>
+  `).join('');
 }
 
 // Render My Products
