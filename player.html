@@ -37,7 +37,11 @@
       min-height: 100vh;
       overflow-x: hidden;
       font-size: 17px;
+      animation: pageFadeIn 0.5s ease forwards;
     }
+    @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
+    .page-fade-out { animation: pageFadeOut 0.35s ease forwards; }
+    @keyframes pageFadeOut { to { opacity:0; transform: translateY(-8px); } }
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -535,7 +539,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-back">← Back to Home</a>
+  <a href="index.html" class="nav-back" onclick="fadeOut(event, 'index.html')">← Back to Home</a>
 </nav>
 
 <!-- LAYOUT -->
@@ -898,6 +902,12 @@ function saveNotes() {
 
 function closeGiftModal() {
   document.getElementById('gift-modal').classList.remove('show');
+}
+
+function fadeOut(e, url) {
+  e.preventDefault();
+  document.body.classList.add('page-fade-out');
+  setTimeout(() => window.location.href = url, 350);
 }
 
 // ── SIDEBAR MOBILE ──
