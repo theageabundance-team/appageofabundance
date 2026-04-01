@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Daily Decree | Age of Abundance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#1a0a0e;--bg2:#220d12;--card:#2a1018;--acc:#c0445a;--acc-light:#e07080;--acc-dim:rgba(192,68,90,0.1);--acc-border:rgba(192,68,90,0.28);--text:#f2ebe4;--text-dim:#c4a89a;--text-muted:#7a6058;}
+    *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;min-height:100vh;opacity:0;animation:fadeIn 0.7s ease forwards;}
+    body.page-fade-out{animation:fadeOut 0.35s ease forwards;}
+    @keyframes fadeIn{to{opacity:1}}@keyframes fadeOut{to{opacity:0}}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
+    .banner{background:var(--bg2);border-bottom:1px solid var(--acc-border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+    .badge-wrap{background:var(--acc-dim);border:1px solid var(--acc-border);border-radius:3px;padding:6px 14px;display:flex;align-items:center;gap:10px;}
+    .badge-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);}
+    .badge-sub{font-size:11px;color:var(--text-dim);}
+    .back-btn{display:flex;align-items:center;gap:6px;color:var(--text-dim);text-decoration:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;transition:color .2s;}
+    .back-btn:hover{color:var(--acc);}
+    .hero{text-align:center;padding:60px 24px 44px;position:relative;overflow:hidden;}
+    .hero-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(192,68,90,0.1) 0%,transparent 70%);pointer-events:none;}
+    .day-pill{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-border);border-radius:20px;padding:6px 18px;margin-bottom:20px;opacity:.8;}
+    .hero-title{font-family:'Cinzel',serif;font-size:clamp(28px,6vw,50px);font-weight:700;color:var(--acc);line-height:1.15;margin-bottom:8px;}
+    .hero-sub{font-size:clamp(15px,2.5vw,18px);color:var(--text-dim);font-style:italic;margin-bottom:24px;}
+    .hero-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);margin:0 auto 20px;}
+    .hero-date{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);}
+    .content-wrap{max-width:680px;margin:0 auto;padding:0 24px 80px;}
+    .focus-card{background:var(--card);border:1px solid var(--acc-border);border-top:3px solid var(--acc);border-radius:6px;padding:40px 36px;margin-bottom:20px;animation:slideUp 0.5s ease forwards;opacity:0;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .card-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);opacity:.6;margin-bottom:10px;}
+    .card-theme{font-family:'Cinzel',serif;font-size:24px;font-weight:600;color:var(--acc);margin-bottom:16px;}
+    .week-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;background:var(--acc-dim);border:1px solid var(--acc-border);color:var(--acc);border-radius:2px;padding:4px 12px;margin-bottom:20px;}
+    .card-divider{height:1px;background:var(--acc-border);margin-bottom:24px;}
+    .instruction{font-size:14px;color:var(--text-muted);margin-bottom:20px;letter-spacing:.02em;}
+    .decree-box{background:rgba(192,68,90,0.07);border:1px solid var(--acc-border);border-radius:4px;padding:28px 28px;margin-bottom:32px;text-align:center;}
+    .decree-text{font-size:20px;color:var(--text);line-height:1.75;font-style:italic;}
+    .declare-btn{width:100%;background:linear-gradient(135deg,#8a1e2e,var(--acc));color:#f2ebe4;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;border:none;border-radius:3px;padding:18px 24px;cursor:pointer;transition:all .25s;box-shadow:0 4px 16px rgba(192,68,90,0.25);margin-bottom:12px;}
+    .declare-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,68,90,0.35);}
+    .declare-btn:disabled{opacity:.6;transform:none;cursor:default;}
+    .done-btn{width:100%;background:transparent;border:1px solid var(--acc-border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border-radius:3px;padding:14px 24px;cursor:pointer;transition:all .25s;}
+    .done-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--acc-dim);}
+    .done-btn.done{background:var(--acc-dim);border-color:var(--acc);color:var(--acc);cursor:default;}
+    .other-cards-section{max-width:680px;margin:0 auto;padding:0 24px 60px;}
+    .other-cards-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;text-align:center;}
+    .other-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .other-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:16px 10px;text-align:center;cursor:pointer;text-decoration:none;display:block;transition:all .2s;position:relative;overflow:hidden;}
+    .other-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px);}
+    .other-card.is-done{border-color:rgba(80,200,100,0.4);background:rgba(80,200,100,0.06);}
+    .other-card-icon{font-size:22px;margin-bottom:6px;}
+    .other-card-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);line-height:1.3;}
+    .other-card-check{position:absolute;top:6px;right:8px;font-size:11px;color:#5cc878;}
+    .celeb-overlay{display:none;position:fixed;inset:0;background:rgba(5,3,10,.88);z-index:600;align-items:center;justify-content:center;padding:24px;}
+    .celeb-overlay.visible{display:flex;}
+    .celeb-modal{background:#1a1020;border:1px solid #c9a84c;border-top:3px solid #c9a84c;border-radius:6px;padding:48px 36px;text-align:center;max-width:440px;width:100%;animation:revealUp .4s ease;}
+    @keyframes revealUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .celeb-stars{font-size:14px;color:#c9a84c;letter-spacing:.3em;margin-bottom:16px;}
+    .celeb-emoji{font-size:52px;margin-bottom:16px;}
+    .celeb-title{font-family:'Cinzel',serif;font-size:22px;color:#c9a84c;font-weight:700;margin-bottom:10px;}
+    .celeb-text{font-size:15px;color:#b8a898;line-height:1.75;margin-bottom:20px;}
+    .celeb-verse{font-style:italic;font-size:13px;color:rgba(201,168,76,.6);margin-bottom:28px;}
+    .celeb-btn{background:linear-gradient(135deg,#8a6020,#c9a84c);color:#0a0508;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border:none;border-radius:3px;padding:15px 32px;cursor:pointer;width:100%;}
+    .declared-msg{text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:16px;display:none;}
+    .declared-msg.visible{display:block;}
+    .nav-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+    .nav-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:16px 12px;text-align:center;cursor:pointer;text-decoration:none;transition:all .2s;display:block;}
+    .nav-card:hover{border-color:var(--acc-border);}
+    .nav-card-icon{font-size:22px;margin-bottom:6px;}
+    .nav-card-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);line-height:1.3;}
+    .particle{position:fixed;pointer-events:none;z-index:1000;border-radius:50%;animation:particleFly 1.2s ease-out forwards;}
+    @keyframes particleFly{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0;}}
+    .flash-overlay{position:fixed;inset:0;pointer-events:none;z-index:998;background:radial-gradient(ellipse at center,rgba(192,68,90,0.15) 0%,transparent 70%);opacity:0;animation:flashPulse 0.8s ease-out forwards;}
+    @keyframes flashPulse{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+    @media(max-width:600px){.focus-card{padding:28px 20px;}}
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <div class="badge-wrap"><span style="font-size:18px;">📜</span><div><div class="badge-title">Today's Practice</div><div class="badge-sub">Daily Decree</div></div></div>
+    <a href="index.html" class="back-btn" onclick="navigateTo(event,'index.html')">← Back to Home</a>
+  </header>
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="day-pill" id="dayPill"></div>
+    <h1 class="hero-title">Daily Decree</h1>
+    <p class="hero-sub">Speak it aloud — and seal your day</p>
+    <div class="hero-divider"></div>
+    <p class="hero-date" id="heroDate"></p>
+  </section>
+  <div class="content-wrap">
+    <div class="focus-card" style="animation-delay:0.1s">
+      <div class="card-eyebrow">📜 Today's Declaration</div>
+      <div class="card-theme" id="focusTheme"></div>
+      <div class="week-badge" id="weekBadge"></div>
+      <div class="card-divider"></div>
+      <p class="instruction">Speak this aloud three times with conviction and open hands:</p>
+      <div class="decree-box"><div class="decree-text" id="decreeText"></div></div>
+      <div class="declared-msg" id="declaredMsg">✦ Decree Declared — Heaven has heard ✦</div>
+      <button class="declare-btn" id="declareBtn" onclick="declare()">🔊 Declare This Now</button>
+      <button class="done-btn" id="doneBtn" onclick="markDone()">✦ Mark as Done</button>
+    </div>
+    <div class="nav-cards">
+      <a class="nav-card" href="player-daily-focus.html" onclick="navigateTo(event,'player-daily-focus.html')"><div class="nav-card-icon">🎯</div><div class="nav-card-label">Daily Focus</div></a>
+      <a class="nav-card" href="player-divine-truth.html" onclick="navigateTo(event,'player-divine-truth.html')"><div class="nav-card-icon">✝️</div><div class="nav-card-label">Divine Truth</div></a>
+      <a class="nav-card" href="player-solomons-wisdom.html" onclick="navigateTo(event,'player-solomons-wisdom.html')"><div class="nav-card-icon">👑</div><div class="nav-card-label">Solomon's Wisdom</div></a>
+    </div>
+  </div>
+  <script>
+    const DECREES=[{0:{theme:'Rest & Peace',decree:'I decree that my rest is sacred. I release control and surrender my concerns to the Creator. My peace is non-negotiable.'},1:{theme:'Prosperity',decree:'I decree that my paths are open today. I do not seek walls — I find doors. The capacity to produce wealth is activated in my hands right now.'},2:{theme:'Mindset',decree:'I decree that I govern my mind. I am not a slave to fear, but a master of my spirit. I reject cowardice and activate power and balance.'},3:{theme:'Connection',decree:'I decree that my channel of spiritual hearing is clear. I quiet myself to receive direction from on High. My intuition is my guide today.'},4:{theme:'Abundance',decree:'I decree that overflow is my natural state. I do not live in lack — I live in the provision of the Good Shepherd. Nothing shall be missing today.'},5:{theme:'Protection',decree:'I decree that my territory is shielded. I dwell in the shelter of the Most High and no frequency of scarcity has permission to enter.'},6:{theme:'Vision',decree:'I decree that I see beyond the visible. I write my vision with clarity and take my posture as an heir of abundance. I am who God says I am.'}},{0:{theme:'Rest & Presence',decree:'I decree that the Presence accompanies me. I rest today knowing that the force that sustains the universe is caring for me.'},1:{theme:'Prosperity',decree:'I decree that the blessing of the Lord enriches me. I am a channel of pure financial flow. I plant with order and harvest with abundance.'},2:{theme:'Mindset',decree:'I decree the renewal of my mind today. I do not accept the patterns of the world — I live by the standards of the Kingdom. I transform my reality by changing my thoughts.'},3:{theme:'Connection',decree:'I decree that divine wisdom reaches me. I ask and receive immediate clarity for every decision. I do not walk in darkness.'},4:{theme:'Abundance',decree:'I decree that all my needs are met now. I focus on the richness of Glory, not the bank balance. I am provided for.'},5:{theme:'Protection',decree:'I decree that no weapon forged against my purpose shall prosper. I silence every voice of accusation and walk in my truth.'},6:{theme:'Vision',decree:'I decree that my future is bright. I keep my hope firm because God\'s plans for me are of peace and prosperity.'}},{0:{theme:'Rest & Security',decree:'I decree a sleep of peace and security. I lie down without anxiety and wake renewed. God is my shield while I rest.'},1:{theme:'Prosperity',decree:'I decree that I have boldness to advance. I ask, I seek, and I find the keys to my next financial level. God\'s "yes" is mine.'},2:{theme:'Mindset',decree:'I decree that I can do all things through Him who strengthens me. I destroy the impostor complex and take on my divine strength. I am capable.'},3:{theme:'Connection',decree:'I decree that I recognize the voice of my Shepherd. I do not follow strangers — I follow the truth. My feet are on the right path.'},4:{theme:'Abundance',decree:'I decree the Abundant Life now. I do not accept crumbs — I sit at the table of the royal banquet. Overflow is my birthright.'},5:{theme:'Protection',decree:'I decree that the Lord guards my soul and my going out and coming in. I am safe, I am at peace, I am kept.'},6:{theme:'Vision',decree:'I decree that faith is my foundation. Even if I cannot see with physical eyes, I already celebrate the victory in the spirit. It is done.'}},{0:{theme:'Rest & Celebration',decree:'I decree that my strength comes from my confidence. In rest I renew and in peace I conquer. Today is a day to celebrate life.'},1:{theme:'Prosperity',decree:'I decree order in my finances. I honor the Source and my storehouses overflow. I am the faithful steward of a growing empire.'},2:{theme:'Mindset',decree:'I decree the destruction of all mental strongholds of scarcity. My weapons are powerful and I govern every thought today.'},3:{theme:'Connection',decree:'I decree that I receive great and firm answers. What was hidden is now revealed to me. I call and Heaven responds.'},4:{theme:'Abundance',decree:'I decree the "exceedingly abundantly." God does far beyond what I ask or think. I prepare myself for the supernatural today.'},5:{theme:'Protection',decree:'I decree total immunity. A thousand may fall at my side, but I will not be struck. I am invisible to evil and visible to blessing.'},6:{theme:'Vision',decree:'I decree that my vision is sealed. My projects succeed because I consecrate them to the Altar. Success is my destiny.'}}];
+    const WEEK_NAMES=['Week 1 — Activating the Foundations','Week 2 — Taking Authority','Week 3 — Boldness & Manifestation','Week 4 — Sealing & Victory'];
+    const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    function getContent(){let s=localStorage.getItem('abundance_start_date');if(!s){s=new Date().toISOString().split('T')[0];localStorage.setItem('abundance_start_date',s);}const start=new Date(s+'T00:00:00');const today=new Date();today.setHours(0,0,0,0);const days=Math.floor((today-start)/86400000);const wi=Math.floor(days/7)%4;const dow=today.getDay();return{data:DECREES[wi][dow],wi,dow};}
+    function spawnParticles(){const colors=['#c0445a','#e07080','#f2ebe4','#c9a84c'];for(let i=0;i<30;i++){const p=document.createElement('div');p.className='particle';const size=4+Math.random()*7;const angle=Math.random()*Math.PI*2;const dist=80+Math.random()*150;const tx=Math.cos(angle)*dist+'px';const ty=(Math.sin(angle)*dist-50)+'px';const color=colors[Math.floor(Math.random()*colors.length)];p.style.cssText=`width:${size}px;height:${size}px;background:${color};left:50%;top:50%;--tx:${tx};--ty:${ty};animation-duration:${0.8+Math.random()*0.5}s;animation-delay:${Math.random()*0.1}s`;document.body.appendChild(p);setTimeout(()=>p.remove(),1400);}}
+    function flashScreen(){const f=document.createElement('div');f.className='flash-overlay';document.body.appendChild(f);setTimeout(()=>f.remove(),900);}
+    function declare(){const btn=document.getElementById('declareBtn');btn.disabled=true;btn.textContent='✦ Declared';spawnParticles();flashScreen();document.getElementById('declaredMsg').classList.add('visible');}
+    function markDone(){
+      const btn=document.getElementById('doneBtn');
+      btn.textContent='✓ Decree Sealed';btn.classList.add('done');btn.disabled=true;
+      localStorage.setItem('daily_decree_done',new Date().toISOString().split('T')[0]);
+      spawnParticles();
+      setTimeout(()=>{ if(allDoneToday()) showCelebration(); else renderOtherCards('daily_decree_done'); },600);
+    }
+    function init(){const{data,wi,dow}=getContent();const today=new Date();document.getElementById('dayPill').textContent=DOW[dow];document.getElementById('heroDate').textContent=today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});document.getElementById('focusTheme').textContent=data.theme;document.getElementById('weekBadge').textContent=WEEK_NAMES[wi];document.getElementById('decreeText').textContent=data.decree;const ts=today.toISOString().split('T')[0];if(localStorage.getItem('daily_decree_done')===ts){document.getElementById('declareBtn').disabled=true;document.getElementById('declareBtn').textContent='✦ Declared';document.getElementById('declaredMsg').classList.add('visible');const btn=document.getElementById('doneBtn');btn.textContent='✓ Decree Sealed';btn.classList.add('done');btn.disabled=true;}}
+    function navigateTo(e,url){e.preventDefault();document.body.classList.add('page-fade-out');setTimeout(()=>window.location.href=url,350);}
+    const ALL_CARDS=[{key:'daily_focus_done',emoji:'🎯',label:'Daily Focus',url:'player-daily-focus.html'},{key:'divine_truth_done',emoji:'✝️',label:'Divine Truth',url:'player-divine-truth.html'},{key:'solomons_wisdom_done',emoji:'👑',label:"Solomon's Wisdom",url:'player-solomons-wisdom.html'},{key:'daily_decree_done',emoji:'📜',label:'Daily Decree',url:'player-daily-decree.html'}];
+    const todayStr=new Date().toISOString().split('T')[0];
+    function isDoneToday(k){return localStorage.getItem(k)===todayStr;}
+    function allDoneToday(){return ALL_CARDS.every(c=>isDoneToday(c.key));}
+    function renderOtherCards(currentKey){const others=ALL_CARDS.filter(c=>c.key!==currentKey);const pending=others.filter(c=>!isDoneToday(c.key));if(pending.length===0)return;const s=document.createElement('div');s.className='other-cards-section';s.innerHTML=`<div class="other-cards-title">Continue Today's Practice</div><div class="other-cards-grid">${others.map(c=>`<a class="other-card${isDoneToday(c.key)?' is-done':''}" href="${c.url}" onclick="navigateTo(event,'${c.url}')">${isDoneToday(c.key)?'<span class="other-card-check">✓</span>':''}<div class="other-card-icon">${c.emoji}</div><div class="other-card-label">${c.label}</div></a>`).join('')}</div>`;document.body.appendChild(s);}
+    function showCelebration(){const m=document.createElement('div');m.className='celeb-overlay';m.innerHTML=`<div class="celeb-modal"><div class="celeb-stars">✦ ✦ ✦</div><div class="celeb-emoji">🙌</div><div class="celeb-title">All Done Today!</div><div class="celeb-text">You have walked in full alignment today. Your faithfulness has been registered in Heaven.</div><div class="celeb-verse">"Well done, good and faithful servant." — Matthew 25:23</div><button class="celeb-btn" onclick="navigateTo(event,'index.html')">Return Home</button></div>`;document.body.appendChild(m);setTimeout(()=>m.classList.add('visible'),50);spawnCelebParticles();}
+    function spawnCelebParticles(){const colors=['#c9a84c','#e8c96d','#fff8e7','#ffffff'];for(let i=0;i<50;i++){const p=document.createElement('div');p.className='particle';const size=4+Math.random()*8,angle=Math.random()*Math.PI*2,dist=100+Math.random()*200;p.style.cssText=`width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};position:fixed;left:${window.innerWidth/2}px;top:${window.innerHeight/2}px;border-radius:50%;pointer-events:none;z-index:700;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist-80}px;animation:particleFly ${0.9+Math.random()*0.7}s ease-out ${Math.random()*0.2}s forwards;`;document.body.appendChild(p);setTimeout(()=>p.remove(),1800);}}
+    init();
+    renderOtherCards('daily_decree_done');
+  </script>
+</body>
+</html>
