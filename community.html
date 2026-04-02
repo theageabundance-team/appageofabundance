@@ -107,6 +107,24 @@
     .joined-notice.hidden{display:none;}
 
     @keyframes particleFly{to{transform:translate(var(--tx),var(--ty));opacity:0;}}
+  
+    .bottom-nav {
+      display: flex; flex-direction: column;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,12,0.97); backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      padding: 0 0 env(safe-area-inset-bottom, 0);
+    }
+    .bottom-nav-inner { display: flex; justify-content: space-around; align-items: center; height: 62px; }
+    .bottom-nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      text-decoration: none; color: rgba(138,122,96,1);
+      font-family: 'Crimson Pro', Georgia, serif; font-size: 0.7rem;
+      letter-spacing: 0.04em; padding: 8px 20px; flex: 1; transition: color 0.2s;
+    }
+    .bottom-nav-item.active { color: #c9a84c; }
+    .bottom-nav-item .nav-icon { font-size: 1.3rem; }
+
   </style>
 </head>
 <body>
@@ -350,5 +368,16 @@
 
     init();
   </script>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
+    <a href="journey.html" class="bottom-nav-item"><span class="nav-icon">✨</span><span>Journey</span></a>
+    <a href="community.html" class="bottom-nav-item active"><span class="nav-icon">👥</span><span>Community</span></a>
+    <a href="support.html" class="bottom-nav-item"><span class="nav-icon">💬</span><span>Support</span></a>
+  </div>
+</nav>
+
 </body>
 </html>
