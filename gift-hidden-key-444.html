@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Hidden Key of 444 — Day 15 Gift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-pale:  #f5e6b8;
+      --gold-dim:   #7a5f28;
+      --bg:         #0a0a0c;
+      --bg2:        #0e0e12;
+      --bg3:        #141418;
+      --bg4:        #1a1a20;
+      --text:       #f0e8d8;
+      --text-dim:   #8a7a60;
+      --text-mid:   #c8b898;
+      --blue-dim:   rgba(100,140,200,0.12);
+      --blue-glow:  rgba(100,140,255,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(100,140,255,0.06) 0%, rgba(201,168,76,0.05) 40%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 5%; height: 62px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.92rem; letter-spacing: 0.03em;
+      transition: color 0.2s; text-decoration: none;
+    }
+    .back-btn:hover { color: var(--gold); }
+    .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+    .nav-gift-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+    }
+
+    /* ── PAGE ── */
+    .page {
+      position: relative; z-index: 1;
+      padding-top: 62px;
+      padding-bottom: 80px;
+    }
+
+    /* ── HERO ── */
+    .gift-hero {
+      position: relative;
+      padding: 72px 5% 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .gift-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(100,140,255,0.07) 0%, rgba(201,168,76,0.06) 40%, transparent 65%);
+      pointer-events: none;
+    }
+    .gift-day-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 28px;
+    }
+    .gift-symbol-large {
+      font-size: 4rem; line-height: 1;
+      margin-bottom: 24px; display: block;
+      filter: drop-shadow(0 0 30px rgba(100,140,255,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .gift-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.9rem, 5vw, 3.2rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em; line-height: 1.1;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 40px rgba(201,168,76,0.3));
+    }
+    .gift-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6;
+      margin-bottom: 28px;
+    }
+    .gift-intro {
+      font-size: 1.12rem; color: var(--text-mid);
+      max-width: 600px; margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    /* ── NUMBER 444 ── */
+    .number-reveal {
+      text-align: center;
+      padding: 48px 5% 0;
+      opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+    .number-444 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, #a8c0ff 0%, #7090e8 40%, rgba(100,140,200,0.5) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.2em;
+      filter: drop-shadow(0 0 40px rgba(100,140,255,0.35));
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .number-meaning {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-dim);
+      opacity: 0.7;
+    }
+
+    /* ── DIVIDER ── */
+    .sacred-divider {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 5%; margin: 48px 0;
+    }
+    .sacred-divider::before,
+    .sacred-divider::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
+    }
+    .sacred-divider-symbol {
+      font-size: 1rem; color: var(--gold); opacity: 0.5;
+      letter-spacing: 0.3em;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CONTENT BLOCKS ── */
+    .content-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    .narrative-block {
+      margin-bottom: 48px;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .narrative-block:nth-child(1) { animation-delay: 0.15s; }
+    .narrative-block:nth-child(2) { animation-delay: 0.25s; }
+
+    .narrative-block p {
+      font-size: 1.08rem; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 18px;
+    }
+    .narrative-block p:last-child { margin-bottom: 0; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      text-align: center;
+      padding: 0 5% 36px;
+      opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .section-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+
+    /* ── RITUAL STEPS ── */
+    .ritual-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 5%;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .ritual-step {
+      display: flex; gap: 22px; align-items: flex-start;
+      opacity: 0; transform: translateY(20px);
+    }
+    .ritual-step.visible { animation: fadeUp 0.6s ease forwards; }
+
+    .ritual-step-num {
+      flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(100,140,255,0.2), rgba(100,140,255,0.06));
+      border: 1px solid rgba(100,140,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: #a8c0ff;
+    }
+
+    .ritual-step-body { flex: 1; }
+
+    .ritual-step-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+    .ritual-step-desc {
+      font-size: 1rem; color: var(--text-mid);
+      line-height: 1.75; margin-bottom: 14px;
+    }
+
+    /* Command prayer box */
+    .command-box {
+      background: linear-gradient(135deg, rgba(100,140,255,0.07), rgba(100,140,255,0.02));
+      border: 1px solid rgba(100,140,255,0.2);
+      border-left: 3px solid rgba(100,140,255,0.5);
+      border-radius: 0 10px 10px 0;
+      padding: 20px 22px;
+      position: relative;
+    }
+    .command-box-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #a8c0ff; opacity: 0.7;
+      margin-bottom: 10px;
+    }
+    .command-text {
+      font-size: 1.05rem; color: var(--text);
+      line-height: 1.75;
+    }
+    .command-text em {
+      color: var(--gold-pale);
+      font-style: normal;
+      font-weight: 600;
+    }
+    .command-note {
+      margin-top: 12px;
+      font-size: 0.84rem; color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* Instruction card */
+    .instruction-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 10px 10px 0;
+      padding: 20px 22px;
+    }
+    .instruction-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+      margin-bottom: 10px;
+    }
+    .instruction-text {
+      font-size: 1rem; color: var(--text);
+      line-height: 1.75;
+    }
+    .instruction-text strong { color: var(--gold-pale); font-weight: 600; }
+
+    /* The 4 corners of the house */
+    .corners-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .corner-item {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 16px 18px;
+      text-align: center;
+    }
+    .corner-symbol { font-size: 1.4rem; margin-bottom: 8px; display: block; }
+    .corner-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.1em; color: var(--gold);
+      margin-bottom: 5px;
+    }
+    .corner-meaning {
+      font-size: 0.82rem; color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* ── THE 4-4-4 PATTERN ── */
+    .pattern-block {
+      background: var(--bg3);
+      border: 1px solid rgba(100,140,255,0.15);
+      border-radius: 14px;
+      padding: 28px 28px;
+      margin-top: 16px;
+    }
+    .pattern-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .pattern-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .pattern-digit {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: #a8c0ff; opacity: 0.8;
+      min-width: 32px;
+    }
+    .pattern-meaning {
+      flex: 1;
+    }
+    .pattern-meaning-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 3px;
+    }
+    .pattern-meaning-desc {
+      font-size: 0.88rem; color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ── SCROLL ACTION ── */
+    .scroll-action {
+      max-width: 720px; margin: 56px auto 0;
+      padding: 0 5%;
+      opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards;
+    }
+    .scroll-action-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .scroll-action-card::before {
+      content: '';
+      position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .scroll-action-symbol { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+    .scroll-action-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 14px;
+      letter-spacing: 0.03em;
+    }
+    .scroll-action-text {
+      font-size: 1.05rem; color: var(--text-mid);
+      line-height: 1.75; max-width: 520px;
+      margin: 0 auto 24px;
+    }
+    .scroll-action-steps {
+      display: flex; flex-direction: column; gap: 12px;
+      max-width: 500px; margin: 0 auto;
+      text-align: left;
+    }
+    .scroll-step {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .scroll-step-num {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--gold); opacity: 0.6;
+      min-width: 18px; margin-top: 1px;
+    }
+    .scroll-step-text {
+      font-size: 0.95rem; color: var(--text-mid);
+      line-height: 1.6;
+    }
+    .scroll-step-text strong { color: var(--gold-pale); font-weight: 600; }
+    .scroll-action-verse {
+      margin-top: 24px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.6;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap {
+      text-align: center;
+      padding: 48px 5% 60px;
+    }
+    .btn-back-journey {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.25s;
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold-pale);
+      text-decoration: none;
+    }
+    .btn-back-journey:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.14));
+      box-shadow: 0 6px 28px rgba(201,168,76,0.18);
+      transform: translateY(-2px);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+    @media(max-width: 768px) {
+      .gift-hero { padding: 56px 5% 44px; }
+      .ritual-step { flex-direction: column; gap: 14px; }
+      .ritual-step-num { width: 36px; height: 36px; }
+      .corners-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .scroll-action-card { padding: 28px 20px; }
+      .number-444 { letter-spacing: 0.1em; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="journey.html" class="back-btn">← Back</a>
+  <div class="nav-divider"></div>
+  <span class="nav-gift-label">Day 15 · Sacred Gift</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="gift-hero">
+    <div class="gift-day-badge">✦ Day 15 Milestone · Sacred Gift Unlocked</div>
+    <span class="gift-symbol-large">🔑</span>
+    <h1 class="gift-title">The Hidden Key of 444</h1>
+    <div class="gift-subtitle">The Sacred Technique of Command Prayer & Protection</div>
+    <p class="gift-intro">
+      You have reached the middle of the journey — the place where most turn back.
+      The fact that you are here means you are ready
+      to receive something that has not been shared in any other module.
+    </p>
+  </div>
+
+  <!-- 444 NUMBER REVEAL -->
+  <div class="number-reveal">
+    <div class="number-444">444</div>
+    <div class="number-meaning">The Number of Divine Presence & Angelic Protection</div>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- INTRO NARRATIVE -->
+  <div class="content-wrap">
+
+    <div class="narrative-block">
+      <p>
+        Throughout Scripture, the number 4 carries the meaning of creation, foundation,
+        and divine order — the four corners of the earth, the four winds, the four living creatures
+        before the throne. When it appears three times, it forms a seal: the fullness of creation
+        covered by divine presence on every side and in every dimension.
+      </p>
+      <p>
+        Those who have walked close with God for years have noticed that when 444 appears —
+        on a clock, a receipt, a page — it is often a signal from Heaven:
+        <em style="color:var(--gold-pale);font-style:normal;">"I am here. I am watching. You are covered."</em>
+        What you are about to learn is how to actively invoke that covering —
+        not as superstition, but as a deliberate act of faith rooted in the authority
+        given to you through Christ.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- SECTION: THE PATTERN -->
+  <div class="section-header">
+    <div class="section-eyebrow">The Hidden Key</div>
+    <div class="section-title">What 4 · 4 · 4 Means</div>
+  </div>
+
+  <div class="content-wrap" style="margin-bottom: 48px;">
+    <div class="pattern-block" style="opacity:0;animation:fadeUp 0.6s ease 0.2s forwards;">
+      <div class="pattern-row">
+        <div class="pattern-digit">4</div>
+        <div class="pattern-meaning">
+          <div class="pattern-meaning-title">4 Declarations — The Word Goes First</div>
+          <div class="pattern-meaning-desc">Before any action, the Word of God is spoken aloud over the situation. Four declarations, four foundations laid. "In the beginning was the Word" — and in every act of spiritual authority, the Word must come first.</div>
+        </div>
+      </div>
+      <div class="pattern-row">
+        <div class="pattern-digit">4</div>
+        <div class="pattern-meaning">
+          <div class="pattern-meaning-title">4 Directions — Nothing Is Left Uncovered</div>
+          <div class="pattern-meaning-desc">North, South, East, West. The protection is not partial. What you are sealing is sealed completely — your home, your family, your finances, your mind. No corner is left open to the enemy.</div>
+        </div>
+      </div>
+      <div class="pattern-row">
+        <div class="pattern-digit">4</div>
+        <div class="pattern-meaning">
+          <div class="pattern-meaning-title">4 Minutes — The Consecrated Window</div>
+          <div class="pattern-meaning-desc">This ritual takes no more than four minutes. It is not long — it is concentrated. A focused minute of faith carries more weight than an hour of distracted petition. These four minutes are set apart.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: THE RITUAL -->
+  <div class="section-header" style="opacity:0;animation:fadeUp 0.6s ease 0.25s forwards;">
+    <div class="section-eyebrow">The Technique</div>
+    <div class="section-title">The Command Prayer Ritual</div>
+  </div>
+
+  <div class="ritual-wrap">
+
+    <div class="ritual-step">
+      <div class="ritual-step-num">1</div>
+      <div class="ritual-step-body">
+        <div class="ritual-step-title">Prepare the Space</div>
+        <div class="ritual-step-desc">
+          Find a quiet place — ideally the entrance of your home, or any room
+          where you feel the need for covering. Stand still for a moment.
+          Place both feet flat on the ground. Take one slow breath.
+          This is not about a special posture or a sacred location —
+          it is about bringing your full attention into the present moment,
+          where the authority you carry becomes active.
+        </div>
+        <div class="instruction-card">
+          <div class="instruction-label">Before You Begin</div>
+          <div class="instruction-text">
+            Say quietly: <strong>"I come not in my own name, but in the name of Jesus Christ,
+            to whom all authority in heaven and on earth has been given."</strong>
+            This is not a formula — it is an alignment. You are reminding yourself
+            of whose power you are operating in.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ritual-step">
+      <div class="ritual-step-num">2</div>
+      <div class="ritual-step-body">
+        <div class="ritual-step-title">The 4 Declarations</div>
+        <div class="ritual-step-desc">
+          Speak these four declarations aloud. Not in a whisper — in the voice
+          of someone who knows they have been given authority. Each one builds on the last,
+          establishing the foundation before the command is given.
+        </div>
+        <div class="command-box">
+          <div class="command-box-label">Speak Aloud — The 4 Declarations</div>
+          <div class="command-text">
+            <em>"God is my refuge and my fortress. In Him I trust, and I shall not be shaken."</em>
+            <br><br>
+            <em>"No weapon formed against me, against my family, or against this house shall prosper.
+            This is the heritage of the servants of the Lord."</em>
+            <br><br>
+            <em>"The angel of the Lord encamps around those who fear Him, and delivers them.
+            That angel is here now."</em>
+            <br><br>
+            <em>"Greater is He who is in me than he who is in the world.
+            The light of God fills every corner of this place."</em>
+          </div>
+          <div class="command-note">Pause after each declaration. Let it settle before moving to the next.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ritual-step">
+      <div class="ritual-step-num">3</div>
+      <div class="ritual-step-body">
+        <div class="ritual-step-title">The 4 Directions — Sealing the House</div>
+        <div class="ritual-step-desc">
+          Now you will seal your home in the four directions.
+          You do not need to physically walk to each corner —
+          you can turn your body, or simply extend your hand
+          and speak with intention toward each direction.
+          Each direction carries a specific meaning and a specific command.
+        </div>
+        <div class="corners-grid">
+          <div class="corner-item">
+            <span class="corner-symbol">⬆️</span>
+            <div class="corner-name">North — The Past</div>
+            <div class="corner-meaning">Seal every door that past wounds, failures, or generations have left open.</div>
+          </div>
+          <div class="corner-item">
+            <span class="corner-symbol">⬇️</span>
+            <div class="corner-name">South — The Future</div>
+            <div class="corner-meaning">Cover the path ahead. What God has prepared cannot be stolen before it arrives.</div>
+          </div>
+          <div class="corner-item">
+            <span class="corner-symbol">⬅️</span>
+            <div class="corner-name">West — The Hidden</div>
+            <div class="corner-meaning">Seal what you cannot see. The enemy operates in concealment — light exposes all.</div>
+          </div>
+          <div class="corner-item">
+            <span class="corner-symbol">➡️</span>
+            <div class="corner-name">East — The New</div>
+            <div class="corner-meaning">Open the door to what God is bringing. Protection and invitation, both at once.</div>
+          </div>
+        </div>
+        <div class="command-box" style="margin-top: 16px;">
+          <div class="command-box-label">Speak toward each direction</div>
+          <div class="command-text">
+            <em>"In the name of Jesus Christ, I seal this [direction] against every spirit that is not of God.
+            No fear, no lack, no sickness, no division shall enter through this gate.
+            This home belongs to the Lord. Let His peace stand guard here."</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ritual-step">
+      <div class="ritual-step-num">4</div>
+      <div class="ritual-step-body">
+        <div class="ritual-step-title">The Closing Command</div>
+        <div class="ritual-step-desc">
+          After the four directions have been sealed, return to the center.
+          Stand still. This is the final act — not a request, but a declaration
+          of what has already been established in the spiritual realm
+          through the authority you have just exercised.
+        </div>
+        <div class="command-box">
+          <div class="command-box-label">The Final Declaration</div>
+          <div class="command-text">
+            <em>"It is done. This house is sealed. This family is covered.
+            The angels of the Lord are stationed here, and the peace of God,
+            which surpasses all understanding, now guards every heart and every mind within these walls.
+            <br><br>
+            444 — You are here, Lord. I receive Your presence.
+            <br><br>
+            In Jesus' name. Amen."</em>
+          </div>
+          <div class="command-note">Remain in silence for one minute after this declaration. Receive what has been established.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end ritual-wrap -->
+
+  <div class="sacred-divider" style="margin-top: 56px;">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- SCROLL ACTION -->
+  <div class="scroll-action">
+    <div class="scroll-action-card">
+      <span class="scroll-action-symbol">📜</span>
+      <div class="scroll-action-title">Now, Open Your Golden Scroll</div>
+      <div class="scroll-action-text">
+        After performing this ritual, you will feel things that need to be named.
+        Open your Golden Scroll and complete these two acts of faith.
+      </div>
+      <div class="scroll-action-steps">
+        <div class="scroll-step">
+          <div class="scroll-step-num">1</div>
+          <div class="scroll-step-text">
+            Write the <strong>3 things that have been stealing your peace</strong> —
+            the fears, the threats, the situations you have been carrying alone.
+            Name them. What is named can be surrendered.
+          </div>
+        </div>
+        <div class="scroll-step">
+          <div class="scroll-step-num">2</div>
+          <div class="scroll-step-text">
+            Beside each one, write a <strong>divine promise that defeats it</strong>.
+            A verse, a word from God, a truth that is stronger than the threat.
+            Then write: <strong>"Surrendered. Covered. Done."</strong>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-action-verse">"No weapon formed against you shall prosper." — Isaiah 54:17</div>
+    </div>
+  </div>
+
+  <!-- BACK BUTTON -->
+  <div class="back-wrap">
+    <a href="journey.html" class="btn-back-journey">← Return to My Journey</a>
+  </div>
+
+</div>
+
+<script>
+const ritualSteps = document.querySelectorAll('.ritual-step');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+ritualSteps.forEach(step => observer.observe(step));
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) document.body.style.opacity = '';
+});
+</script>
+</body>
+</html>
