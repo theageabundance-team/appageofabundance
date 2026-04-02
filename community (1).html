@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Abundance Circle | Age of Abundance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f0f0f;
+      --bg2:#1a1a1a;
+      --bubble:#1e2433;
+      --bubble2:#212121;
+      --gold:#c9a84c;
+      --gold-dim:rgba(201,168,76,0.12);
+      --gold-border:rgba(201,168,76,0.22);
+      --text:#e8e0d0;
+      --text-dim:#9a9080;
+      --text-muted:#5a5248;
+      --green:#25d366;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;opacity:0;animation:fadeIn 0.6s ease forwards;}
+    body.page-fade-out{animation:fadeOut 0.3s ease forwards;}
+    @keyframes fadeIn{to{opacity:1}}
+    @keyframes fadeOut{to{opacity:0}}
+
+    /* ── ONBOARDING ── */
+    .onboard-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .onboard-overlay.hidden{display:none;}
+    .onboard-modal{background:#1a1a1a;border:1px solid var(--gold-border);border-radius:12px;padding:40px 28px;text-align:center;max-width:400px;width:100%;animation:popUp .4s ease;}
+    @keyframes popUp{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+    .onboard-avatar{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#7a5020,var(--gold));display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;overflow:hidden;}
+    .onboard-avatar img{width:100%;height:100%;object-fit:cover;}
+    .onboard-name{font-family:'Inter',sans-serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:4px;}
+    .onboard-count{font-size:12px;color:var(--text-muted);margin-bottom:18px;}
+    .onboard-desc{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:20px;}
+    .onboard-bullets{text-align:left;margin:0 0 24px;display:flex;flex-direction:column;gap:10px;}
+    .onboard-bullet{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-dim);}
+    .ob-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+    .onboard-btn{width:100%;background:var(--green);color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;border-radius:8px;padding:14px 24px;cursor:pointer;transition:all .2s;margin-bottom:10px;}
+    .onboard-btn:hover{opacity:.9;}
+    .onboard-skip{font-size:12px;color:var(--text-muted);cursor:pointer;}
+    .onboard-skip:hover{color:var(--text-dim);}
+
+    /* ── HEADER ── */
+    .chat-header{background:#1f1f1f;border-bottom:1px solid #2a2a2a;padding:10px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;}
+    .ch-back{color:var(--text-dim);text-decoration:none;font-size:22px;line-height:1;padding:4px;transition:color .2s;}
+    .ch-back:hover{color:var(--text);}
+    .ch-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7a5020,var(--gold));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;overflow:hidden;}
+    .ch-avatar img{width:100%;height:100%;object-fit:cover;}
+    .ch-info{flex:1;}
+    .ch-name{font-size:15px;font-weight:600;color:var(--text);}
+    .ch-status{font-size:12px;color:#aaa;margin-top:1px;}
+    .ch-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle;}
+
+    /* ── CHAT BG ── */
+    .chat-body{padding:10px 10px 120px;max-width:600px;margin:0 auto;}
+
+    /* ── DATE DIVIDER ── */
+    .date-div{text-align:center;margin:10px 0 16px;}
+    .date-div span{background:#2a2a2a;border-radius:6px;padding:3px 12px;font-size:11px;color:#888;}
+
+    /* ── MESSAGE ── */
+    .msg-wrap{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px;animation:msgIn .4s ease forwards;opacity:0;}
+    @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7a5020,var(--gold));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;overflow:hidden;}
+    .msg-av img{width:100%;height:100%;object-fit:cover;}
+    .msg-right{flex:1;min-width:0;}
+    .msg-sender-name{font-size:12px;font-weight:600;color:var(--gold);margin-bottom:3px;padding-left:2px;}
+    .msg-bubble{background:var(--bubble);border-radius:2px 10px 10px 10px;padding:12px 14px;position:relative;}
+    .msg-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.4;}
+    .msg-verse-block{background:rgba(201,168,76,0.07);border-left:2px solid var(--gold);padding:8px 12px;margin-bottom:12px;border-radius:0 4px 4px 0;}
+    .msg-verse{font-style:italic;font-size:13px;color:#c8b87a;line-height:1.65;}
+    .msg-ref{font-size:10px;color:var(--gold);opacity:.6;margin-top:4px;display:block;font-weight:500;}
+    .msg-text{font-size:14px;color:#c8c0b0;line-height:1.75;white-space:pre-line;}
+    .msg-meta{font-size:10px;color:#666;text-align:right;margin-top:8px;}
+
+    /* ── REACTIONS ── */
+    .reactions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+    .r-pill{display:inline-flex;align-items:center;gap:5px;background:#2a2a2a;border:1px solid #333;border-radius:999px;padding:5px 11px;cursor:pointer;transition:all .15s;font-size:14px;user-select:none;}
+    .r-pill:hover{background:#333;border-color:#444;}
+    .r-pill.reacted{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.4);}
+    .r-count{font-size:12px;font-weight:500;color:#aaa;}
+    .r-pill.reacted .r-count{color:var(--gold);}
+
+    /* ── AMENS ── */
+    .amens-section{margin-top:14px;}
+    .amens-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:200px;overflow-y:auto;}
+    .amen-item{background:var(--bubble2);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px;animation:msgIn .3s ease forwards;opacity:0;}
+    .amen-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;color:#fff;}
+    .amen-text{font-size:13px;color:var(--text-dim);flex:1;}
+    .amen-time{font-size:10px;color:#555;flex-shrink:0;}
+
+    /* ── AMEN INPUT ── */
+    .amen-input-wrap{position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;border-top:1px solid #2a2a2a;padding:10px 12px;display:flex;align-items:center;gap:8px;z-index:100;max-width:600px;margin:0 auto;}
+    .amen-input{flex:1;background:#2a2a2a;border:1px solid #333;border-radius:22px;padding:10px 16px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
+    .amen-input::placeholder{color:#555;}
+    .amen-input:focus{border-color:rgba(201,168,76,0.4);}
+    .amen-send{width:40px;height:40px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:opacity .2s;flex-shrink:0;}
+    .amen-send:hover{opacity:.85;}
+
+    /* ── JOINED ── */
+    .joined-notice{text-align:center;margin:10px 0;}
+    .joined-notice span{font-size:11px;color:#666;background:#1f1f1f;border-radius:6px;padding:3px 12px;}
+    .joined-notice.hidden{display:none;}
+
+    @keyframes particleFly{to{transform:translate(var(--tx),var(--ty));opacity:0;}}
+  </style>
+</head>
+<body>
+
+  <!-- ONBOARDING -->
+  <div class="onboard-overlay" id="onboardOverlay">
+    <div class="onboard-modal">
+      <div class="onboard-avatar">🌿</div>
+      <div class="onboard-name">Abundance Circle</div>
+      <div class="onboard-count" id="onboardCount"></div>
+      <div class="onboard-desc">A sacred group where every day begins with a divine alignment prayer from The Age of Abundance.</div>
+      <div class="onboard-bullets">
+        <div class="onboard-bullet"><span class="ob-icon">🙏</span><span>A fresh prayer of alignment every single day</span></div>
+        <div class="onboard-bullet"><span class="ob-icon">✨</span><span>Scripture and decree to anchor your morning</span></div>
+        <div class="onboard-bullet"><span class="ob-icon">🔥</span><span>React and leave your Amen alongside thousands</span></div>
+      </div>
+      <button class="onboard-btn" onclick="joinCircle()">Join the Abundance Circle</button>
+      <div class="onboard-skip" onclick="skipOnboard()">Just looking for now</div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="chat-header">
+    <a href="index.html" class="ch-back" onclick="navigateTo(event,'index.html')">‹</a>
+    <div class="ch-avatar" id="headerAvatar">🌿</div>
+    <div class="ch-info">
+      <div class="ch-name">Abundance Circle</div>
+      <div class="ch-status"><span class="ch-dot"></span><span id="memberCount"></span></div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat-body">
+    <div class="date-div"><span id="datePill"></span></div>
+
+    <div class="msg-wrap">
+      <div class="msg-av" id="msgAv">🌿</div>
+      <div class="msg-right">
+        <div class="msg-sender-name">The Age of Abundance</div>
+        <div class="msg-bubble">
+          <div class="msg-title" id="msgTitle"></div>
+          <div class="msg-verse-block">
+            <div class="msg-verse" id="msgVerse"></div>
+            <span class="msg-ref" id="msgRef"></span>
+          </div>
+          <div class="msg-text" id="msgText"></div>
+          <div class="msg-meta" id="msgMeta"></div>
+        </div>
+        <div class="reactions">
+          <div class="r-pill" id="react-fire" onclick="react('fire','🔥')">🔥 <span class="r-count" id="count-fire"></span></div>
+          <div class="r-pill" id="react-pray" onclick="react('pray','🙏')">🙏 <span class="r-count" id="count-pray"></span></div>
+          <div class="r-pill" id="react-spark" onclick="react('spark','✨')">✨ <span class="r-count" id="count-spark"></span></div>
+        </div>
+
+        <!-- AMENS -->
+        <div class="amens-section">
+          <div class="amens-list" id="amensList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="joined-notice hidden" id="joinedNotice">
+      <span>You joined the Abundance Circle</span>
+    </div>
+  </div>
+
+  <!-- AMEN INPUT -->
+  <div class="amen-input-wrap">
+    <input class="amen-input" id="amenInput" type="text" placeholder="Leave your Amen..." maxlength="80"/>
+    <button class="amen-send" onclick="sendAmen()">➤</button>
+  </div>
+
+  <script>
+    // ── POSTS ──
+    const POSTS = [
+      {
+        title: "Thursday Prayer: Breaking Every Limit 🔱",
+        verse: '"Enlarge the place of your tent, stretch your tent curtains wide, do not hold back."',
+        ref: 'Isaiah 54:2',
+        text: 'Today is the day of expansion — the moment to step beyond the boundaries that have tried to contain you. You are not meant to stay small; you are designed for growth and divine increase.\n\n"I decree that my territory is enlarging. I break every limit, every barrier, and every self-imposed boundary. I am walking in authority, living in abundance, and stepping into my greatness. Amen." ✨\n\nDrop a 🔥 if you are breaking through every limit today!'
+      }
+      // ... seus outros 29 posts aqui
+    ];
+
+    // Amens pré-carregados por dia (base)
+    const SEED_AMENS = [
+      {name:'Maria S.',color:'#e67e22',text:'Amen! 🙏 Receiving this today!'},
+      {name:'James R.',color:'#8b5cf6',text:'Breaking every limit! 🔥'},
+      {name:'Ana L.',color:'#e74c3c',text:'Amen and Amen ✨'},
+      {name:'David M.',color:'#2ecc71',text:'This word is for me today 🙌'},
+      {name:'Sofia K.',color:'#3498db',text:'Grateful for this community 🙏'},
+      {name:'Carlos T.',color:'#c0392b',text:'Amen! Declaring this over my life!'},
+      {name:'Grace W.',color:'#f39c12',text:'Amen 🔥🔥'},
+    ];
+
+    const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const BASE = [1243, 987, 634];
+
+    function getDayIndex() {
+      let s = localStorage.getItem('abundance_start_date');
+      if (!s) { s = new Date().toISOString().split('T')[0]; localStorage.setItem('abundance_start_date', s); }
+      const start = new Date(s + 'T00:00:00');
+      const today = new Date(); today.setHours(0,0,0,0);
+      return Math.floor((today - start) / 86400000) % POSTS.length;
+    }
+
+    function fmt(n){ return n.toLocaleString(); }
+    function initials(name){ return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+
+    function init() {
+      const today = new Date();
+      const idx = getDayIndex();
+      const post = POSTS[idx];
+      const todayStr = today.toISOString().split('T')[0];
+      const members = 2847 + idx * 17;
+      const dow = DOW[today.getDay()];
+      const dateStr = `${dow}, ${MONTHS[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+
+      document.getElementById('memberCount').textContent = `${fmt(members)} members`;
+      document.getElementById('onboardCount').textContent = `${fmt(members)} members · Daily prayers`;
+      document.getElementById('datePill').textContent = dateStr;
+
+      document.getElementById('msgTitle').textContent = post.title;
+      document.getElementById('msgVerse').textContent = post.verse;
+      document.getElementById('msgRef').textContent = '— ' + post.ref;
+      document.getElementById('msgText').textContent = post.text;
+      document.getElementById('msgMeta').textContent = `7:00 AM · ${MONTHS[today.getMonth()]} ${today.getDate()}`;
+
+      // Reactions
+      ['fire','pray','spark'].forEach((k, i) => {
+        const saved = localStorage.getItem(`cr_${k}_${todayStr}`);
+        const base = BASE[i] + idx * 11;
+        document.getElementById(`count-${k}`).textContent = fmt(saved ? base + 1 : base);
+        if (saved) document.getElementById(`react-${k}`).classList.add('reacted');
+      });
+
+      // Amens
+      renderAmens(idx, todayStr);
+
+      if (localStorage.getItem('circle_member') === 'true') {
+        document.getElementById('joinedNotice').classList.remove('hidden');
+      }
+      if (localStorage.getItem('circle_visited') === 'true') {
+        document.getElementById('onboardOverlay').classList.add('hidden');
+      }
+
+      // Enter key
+      document.getElementById('amenInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') sendAmen();
+      });
+    }
+
+    function renderAmens(idx, todayStr) {
+      const list = document.getElementById('amensList');
+      const userAmens = JSON.parse(localStorage.getItem(`amens_${todayStr}`) || '[]');
+      const seedCount = 3 + (idx % 4);
+      const seeds = SEED_AMENS.slice(0, seedCount);
+      const all = [...seeds, ...userAmens];
+      list.innerHTML = all.map(a => `
+        <div class="amen-item">
+          <div class="amen-avatar" style="background:${a.color}">${initials(a.name)}</div>
+          <div class="amen-text"><strong style="color:var(--text);font-size:12px;">${a.name}</strong> ${a.text}</div>
+          <div class="amen-time">${a.time || ''}</div>
+        </div>`).join('');
+    }
+
+    function sendAmen() {
+      const input = document.getElementById('amenInput');
+      const val = input.value.trim();
+      if (!val) return;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const colors = ['#e67e22','#8b5cf6','#e74c3c','#2ecc71','#3498db','#f39c12','#c0392b'];
+      const now = new Date();
+      const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const amen = {
+        name: 'You',
+        color: colors[Math.floor(Math.random() * colors.length)],
+        text: val,
+        time: timeStr
+      };
+      const existing = JSON.parse(localStorage.getItem(`amens_${todayStr}`) || '[]');
+      existing.push(amen);
+      localStorage.setItem(`amens_${todayStr}`, JSON.stringify(existing));
+      input.value = '';
+      renderAmens(getDayIndex(), todayStr);
+      spawnParticles('🙏');
+      // Scroll to bottom
+      const list = document.getElementById('amensList');
+      list.scrollTop = list.scrollHeight;
+    }
+
+    function react(key, emoji) {
+      const btn = document.getElementById(`react-${key}`);
+      if (btn.classList.contains('reacted')) return;
+      const el = document.getElementById(`count-${key}`);
+      const todayStr = new Date().toISOString().split('T')[0];
+      btn.classList.add('reacted');
+      el.textContent = fmt(parseInt(el.textContent.replace(/,/g,'')) + 1);
+      localStorage.setItem(`cr_${key}_${todayStr}`, '1');
+      spawnParticles(emoji);
+    }
+
+    function spawnParticles(emoji) {
+      for (let i = 0; i < 12; i++) {
+        const p = document.createElement('div');
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 60 + Math.random() * 120;
+        p.style.cssText = `position:fixed;left:${window.innerWidth/2}px;top:${window.innerHeight*0.6}px;font-size:${13+Math.random()*9}px;pointer-events:none;z-index:700;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist-80}px;animation:particleFly ${0.7+Math.random()*0.6}s ease-out ${Math.random()*0.12}s forwards;`;
+        p.textContent = emoji;
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1500);
+      }
+    }
+
+    function joinCircle() {
+      localStorage.setItem('circle_member', 'true');
+      localStorage.setItem('circle_visited', 'true');
+      document.getElementById('onboardOverlay').classList.add('hidden');
+      document.getElementById('joinedNotice').classList.remove('hidden');
+      spawnParticles('✨');
+    }
+
+    function skipOnboard() {
+      localStorage.setItem('circle_visited', 'true');
+      document.getElementById('onboardOverlay').classList.add('hidden');
+    }
+
+    function navigateTo(e, url) {
+      e.preventDefault();
+      document.body.classList.add('page-fade-out');
+      setTimeout(() => window.location.href = url, 350);
+    }
+
+    window.addEventListener('pageshow', function(e) {
+      if (e.persisted) {
+        document.body.classList.remove('page-fade-out');
+        document.body.style.opacity = '1';
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>
