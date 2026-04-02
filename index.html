@@ -662,6 +662,22 @@
     </div>
     <div class="cards-viewport"><div class="cards-track" id="track-expand"></div></div>
   </div>
+
+  <!-- ABUNDANCE CIRCLE BANNER -->
+  <div class="divider"></div>
+  <div class="row-section fade-section" style="padding:0 var(--pad) 32px;">
+    <a href="community.html" onclick="event.preventDefault();navigateTo('community.html')" style="text-decoration:none;display:block;">
+      <div style="background:linear-gradient(135deg,#0f1a12,#131f17);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:24px 24px;display:flex;align-items:center;gap:18px;transition:border-color .2s;cursor:pointer;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.25)'">
+        <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#7a5020,#c9a84c);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🌿</div>
+        <div style="flex:1;">
+          <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#c9a84c;opacity:.7;margin-bottom:4px;">Daily Alignment</div>
+          <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:#e8e0d0;margin-bottom:4px;">Abundance Circle</div>
+          <div style="font-size:13px;color:#8a8070;font-family:'Crimson Pro',Georgia,serif;">Receive your daily prayer of alignment →</div>
+        </div>
+        <div style="font-size:22px;color:rgba(201,168,76,0.4);">›</div>
+      </div>
+    </a>
+  </div>
 </main>
 
 <!-- BOTTOM NAV MOBILE -->
@@ -678,6 +694,10 @@
     <a href="journal.html" class="bottom-nav-item">
       <span class="nav-icon">📖</span>
       <span>Journal</span>
+    </a>
+    <a href="community.html" class="bottom-nav-item" onclick="navigateTo('community.html')">
+      <span class="nav-icon">👥</span>
+      <span>Community</span>
     </a>
   </div>
 </nav>
