@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The New Name — Day 21 Gift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-pale:  #f5e6b8;
+      --gold-dim:   #7a5f28;
+      --bg:         #0a0a0c;
+      --bg2:        #0e0e12;
+      --bg3:        #141418;
+      --bg4:        #1a1a20;
+      --text:       #f0e8d8;
+      --text-dim:   #8a7a60;
+      --text-mid:   #c8b898;
+      --purple:     rgba(160,100,255,0.15);
+      --purple-glow:rgba(160,100,255,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse, rgba(160,100,255,0.06) 0%, rgba(201,168,76,0.05) 50%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 5%; height: 62px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.92rem; letter-spacing: 0.03em;
+      transition: color 0.2s; text-decoration: none;
+    }
+    .back-btn:hover { color: var(--gold); }
+    .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+    .nav-gift-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+    }
+
+    /* ── PAGE ── */
+    .page {
+      position: relative; z-index: 1;
+      padding-top: 62px;
+      padding-bottom: 80px;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO ── */
+    .gift-hero {
+      position: relative;
+      padding: 72px 5% 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .gift-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(160,100,255,0.08) 0%, rgba(201,168,76,0.05) 45%, transparent 65%);
+      pointer-events: none;
+    }
+    .gift-day-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 999px; padding: 6px 18px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 28px;
+    }
+    .gift-symbol-large {
+      font-size: 4rem; line-height: 1;
+      margin-bottom: 24px; display: block;
+      filter: drop-shadow(0 0 30px rgba(160,100,255,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .gift-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em; line-height: 1.1;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 40px rgba(201,168,76,0.3));
+    }
+    .gift-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 28px;
+    }
+    .gift-intro {
+      font-size: 1.12rem; color: var(--text-mid);
+      max-width: 600px; margin: 0 auto; line-height: 1.75;
+    }
+
+    /* ── DIVIDER ── */
+    .sacred-divider {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 5%; margin: 48px 0;
+    }
+    .sacred-divider::before,
+    .sacred-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
+    }
+    .sacred-divider-symbol {
+      font-size: 1rem; color: var(--gold); opacity: 0.5; letter-spacing: 0.3em;
+    }
+
+    /* ── CONTENT WRAP ── */
+    .content-wrap {
+      max-width: 720px; margin: 0 auto; padding: 0 5%;
+    }
+
+    .narrative-p {
+      font-size: 1.08rem; color: var(--text-mid);
+      line-height: 1.82; margin-bottom: 20px;
+      opacity: 0; transform: translateY(16px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .narrative-p:nth-child(1) { animation-delay: 0.1s; }
+    .narrative-p:nth-child(2) { animation-delay: 0.2s; }
+    .narrative-p:nth-child(3) { animation-delay: 0.3s; }
+
+    /* ── NAMES IN SCRIPTURE ── */
+    .names-section {
+      padding: 0 5%; max-width: 720px; margin: 0 auto 56px;
+    }
+    .names-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 10px;
+      text-align: center;
+    }
+    .names-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--text); text-align: center;
+      margin-bottom: 32px;
+    }
+    .names-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .name-card {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 24px 18px;
+      text-align: center;
+      opacity: 0; transform: translateY(16px);
+      transition: border-color 0.3s;
+    }
+    .name-card.visible { animation: fadeUp 0.6s ease forwards; }
+    .name-card:nth-child(1) { animation-delay: 0.05s; }
+    .name-card:nth-child(2) { animation-delay: 0.15s; }
+    .name-card:nth-child(3) { animation-delay: 0.25s; }
+    .name-card:hover { border-color: rgba(201,168,76,0.2); }
+
+    .name-old {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem; color: var(--text-dim);
+      letter-spacing: 0.06em; margin-bottom: 8px;
+      text-decoration: line-through; opacity: 0.6;
+    }
+    .name-arrow {
+      font-size: 1.1rem; color: var(--gold);
+      opacity: 0.4; margin-bottom: 8px; display: block;
+    }
+    .name-new {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--gold-pale); letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .name-meaning {
+      font-size: 0.8rem; color: var(--text-dim);
+      line-height: 1.5; font-style: italic;
+    }
+    .name-verse {
+      margin-top: 10px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.5;
+    }
+
+    /* ── STEPS ── */
+    .steps-section {
+      padding: 0 5%; max-width: 720px; margin: 0 auto;
+    }
+    .section-header {
+      text-align: center; margin-bottom: 36px;
+      opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .section-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+
+    .step-block {
+      margin-bottom: 52px;
+      opacity: 0; transform: translateY(20px);
+    }
+    .step-block.visible { animation: fadeUp 0.65s ease forwards; }
+
+    .step-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.55; margin-bottom: 10px;
+    }
+    .step-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--gold-pale); letter-spacing: 0.03em;
+      line-height: 1.2; margin-bottom: 18px;
+    }
+    .step-text {
+      font-size: 1.06rem; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 22px;
+    }
+
+    /* Instruction card */
+    .instruction-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 10px 10px 0;
+      padding: 22px 24px; margin-bottom: 16px;
+    }
+    .instruction-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7; margin-bottom: 10px;
+    }
+    .instruction-text {
+      font-size: 1rem; color: var(--text); line-height: 1.75;
+    }
+    .instruction-text strong { color: var(--gold-pale); font-weight: 600; }
+
+    /* Declaration */
+    .declaration-block {
+      background: rgba(160,100,255,0.06);
+      border: 1px solid rgba(160,100,255,0.2);
+      border-radius: 12px;
+      padding: 26px 28px;
+      text-align: center; position: relative;
+    }
+    .declaration-block::before {
+      content: '"';
+      position: absolute; top: -8px; left: 22px;
+      font-family: 'Cinzel', serif; font-size: 4rem;
+      color: var(--gold); opacity: 0.12; line-height: 1;
+    }
+    .declaration-text {
+      font-size: 1.2rem; color: var(--gold-pale);
+      line-height: 1.7; position: relative; z-index: 1;
+    }
+    .declaration-note {
+      margin-top: 12px; font-size: 0.82rem;
+      color: var(--text-dim); font-style: italic;
+    }
+
+    /* Name suggestion pills */
+    .name-suggestions {
+      margin-top: 18px;
+    }
+    .name-suggestions-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-dim); opacity: 0.7; margin-bottom: 12px;
+    }
+    .name-pills {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .name-pill {
+      background: rgba(160,100,255,0.08);
+      border: 1px solid rgba(160,100,255,0.2);
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--text-mid);
+      cursor: default;
+    }
+
+    /* Scripting template */
+    .scripting-template {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 28px 28px;
+      margin-top: 16px;
+    }
+    .scripting-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-dim); opacity: 0.7; margin-bottom: 18px;
+    }
+    .scripting-line {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 18px; padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .scripting-line:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .scripting-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); opacity: 0.35;
+      flex-shrink: 0; margin-top: 8px;
+    }
+    .scripting-prompt {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.06em; color: var(--gold);
+      opacity: 0.7; margin-bottom: 5px;
+    }
+    .scripting-example {
+      font-size: 0.98rem; color: var(--text-mid);
+      line-height: 1.6; font-style: italic;
+    }
+
+    /* ── SCROLL ACTION ── */
+    .scroll-action {
+      max-width: 720px; margin: 56px auto 0; padding: 0 5%;
+      opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+    .scroll-action-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 16px; padding: 36px 32px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .scroll-action-card::before {
+      content: '';
+      position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .scroll-action-symbol { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+    .scroll-action-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 14px; letter-spacing: 0.03em;
+    }
+    .scroll-action-text {
+      font-size: 1.05rem; color: var(--text-mid);
+      line-height: 1.75; max-width: 520px; margin: 0 auto 24px;
+    }
+    .scroll-steps {
+      display: flex; flex-direction: column; gap: 12px;
+      max-width: 500px; margin: 0 auto;
+      text-align: left;
+    }
+    .scroll-step {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 8px; padding: 14px 16px;
+    }
+    .scroll-step-num {
+      font-family: 'Cinzel', serif; font-size: 0.7rem;
+      font-weight: 700; color: var(--gold); opacity: 0.6;
+      min-width: 18px; margin-top: 1px;
+    }
+    .scroll-step-text {
+      font-size: 0.95rem; color: var(--text-mid); line-height: 1.6;
+    }
+    .scroll-step-text strong { color: var(--gold-pale); font-weight: 600; }
+    .scroll-action-verse {
+      margin-top: 24px; font-family: 'Cinzel', serif;
+      font-size: 0.72rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.6;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap { text-align: center; padding: 48px 5% 60px; }
+    .btn-back-journey {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.25s;
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold-pale); text-decoration: none;
+    }
+    .btn-back-journey:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.14));
+      box-shadow: 0 6px 28px rgba(201,168,76,0.18);
+      transform: translateY(-2px);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+    @media(max-width: 768px) {
+      .gift-hero { padding: 56px 5% 44px; }
+      .names-grid { grid-template-columns: 1fr; gap: 12px; }
+      .scroll-action-card { padding: 28px 20px; }
+      .scripting-template { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="journey.html" class="back-btn">← Back</a>
+  <div class="nav-divider"></div>
+  <span class="nav-gift-label">Day 21 · Sacred Gift</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="gift-hero">
+    <div class="gift-day-badge">✦ Day 21 Milestone · Sacred Gift Unlocked</div>
+    <span class="gift-symbol-large">🦋</span>
+    <h1 class="gift-title">The New Name</h1>
+    <div class="gift-subtitle">Identity Protocol & The 6-Month Scripting</div>
+    <p class="gift-intro">
+      Twenty-one days. In Scripture, this number marks the end of a spiritual battle
+      and the arrival of the answer. You are not the same person who began.
+      Today, you receive your new name.
+    </p>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- NARRATIVE -->
+  <div class="content-wrap" style="margin-bottom: 48px;">
+    <p class="narrative-p">
+      In the Bible, whenever God transformed someone, one of the first things He did was
+      change their name. Abram became Abraham — father of a multitude —
+      before a single child had been born. Jacob, the deceiver, wrestled with God through the night
+      and rose at dawn with a limp and a new name: Israel, the one who prevails with God.
+      Saul, the persecutor, was blinded on a road and rose as Paul, the apostle to the nations.
+    </p>
+    <p class="narrative-p">
+      A name is not just a label. In the Kingdom, a name is an identity, a calling, a declaration
+      of what someone is — not what their past says, not what their circumstances suggest,
+      but what God sees when He looks at them.
+      For 21 days, He has been seeing something new in you.
+      Today, you see it too.
+    </p>
+    <p class="narrative-p">
+      Before you choose your name, you are going to do something important.
+      You are going to read what you have already written.
+    </p>
+  </div>
+
+  <!-- NAMES IN SCRIPTURE -->
+  <div class="names-section">
+    <div class="names-eyebrow">As It Was in Scripture</div>
+    <div class="names-title">Those Who Received a New Name</div>
+    <div class="names-grid" id="names-grid">
+      <div class="name-card">
+        <div class="name-old">Abram</div>
+        <span class="name-arrow">↓</span>
+        <div class="name-new">Abraham</div>
+        <div class="name-meaning">Father of many nations — before the promise was visible</div>
+        <div class="name-verse">Genesis 17:5</div>
+      </div>
+      <div class="name-card">
+        <div class="name-old">Jacob</div>
+        <span class="name-arrow">↓</span>
+        <div class="name-new">Israel</div>
+        <div class="name-meaning">One who prevails with God — after the night of wrestling</div>
+        <div class="name-verse">Genesis 32:28</div>
+      </div>
+      <div class="name-card">
+        <div class="name-old">Saul</div>
+        <span class="name-arrow">↓</span>
+        <div class="name-new">Paul</div>
+        <div class="name-meaning">Humbled and sent — the persecutor became the apostle</div>
+        <div class="name-verse">Acts 13:9</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-section">
+
+    <div class="section-header">
+      <div class="section-eyebrow">Your Ritual</div>
+      <div class="section-title">Three Acts of Transformation</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step-block">
+      <div class="step-number">Act One</div>
+      <div class="step-title">Read Your Entire Golden Scroll</div>
+      <div class="step-text">
+        Before you do anything else today, go and find your Golden Scroll —
+        the paper you have been carrying since Day 3.
+        Sit somewhere quiet. Read everything you have written on it
+        from the very beginning: the three victories you declared on Day 3,
+        the flow you chose to activate on Day 7, the threats you surrendered on Day 15.
+        Read it all, slowly.
+      </div>
+      <div class="instruction-card">
+        <div class="instruction-label">What You Will Notice</div>
+        <div class="instruction-text">
+          As you read, notice what has shifted. Some of what you wrote may already be moving.
+          Some of it may still feel distant — but notice that the person who wrote those words
+          with trembling faith on Day 3 is not the same person reading them today.
+          <strong>That distance is your transformation.</strong>
+          Let yourself feel it before you move on.
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-block">
+      <div class="step-number">Act Two</div>
+      <div class="step-title">Choose Your New Name</div>
+      <div class="step-text">
+        Now you are going to choose a single word — your new name.
+        Not a title, not a description. One word that captures who you have become
+        in these 21 days. A word that, when you say it, you feel something true rising
+        in your chest. It might be a virtue, a calling, a quality, or a declaration.
+        There is no wrong answer — only the word that God has already been whispering.
+      </div>
+      <div class="name-suggestions">
+        <div class="name-suggestions-label">Some words to consider — or let them inspire your own</div>
+        <div class="name-pills">
+          <span class="name-pill">Overcomer</span>
+          <span class="name-pill">Heir</span>
+          <span class="name-pill">Abundant</span>
+          <span class="name-pill">Restored</span>
+          <span class="name-pill">Faithful</span>
+          <span class="name-pill">Chosen</span>
+          <span class="name-pill">Protected</span>
+          <span class="name-pill">Fruitful</span>
+          <span class="name-pill">Renewed</span>
+          <span class="name-pill">Established</span>
+          <span class="name-pill">Redeemed</span>
+          <span class="name-pill">Unshakeable</span>
+        </div>
+      </div>
+      <div class="instruction-card" style="margin-top: 20px;">
+        <div class="instruction-label">Your Instruction</div>
+        <div class="instruction-text">
+          Open your Golden Scroll. At the very top of the page —
+          above everything else you have written — write your new name
+          in the largest letters on the page. Underneath it, write:
+          <strong>"This is who I am before God. This is the name He calls me."</strong>
+        </div>
+      </div>
+      <div class="declaration-block" style="margin-top: 20px;">
+        <div class="declaration-text">
+          Stand before the mirror once more.<br>
+          Look into your eyes. Speak your new name aloud.<br><br>
+          "This is my name before the Kingdom.<br>
+          I am no longer who I was.<br>
+          I receive this identity now."
+        </div>
+        <div class="declaration-note">Say it three times. The third time, let there be silence.</div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-block">
+      <div class="step-number">Act Three</div>
+      <div class="step-title">Write the Next 6 Months</div>
+      <div class="step-text">
+        Now that you know who you are, it is time to write where you are going.
+        This is the 6-Month Scripting — a powerful act of faith in which you write
+        the story of the next six months of your life as if it has already happened.
+        Not as wishes. Not as goals. As testimony.
+        You are writing from the future, looking back at what God did.
+      </div>
+      <div class="instruction-card">
+        <div class="instruction-label">Your Instruction</div>
+        <div class="instruction-text">
+          Take a new piece of paper — or the back of your Golden Scroll.
+          Write today's date, then write: <strong>"Six months from today, this is what God has done:"</strong>
+          Then write freely, guided by the prompts below. Do not filter.
+          Do not be afraid of the size of what you write.
+          <strong>God is not intimidated by big dreams.</strong>
+        </div>
+      </div>
+      <div class="scripting-template">
+        <div class="scripting-label">Scripting Prompts — Write in past tense, as testimony</div>
+        <div class="scripting-line">
+          <div class="scripting-dot"></div>
+          <div>
+            <div class="scripting-prompt">Finances & Provision</div>
+            <div class="scripting-example">"Lord, thank You for what You did with my finances. Six months ago I could not see how — and then..."</div>
+          </div>
+        </div>
+        <div class="scripting-line">
+          <div class="scripting-dot"></div>
+          <div>
+            <div class="scripting-prompt">Health & Strength</div>
+            <div class="scripting-example">"My body has been renewed. I feel in my body what I declared in faith on Day 3..."</div>
+          </div>
+        </div>
+        <div class="scripting-line">
+          <div class="scripting-dot"></div>
+          <div>
+            <div class="scripting-prompt">Relationships & Family</div>
+            <div class="scripting-example">"The atmosphere in my home has changed. The people around me have noticed something different about me..."</div>
+          </div>
+        </div>
+        <div class="scripting-line">
+          <div class="scripting-dot"></div>
+          <div>
+            <div class="scripting-prompt">Calling & Purpose</div>
+            <div class="scripting-example">"The door that seemed closed has opened. I am now walking in what I was made for..."</div>
+          </div>
+        </div>
+        <div class="scripting-line">
+          <div class="scripting-dot"></div>
+          <div>
+            <div class="scripting-prompt">Faith & Connection</div>
+            <div class="scripting-example">"My relationship with God is not the same. I hear Him more clearly. I trust Him more deeply..."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end steps-section -->
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- SCROLL ACTION -->
+  <div class="scroll-action">
+    <div class="scroll-action-card">
+      <span class="scroll-action-symbol">📜</span>
+      <div class="scroll-action-title">Your Golden Scroll Is Now Complete</div>
+      <div class="scroll-action-text">
+        Your Scroll now holds your identity, your surrenders, your declarations,
+        and the vision of your future. Keep it with great care.
+        One milestone remains — and it will ask you to seal everything
+        you have built into a final act of faith.
+      </div>
+      <div class="scroll-steps">
+        <div class="scroll-step">
+          <div class="scroll-step-num">✦</div>
+          <div class="scroll-step-text">
+            Your new name is written at the top of the Scroll —
+            <strong>the identity God has been forming in you for 21 days.</strong>
+          </div>
+        </div>
+        <div class="scroll-step">
+          <div class="scroll-step-num">✦</div>
+          <div class="scroll-step-text">
+            Your 6-month scripting is written —
+            <strong>the testimony you are believing God to write in your life.</strong>
+          </div>
+        </div>
+        <div class="scroll-step">
+          <div class="scroll-step-num">✦</div>
+          <div class="scroll-step-text">
+            Hold both papers. You are 19 days from the final milestone.
+            <strong>Do not stop now.</strong>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-action-verse">"Therefore, if anyone is in Christ, the new creation has come." — 2 Corinthians 5:17</div>
+    </div>
+  </div>
+
+  <!-- BACK -->
+  <div class="back-wrap">
+    <a href="journey.html" class="btn-back-journey">← Return to My Journey</a>
+  </div>
+
+</div>
+
+<script>
+const nameCards = document.querySelectorAll('.name-card');
+const stepBlocks = document.querySelectorAll('.step-block');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+nameCards.forEach(c => observer.observe(c));
+stepBlocks.forEach(s => observer.observe(s));
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) document.body.style.opacity = '';
+});
+</script>
+</body>
+</html>
