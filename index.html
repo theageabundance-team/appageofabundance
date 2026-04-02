@@ -544,6 +544,36 @@
     @keyframes pageFadeOut {
       to { opacity: 0; transform: translateY(-10px); }
     }
+
+    .practice-pending-banner {
+      margin: 0 0 16px;
+    }
+    .ppb-inner {
+      background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-left: 3px solid rgba(201,168,76,0.5);
+      border-radius: 8px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+    .ppb-icon { font-size: 18px; margin-bottom: 6px; }
+    .ppb-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 5px;
+      letter-spacing: 0.02em;
+    }
+    .ppb-text {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      font-variant: normal;
+      text-transform: none;
+      font-feature-settings: normal;
+    }
   </style>
 </head>
 <body>
@@ -815,10 +845,23 @@ if(practiceTrack){
         <div class="pcb-inner">
           <div class="pcb-stars">✦ ✦ ✦</div>
           <div class="pcb-title">Today's Practice Complete</div>
-          <div class="pcb-text">You have walked in alignment today. Heaven has registered your faithfulness.</div>
+          <div class="pcb-text">You have walked in alignment today. Your connection with God has been renewed. Heaven has registered your faithfulness.</div>
           <div class="pcb-verse">"Well done, good and faithful servant." — Matthew 25:23</div>
         </div>`;
       practiceSection.querySelector('.row-header').after(banner);
+    } else {
+      const doneSoFar = done.filter(Boolean).length;
+      if(doneSoFar === 0){
+        const banner = document.createElement('div');
+        banner.className = 'practice-pending-banner';
+        banner.innerHTML = `
+          <div class="ppb-inner">
+            <div class="ppb-icon">🙏</div>
+            <div class="ppb-title">Your daily practices are waiting</div>
+            <div class="ppb-text">Take 2 minutes to deepen your connection with God today and carry His presence into every moment that follows.</div>
+          </div>`;
+        practiceSection.querySelector('.row-header').after(banner);
+      }
     }
   }
 
