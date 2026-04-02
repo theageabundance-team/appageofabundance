@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Golden Scroll — Day 3 Gift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-pale:  #f5e6b8;
+      --gold-dim:   #7a5f28;
+      --bg:         #0a0a0c;
+      --bg2:        #0e0e12;
+      --bg3:        #141418;
+      --text:       #f0e8d8;
+      --text-dim:   #8a7a60;
+      --text-mid:   #c8b898;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grain */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* Top glow */
+    body::after {
+      content: '';
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── BACK NAV ── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 5%; height: 62px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.92rem; letter-spacing: 0.03em;
+      transition: color 0.2s; text-decoration: none;
+    }
+    .back-btn:hover { color: var(--gold); }
+    .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+    .nav-gift-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page {
+      position: relative; z-index: 1;
+      padding-top: 62px;
+      padding-bottom: 80px;
+    }
+
+    /* ── HERO ── */
+    .gift-hero {
+      position: relative;
+      padding: 72px 5% 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .gift-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .gift-day-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 28px;
+    }
+    .gift-symbol-large {
+      font-size: 4rem; line-height: 1;
+      margin-bottom: 24px;
+      display: block;
+      filter: drop-shadow(0 0 30px rgba(201,168,76,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .gift-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em; line-height: 1.1;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 40px rgba(201,168,76,0.3));
+    }
+    .gift-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6;
+      margin-bottom: 28px;
+    }
+    .gift-intro {
+      font-size: 1.15rem; color: var(--text-mid);
+      max-width: 580px; margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── DIVIDER ── */
+    .sacred-divider {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 5%; margin: 48px 0;
+    }
+    .sacred-divider::before,
+    .sacred-divider::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
+    }
+    .sacred-divider-symbol {
+      font-size: 1rem; color: var(--gold); opacity: 0.5;
+      letter-spacing: 0.3em;
+    }
+
+    /* ── STEPS ── */
+    .steps-wrap {
+      padding: 0 5%;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .step-block {
+      margin-bottom: 64px;
+      opacity: 0; transform: translateY(24px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .step-block:nth-child(1) { animation-delay: 0.1s; }
+    .step-block:nth-child(2) { animation-delay: 0.25s; }
+    .step-block:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.55;
+      margin-bottom: 10px;
+    }
+    .step-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--gold-pale);
+      letter-spacing: 0.03em; line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    /* Narrative paragraph */
+    .step-narrative {
+      font-size: 1.1rem; color: var(--text-mid);
+      line-height: 1.85; margin-bottom: 28px;
+    }
+
+    /* Instruction card */
+    .instruction-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      position: relative; overflow: hidden;
+    }
+    .instruction-card::before {
+      content: '';
+      position: absolute; top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .instruction-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6;
+      margin-bottom: 12px;
+    }
+    .instruction-text {
+      font-size: 1.05rem; color: var(--text);
+      line-height: 1.75;
+    }
+    .instruction-text strong {
+      color: var(--gold-pale);
+      font-weight: 600;
+    }
+
+    /* Declaration block — the words to speak aloud */
+    .declaration-block {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 20px 0;
+      text-align: center;
+      position: relative;
+    }
+    .declaration-block::before {
+      content: '"';
+      position: absolute; top: -10px; left: 24px;
+      font-family: 'Cinzel', serif;
+      font-size: 4rem; color: var(--gold);
+      opacity: 0.15; line-height: 1;
+    }
+    .declaration-text {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.25rem; font-style: italic;
+      color: var(--gold-pale);
+      line-height: 1.7;
+      position: relative; z-index: 1;
+    }
+    .declaration-note {
+      margin-top: 14px;
+      font-size: 0.82rem; color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* Example writing block */
+    .example-block {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+    .example-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--text-dim); opacity: 0.7;
+      margin-bottom: 14px;
+    }
+    .example-line {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .example-line:last-child { margin-bottom: 0; }
+    .example-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold); opacity: 0.4;
+      flex-shrink: 0; margin-top: 9px;
+    }
+    .example-text {
+      font-size: 1rem; color: var(--text-mid);
+      font-style: italic; line-height: 1.6;
+    }
+
+    /* ── SEALING SECTION ── */
+    .sealing-block {
+      background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 16px;
+      padding: 40px 36px;
+      text-align: center;
+      position: relative; overflow: hidden;
+      margin: 0 5% 64px;
+      max-width: 720px;
+      margin-left: auto; margin-right: auto;
+    }
+    .sealing-block::before {
+      content: '';
+      position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .sealing-symbol {
+      font-size: 2.5rem; margin-bottom: 20px; display: block;
+      filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));
+    }
+    .sealing-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--gold-pale);
+      letter-spacing: 0.05em; margin-bottom: 16px;
+    }
+    .sealing-text {
+      font-size: 1.05rem; color: var(--text-mid);
+      line-height: 1.75;
+      max-width: 500px; margin: 0 auto 24px;
+    }
+    .sealing-verse {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.7;
+    }
+
+    /* ── SCROLL REMINDER ── */
+    .scroll-reminder {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 32px 5%;
+      max-width: 720px;
+      margin-left: auto; margin-right: auto;
+    }
+    .scroll-reminder-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .scroll-reminder-text {
+      font-size: 0.92rem; color: var(--text-mid);
+      line-height: 1.6;
+    }
+    .scroll-reminder-text strong {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      color: var(--gold); display: block; margin-bottom: 4px;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap {
+      text-align: center;
+      padding: 20px 5% 60px;
+    }
+    .btn-back-journey {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.25s;
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold-pale);
+      text-decoration: none;
+    }
+    .btn-back-journey:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.14));
+      box-shadow: 0 6px 28px rgba(201,168,76,0.18);
+      transform: translateY(-2px);
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+    @media(max-width: 768px) {
+      .gift-hero { padding: 56px 5% 44px; }
+      .instruction-card, .declaration-block, .example-block { padding: 20px 20px; }
+      .sealing-block { padding: 32px 22px; }
+      .step-title { font-size: 1.25rem; }
+      .declaration-text { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="journey.html" class="back-btn">← Back</a>
+  <div class="nav-divider"></div>
+  <span class="nav-gift-label">Day 3 · Sacred Gift</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="gift-hero">
+    <div class="gift-day-badge">✦ Day 3 Milestone · Sacred Gift Unlocked</div>
+    <span class="gift-symbol-large">📜</span>
+    <h1 class="gift-title">The Golden Scroll</h1>
+    <div class="gift-subtitle">Activation of the Royal Image & Sacred Writing</div>
+    <p class="gift-intro">
+      You have returned for three days. Heaven has been watching.<br>
+      Before you write your future, you must first see yourself<br>
+      as the one who is worthy of receiving it.
+    </p>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-wrap">
+
+    <!-- STEP 1 -->
+    <div class="step-block">
+      <div class="step-number">Step One</div>
+      <div class="step-title">The Mirror Alignment</div>
+
+      <p class="step-narrative">
+        Before a king takes his throne, he does not look at his circumstances.
+        He looks at himself. There is a reason kings had mirrors of polished gold —
+        not out of vanity, but as a daily act of remembrance.
+        Who you see determines what you receive.
+        Go now to a mirror. Look into your own eyes — not quickly, not shyly.
+        Look the way God looks at you: with full recognition of who He made.
+      </p>
+
+      <div class="instruction-card">
+        <div class="instruction-label">Your Instruction</div>
+        <div class="instruction-text">
+          Stand before a mirror. Place one hand over your heart.
+          Look directly into your eyes and speak these words aloud,
+          <strong>slowly, with authority</strong>:
+        </div>
+      </div>
+
+      <div class="declaration-block">
+        <div class="declaration-text">
+          "I am not who my circumstances say I am.<br>
+          I am the steward of the Kingdom's abundance,<br>
+          and today — I take my throne."
+        </div>
+        <div class="declaration-note">Speak this three times. Let the words settle in your chest before you move on.</div>
+      </div>
+
+      <p class="step-narrative" style="margin-top: 20px; margin-bottom: 0;">
+        If something stirs inside you — a tear, a breath, a silence —
+        do not rush past it. That is the sound of an old identity
+        making room for the new one God has been preparing.
+      </p>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-block">
+      <div class="step-number">Step Two</div>
+      <div class="step-title">The Writing of the Scroll</div>
+
+      <p class="step-narrative">
+        Now, from that place of royal identity, you write.
+        Take a piece of paper — any paper. From this moment forward,
+        this paper is your Golden Scroll. Keep it somewhere sacred:
+        a Bible, a nightstand, a place only you know.
+        It will grow with you throughout this journey.
+      </p>
+
+      <div class="instruction-card">
+        <div class="instruction-label">Your Instruction</div>
+        <div class="instruction-text">
+          At the top of your paper, write today's date.
+          Then write <strong>three victories</strong> you are believing God for —
+          but write them <strong>as if they have already happened</strong>,
+          in the form of a prayer of gratitude. Let no doubt edit your pen.
+          Write what is true in the Kingdom, even before it is visible on earth.
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-label">How your writing might look</div>
+        <div class="example-line">
+          <div class="example-dot"></div>
+          <div class="example-text">"Father, thank You for the complete freedom from that debt — for the peace that now reigns in my finances. It is done."</div>
+        </div>
+        <div class="example-line">
+          <div class="example-dot"></div>
+          <div class="example-text">"Lord, thank You for the restoration of my health. My body is strong, whole, and filled with Your life."</div>
+        </div>
+        <div class="example-line">
+          <div class="example-dot"></div>
+          <div class="example-text">"God, thank You for opening the door that no man could open — the opportunity I have been waiting for has arrived."</div>
+        </div>
+      </div>
+
+      <p class="step-narrative" style="margin-bottom: 0;">
+        These are not wishes. These are royal decrees —
+        the language of someone who knows that God's word
+        does not return void.
+      </p>
+    </div>
+
+    <!-- STEP 3 — SEALING -->
+    <div class="step-block">
+      <div class="step-number">The Sealing</div>
+      <div class="step-title">Return to the Mirror</div>
+
+      <p class="step-narrative">
+        Your Scroll is written. Now close the circle.
+        Return to the mirror — this time holding your paper.
+        Read aloud what you have written, looking into your own eyes
+        as you speak. You are uniting the vision on the paper
+        with the person who will live it out.
+        This is not performance. This is prophecy.
+      </p>
+
+      <div class="instruction-card">
+        <div class="instruction-label">Your Instruction</div>
+        <div class="instruction-text">
+          Read your three victories aloud before the mirror.
+          When you finish, hold the paper to your chest for a moment of silence.
+          Then say: <strong>"It is written. It is sealed. Let it be so."</strong>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end steps-wrap -->
+
+  <!-- SACRED DIVIDER -->
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- SEALING BLOCK -->
+  <div class="sealing-block">
+    <span class="sealing-symbol">🔏</span>
+    <div class="sealing-title">Your Golden Scroll Has Begun</div>
+    <p class="sealing-text">
+      Guard this paper. It is not just a piece of writing —
+      it is the first page of a sacred record being built between
+      you and God over the next 40 days.
+      Each milestone will ask you to return to it.
+      By Day 40, you will hold in your hands
+      the story of a transformation.
+    </p>
+    <div class="sealing-verse">"Write the vision and make it plain." — Habakkuk 2:2</div>
+  </div>
+
+  <!-- SCROLL REMINDER -->
+  <div class="scroll-reminder">
+    <div class="scroll-reminder-icon">📜</div>
+    <div class="scroll-reminder-text">
+      <strong>Keep Your Golden Scroll Safe</strong>
+      The next milestone — Day 7 — will ask you to open your Scroll again
+      and add to it. Your paper is now a living document of faith.
+    </div>
+  </div>
+
+  <!-- BACK BUTTON -->
+  <div class="back-wrap">
+    <a href="journey.html" class="btn-back-journey">← Return to My Journey</a>
+  </div>
+
+</div><!-- end page -->
+
+<script>
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.body.style.opacity = '';
+  }
+});
+</script>
+</body>
+</html>
