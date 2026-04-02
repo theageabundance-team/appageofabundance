@@ -512,7 +512,7 @@
     <li><a href="#">My Products</a></li>
     <li><a href="journey.html" class="active">Journey</a></li>
     <li><a href="journal.html">Journal</a></li>
-    <li><a href="#">Support</a></li>
+    <li><a href="support.html">Support</a></li>
   </ul>
   <div class="nav-right">
     <button class="nav-icon-btn">🔍</button>
@@ -616,14 +616,14 @@
       <span class="nav-icon">👥</span>
       <span>Community</span>
     </a>
-    <a href="mailto:support@theageofabundance.com" class="bottom-nav-item">
+    <a href="support.html" class="bottom-nav-item">
       <span class="nav-icon">💬</span>
       <span>Support</span>
     </a>
   </div>
 </nav>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── NAME ──
 function getGreeting() {
   const h = new Date().getHours();
@@ -820,12 +820,4 @@ if (currentMilestone) {
   document.getElementById('counter-msg').innerHTML = `"Every journey begins with a single step${firstName}. Yours has begun."`;
 }
 
-// ── PAGESHOW (back button fix) ──
-window.addEventListener('pageshow', function(e) {
-  if (e.persisted) {
-    document.body.style.opacity = '';
-  }
-});
-</script>
-</body>
-</html>
+// ── PAGESHOW (back bu
