@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Solomon Wealth Map — Day 7 Gift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-pale:  #f5e6b8;
+      --gold-dim:   #7a5f28;
+      --bg:         #0a0a0c;
+      --bg2:        #0e0e12;
+      --bg3:        #141418;
+      --bg4:        #1a1a20;
+      --text:       #f0e8d8;
+      --text-dim:   #8a7a60;
+      --text-mid:   #c8b898;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 5%; height: 62px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.92rem; letter-spacing: 0.03em;
+      transition: color 0.2s; text-decoration: none;
+    }
+    .back-btn:hover { color: var(--gold); }
+    .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+    .nav-gift-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+    }
+
+    /* ── PAGE ── */
+    .page {
+      position: relative; z-index: 1;
+      padding-top: 62px;
+      padding-bottom: 80px;
+    }
+
+    /* ── HERO ── */
+    .gift-hero {
+      position: relative;
+      padding: 72px 5% 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .gift-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .gift-day-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 28px;
+    }
+    .gift-symbol-large {
+      font-size: 4rem; line-height: 1;
+      margin-bottom: 24px; display: block;
+      filter: drop-shadow(0 0 30px rgba(201,168,76,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .gift-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.9rem, 5vw, 3.2rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-pale) 0%, var(--gold) 60%, var(--gold-dim) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em; line-height: 1.1;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 40px rgba(201,168,76,0.3));
+    }
+    .gift-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6;
+      margin-bottom: 28px;
+    }
+    .gift-intro {
+      font-size: 1.12rem; color: var(--text-mid);
+      max-width: 600px; margin: 0 auto;
+      line-height: 1.75;
+    }
+
+    /* ── DIVIDER ── */
+    .sacred-divider {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 5%; margin: 48px 0;
+    }
+    .sacred-divider::before,
+    .sacred-divider::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
+    }
+    .sacred-divider-symbol {
+      font-size: 1rem; color: var(--gold); opacity: 0.5;
+      letter-spacing: 0.3em;
+    }
+
+    /* ── INTRO NARRATIVE ── */
+    .intro-block {
+      max-width: 720px; margin: 0 auto;
+      padding: 0 5% 48px;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+    .intro-block p {
+      font-size: 1.08rem; color: var(--text-mid);
+      line-height: 1.8; margin-bottom: 18px;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── FLOWS SECTION HEADER ── */
+    .flows-header {
+      text-align: center;
+      padding: 0 5% 40px;
+      opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .flows-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 10px;
+    }
+    .flows-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+
+    /* ── FLOW CARDS ── */
+    .flows-wrap {
+      padding: 0 5%;
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .flow-card {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 28px 30px;
+      display: flex; gap: 24px; align-items: flex-start;
+      position: relative; overflow: hidden;
+      opacity: 0; transform: translateY(20px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .flow-card.visible { animation: fadeUp 0.6s ease forwards; }
+    .flow-card:nth-child(1) { animation-delay: 0.1s; }
+    .flow-card:nth-child(2) { animation-delay: 0.18s; }
+    .flow-card:nth-child(3) { animation-delay: 0.26s; }
+    .flow-card:nth-child(4) { animation-delay: 0.34s; }
+    .flow-card:nth-child(5) { animation-delay: 0.42s; }
+    .flow-card:nth-child(6) { animation-delay: 0.50s; }
+    .flow-card:nth-child(7) { animation-delay: 0.58s; }
+
+    .flow-card:hover {
+      border-color: rgba(201,168,76,0.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Shimmer on hover */
+    .flow-card::after {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.04), transparent);
+      transition: left 0.5s ease;
+    }
+    .flow-card:hover::after { left: 200%; }
+
+    .flow-number {
+      flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--gold);
+    }
+
+    .flow-body { flex: 1; }
+
+    .flow-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--gold-pale);
+      letter-spacing: 0.02em; margin-bottom: 6px;
+    }
+    .flow-verse {
+      font-size: 0.78rem; color: var(--gold);
+      opacity: 0.6; font-style: italic;
+      letter-spacing: 0.04em; margin-bottom: 12px;
+    }
+    .flow-desc {
+      font-size: 1rem; color: var(--text-mid);
+      line-height: 1.7; margin-bottom: 14px;
+    }
+    .flow-principle {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(201,168,76,0.06);
+      border-left: 2px solid rgba(201,168,76,0.3);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+    }
+    .flow-principle-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+      white-space: nowrap; margin-top: 2px;
+    }
+    .flow-principle-text {
+      font-size: 0.92rem; color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* ── SCROLL ACTION ── */
+    .scroll-action {
+      max-width: 720px; margin: 56px auto 0;
+      padding: 0 5%;
+      opacity: 0; animation: fadeUp 0.6s ease 0.7s forwards;
+    }
+    .scroll-action-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .scroll-action-card::before {
+      content: '';
+      position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .scroll-action-symbol { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+    .scroll-action-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 14px;
+      letter-spacing: 0.03em;
+    }
+    .scroll-action-text {
+      font-size: 1.05rem; color: var(--text-mid);
+      line-height: 1.75; max-width: 500px;
+      margin: 0 auto 20px;
+    }
+    .scroll-action-instruction {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 10px;
+      padding: 18px 22px;
+      font-size: 1rem; color: var(--gold-pale);
+      font-style: italic; line-height: 1.65;
+      max-width: 480px; margin: 0 auto;
+    }
+    .scroll-action-verse {
+      margin-top: 24px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.6;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap {
+      text-align: center;
+      padding: 48px 5% 60px;
+    }
+    .btn-back-journey {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.25s;
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold-pale);
+      text-decoration: none;
+    }
+    .btn-back-journey:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.14));
+      box-shadow: 0 6px 28px rgba(201,168,76,0.18);
+      transform: translateY(-2px);
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+    @media(max-width: 768px) {
+      .gift-hero { padding: 56px 5% 44px; }
+      .flow-card { flex-direction: column; gap: 16px; padding: 22px 20px; }
+      .flow-number { width: 38px; height: 38px; font-size: 0.85rem; }
+      .scroll-action-card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="journey.html" class="back-btn">← Back</a>
+  <div class="nav-divider"></div>
+  <span class="nav-gift-label">Day 7 · Sacred Gift</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="gift-hero">
+    <div class="gift-day-badge">✦ Day 7 Milestone · Sacred Gift Unlocked</div>
+    <span class="gift-symbol-large">👑</span>
+    <h1 class="gift-title">The Solomon Wealth Map</h1>
+    <div class="gift-subtitle">The 7 Sacred Flows of Abundance from Proverbs</div>
+    <p class="gift-intro">
+      Seven days ago, you began. Today, you receive what Solomon knew —
+      the ancient map of how wealth truly moves in the Kingdom,
+      hidden in plain sight inside the book of Proverbs.
+    </p>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-block">
+    <p>
+      Solomon was the wealthiest man who ever lived. But his riches were not
+      an accident, and they were not merely a divine favor granted without
+      understanding. Solomon asked for wisdom — and wealth followed as a consequence.
+      The book of Proverbs is the record of that wisdom, written so that
+      those who came after him would not have to walk in ignorance.
+    </p>
+    <p>
+      What you are about to receive are the 7 flows Solomon identified —
+      the channels through which abundance enters and exits a life.
+      Most people are unknowingly blocking several of these flows at once.
+      Read each one carefully. One of them will speak directly to your situation.
+    </p>
+  </div>
+
+  <!-- FLOWS HEADER -->
+  <div class="flows-header">
+    <div class="flows-eyebrow">The Ancient Map</div>
+    <div class="flows-title">The 7 Flows of Abundance</div>
+  </div>
+
+  <!-- FLOWS -->
+  <div class="flows-wrap" id="flows-wrap">
+
+    <div class="flow-card">
+      <div class="flow-number">I</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of the Diligent Hand</div>
+        <div class="flow-verse">Proverbs 10:4 — "Lazy hands make for poverty, but diligent hands bring wealth."</div>
+        <div class="flow-desc">
+          Solomon did not promise abundance to those who simply believed or prayed.
+          He observed that wealth follows diligence the way water follows the slope of the land —
+          consistently, faithfully, without exception. This is not about working harder.
+          It is about working with intention, as someone who knows that their labor
+          is a form of worship and an act of stewardship over what God has entrusted to them.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">Show up fully for what is already in your hands. Heaven multiplies what is faithfully tended, not what is merely hoped for.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-number">II</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of the Generous Heart</div>
+        <div class="flow-verse">Proverbs 11:24 — "One person gives freely, yet gains even more; another withholds unduly, but comes to poverty."</div>
+        <div class="flow-desc">
+          This is the flow that defies all human logic. Solomon observed something
+          that cannot be explained by economics alone: those who give generously
+          create an opening in their lives through which more can enter.
+          Generosity is not a loss — it is a declaration that you trust the Source
+          more than you trust the supply. It breaks the spirit of scarcity
+          and aligns the soul with the nature of God, who is Himself an inexhaustible giver.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">Give from a place of faith, not from what is left over. The widow's offering was small in quantity and vast in its power — because it was given first.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-number">III</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of Wise Counsel</div>
+        <div class="flow-verse">Proverbs 15:22 — "Plans fail for lack of counsel, but with many advisers they succeed."</div>
+        <div class="flow-desc">
+          Solomon built an empire not by knowing everything himself,
+          but by surrounding himself with those who knew what he did not.
+          Isolation is one of the most common and overlooked causes of financial stagnation.
+          The flow of abundance is often waiting just on the other side of a conversation
+          you have been too proud, too fearful, or too busy to have.
+          Wisdom is not weakness. Seeking counsel is the posture of kings.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">Identify one area of your finances or calling where you have been moving alone. That is exactly where you need a voice of wisdom beside you.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-number">IV</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of the Guarded Mouth</div>
+        <div class="flow-verse">Proverbs 21:23 — "Those who guard their mouths and their tongues keep themselves from calamity."</div>
+        <div class="flow-desc">
+          Few people understand how much their words are shaping their financial reality.
+          The tongue is not neutral — it is either building or dismantling.
+          Every declaration of "I will always be broke," every agreement with lack,
+          every complaint spoken as a permanent truth is a brick placed in a wall
+          between you and your abundance. Solomon understood this deeply.
+          The mouth is a gate — and you decide what passes through it.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">For the next 7 days, notice every word you speak about money, provision, and lack. What you consistently declare is what you consistently invite.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-number">V</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of Sacred Stewardship</div>
+        <div class="flow-verse">Proverbs 27:23 — "Be sure you know the condition of your flocks, give careful attention to your herds."</div>
+        <div class="flow-desc">
+          Solomon observed that abundance does not stay where it is not watched over.
+          Stewardship is the art of knowing what you have, honoring it,
+          and tending it with the same seriousness you would bring to a sacred trust —
+          because that is exactly what it is. God does not give more to those
+          who do not know what they already have. To be trusted with greater things,
+          you must first demonstrate faithfulness over the present ones.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">Know the condition of your resources today — not anxiously, but as a faithful steward. Clarity precedes multiplication.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-number">VI</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of Patient Planting</div>
+        <div class="flow-verse">Proverbs 13:11 — "Wealth gained hastily will dwindle, but whoever gathers little by little will increase it."</div>
+        <div class="flow-desc">
+          The kingdom of abundance operates on the principle of the seed, not the lottery.
+          What grows slowly grows deep. Solomon warned against the seduction of quick riches —
+          not because abundance should be slow, but because anything built without roots
+          cannot withstand the storms that come to test what has been built.
+          The most fruitful trees are also the ones that took the longest to grow.
+          Plant well. Water consistently. Trust the process that cannot be rushed.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">Identify the seed you are planting right now. Tend it with patience and consistency. A tree does not apologize for the time it takes to bear fruit.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-number">VII</div>
+      <div class="flow-body">
+        <div class="flow-name">The Flow of Divine Honor</div>
+        <div class="flow-verse">Proverbs 3:9-10 — "Honor the Lord with your wealth, with the firstfruits of all your crops; then your barns will be filled to overflowing."</div>
+        <div class="flow-desc">
+          This is the foundation beneath all other flows. Solomon placed it not last
+          because it is least important, but because it is the one that holds all others together.
+          When God is honored first — not from what remains, but from the first and the best —
+          a supernatural principle is activated. The barns overflow not as a transaction,
+          but as the natural consequence of a life that has placed the Source
+          above the supply. This is not religion. This is the architecture of Kingdom abundance.
+        </div>
+        <div class="flow-principle">
+          <div class="flow-principle-label">The Key</div>
+          <div class="flow-principle-text">What does it look like for you to honor God first in your finances this week? Not from what is left — from what arrives first.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end flows-wrap -->
+
+  <!-- DIVIDER -->
+  <div class="sacred-divider" style="margin-top: 64px;">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- SCROLL ACTION -->
+  <div class="scroll-action">
+    <div class="scroll-action-card">
+      <span class="scroll-action-symbol">📜</span>
+      <div class="scroll-action-title">Now, Return to Your Golden Scroll</div>
+      <div class="scroll-action-text">
+        One of these 7 flows spoke to you more directly than the others.
+        You felt it — a recognition, a conviction, perhaps a quiet discomfort.
+        That is the one God is inviting you to activate.
+      </div>
+      <div class="scroll-action-instruction">
+        Open your Golden Scroll. At the bottom of the page,
+        write the name of the flow you are choosing to activate —
+        and beneath it, write one concrete step you will take this week to open that channel.
+        <br><br>
+        Begin with: <strong>"The flow I am activating: ___"</strong>
+      </div>
+      <div class="scroll-action-verse">"The plans of the diligent lead to profit." — Proverbs 21:5</div>
+    </div>
+  </div>
+
+  <!-- BACK BUTTON -->
+  <div class="back-wrap">
+    <a href="journey.html" class="btn-back-journey">← Return to My Journey</a>
+  </div>
+
+</div><!-- end page -->
+
+<script>
+// Animate flow cards on scroll
+const cards = document.querySelectorAll('.flow-card');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+cards.forEach(card => observer.observe(card));
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) document.body.style.opacity = '';
+});
+</script>
+</body>
+</html>
