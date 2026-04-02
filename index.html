@@ -852,6 +852,13 @@ function cardHTML(p,key,i){
   </div>`;
 }
 
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.body.classList.remove('page-fade-out');
+    document.body.style.opacity = '';
+  }
+});
+
 function navigateTo(url) {
   document.body.classList.add('page-fade-out');
   setTimeout(() => window.location.href = url, 200);

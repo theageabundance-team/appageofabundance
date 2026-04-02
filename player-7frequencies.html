@@ -788,6 +788,10 @@ function closeGiftModal() {
   document.getElementById('gift-modal').classList.remove('show');
 }
 
+window.addEventListener('pageshow', function(ev) {
+  if (ev.persisted) { document.body.classList.remove('page-fade-out'); document.body.style.opacity = ''; }
+});
+
 function fadeOut(e, url) {
   e.preventDefault();
   document.body.classList.add('page-fade-out');
