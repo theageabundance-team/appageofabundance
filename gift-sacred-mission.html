@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Sacred Mission — Day 40 Gift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-pale:  #f5e6b8;
+      --gold-dim:   #7a5f28;
+      --bg:         #0a0a0c;
+      --bg2:        #0e0e12;
+      --bg3:        #141418;
+      --bg4:        #1a1a20;
+      --text:       #f0e8d8;
+      --text-dim:   #8a7a60;
+      --text-mid:   #c8b898;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* Rich gold glow — the most intense of all pages */
+    body::after {
+      content: '';
+      position: fixed; top: -250px; left: 50%; transform: translateX(-50%);
+      width: 1000px; height: 800px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.13) 0%, rgba(201,168,76,0.05) 40%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 5%; height: 62px;
+      background: rgba(10,10,12,0.93);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.92rem; letter-spacing: 0.03em;
+      transition: color 0.2s; text-decoration: none;
+    }
+    .back-btn:hover { color: var(--gold); }
+    .nav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+    .nav-gift-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7;
+    }
+
+    /* ── PAGE ── */
+    .page {
+      position: relative; z-index: 1;
+      padding-top: 62px;
+      padding-bottom: 80px;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO ── */
+    .gift-hero {
+      position: relative;
+      padding: 80px 5% 68px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .gift-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.14) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Subtle particle dots */
+    .hero-particles {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .hero-particles span {
+      position: absolute; width: 2px; height: 2px;
+      border-radius: 50%; background: var(--gold);
+      animation: particle 6s ease-in-out infinite;
+      opacity: 0;
+    }
+    .hero-particles span:nth-child(1) { left: 15%; top: 30%; animation-delay: 0s; }
+    .hero-particles span:nth-child(2) { left: 80%; top: 20%; animation-delay: 1.2s; }
+    .hero-particles span:nth-child(3) { left: 50%; top: 70%; animation-delay: 2.4s; }
+    .hero-particles span:nth-child(4) { left: 25%; top: 60%; animation-delay: 0.8s; }
+    .hero-particles span:nth-child(5) { left: 70%; top: 55%; animation-delay: 1.8s; }
+    @keyframes particle {
+      0%, 100% { opacity: 0; transform: translateY(0); }
+      50% { opacity: 0.6; transform: translateY(-20px); }
+    }
+
+    .gift-day-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 999px; padding: 6px 18px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 28px;
+    }
+    .gift-symbol-large {
+      font-size: 4.5rem; line-height: 1;
+      margin-bottom: 28px; display: block;
+      filter: drop-shadow(0 0 40px rgba(201,168,76,0.6));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-12px) scale(1.04); }
+    }
+    .gift-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-weight: 700;
+      background: linear-gradient(180deg, #fff8e8 0%, var(--gold-pale) 30%, var(--gold) 65%, var(--gold-dim) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.05em; line-height: 1.08;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 60px rgba(201,168,76,0.5));
+    }
+    .gift-subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.65; margin-bottom: 32px;
+    }
+    .gift-intro {
+      font-size: 1.18rem; color: var(--text-mid);
+      max-width: 600px; margin: 0 auto; line-height: 1.8;
+    }
+
+    /* ── VERSE BANNER ── */
+    .verse-banner {
+      max-width: 680px; margin: 0 auto;
+      padding: 0 5% 56px;
+      text-align: center;
+      opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+    .verse-banner-text {
+      font-size: 1.35rem; color: var(--gold-pale);
+      line-height: 1.65; font-style: italic;
+      border-left: 3px solid rgba(201,168,76,0.35);
+      padding-left: 24px; text-align: left;
+    }
+    .verse-banner-ref {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem; letter-spacing: 0.14em;
+      color: var(--gold); opacity: 0.6;
+      margin-top: 12px; display: block;
+      padding-left: 24px;
+    }
+
+    /* ── DIVIDER ── */
+    .sacred-divider {
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 5%; margin: 48px 0;
+    }
+    .sacred-divider::before,
+    .sacred-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent);
+    }
+    .sacred-divider-symbol {
+      font-size: 1rem; color: var(--gold); opacity: 0.5; letter-spacing: 0.3em;
+    }
+
+    /* ── 40 DAYS IN SCRIPTURE ── */
+    .forty-section {
+      padding: 0 5%; max-width: 720px; margin: 0 auto 56px;
+    }
+    .forty-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 10px;
+      text-align: center;
+    }
+    .forty-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--text); text-align: center; margin-bottom: 32px;
+    }
+    .forty-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .forty-card {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 22px 20px;
+      opacity: 0; transform: translateY(16px);
+      transition: border-color 0.3s;
+    }
+    .forty-card.visible { animation: fadeUp 0.6s ease forwards; }
+    .forty-card:nth-child(1) { animation-delay: 0.05s; }
+    .forty-card:nth-child(2) { animation-delay: 0.15s; }
+    .forty-card:nth-child(3) { animation-delay: 0.25s; }
+    .forty-card:nth-child(4) { animation-delay: 0.35s; }
+    .forty-card:hover { border-color: rgba(201,168,76,0.18); }
+    .forty-symbol { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+    .forty-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+    .forty-desc {
+      font-size: 0.88rem; color: var(--text-dim); line-height: 1.55;
+    }
+    .forty-verse {
+      margin-top: 8px; font-family: 'Cinzel', serif;
+      font-size: 0.58rem; color: var(--gold);
+      letter-spacing: 0.1em; opacity: 0.5;
+    }
+    .forty-conclusion {
+      margin-top: 24px;
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 12px; padding: 20px 22px;
+      font-size: 1.05rem; color: var(--text-mid); line-height: 1.7;
+      opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards;
+    }
+
+    /* ── CONTENT WRAP ── */
+    .content-wrap {
+      max-width: 720px; margin: 0 auto; padding: 0 5%;
+    }
+
+    /* ── STEPS ── */
+    .steps-section {
+      padding: 0 5%; max-width: 720px; margin: 0 auto;
+    }
+    .section-header {
+      text-align: center; margin-bottom: 36px;
+      opacity: 0; animation: fadeUp 0.6s ease 0.15s forwards;
+    }
+    .section-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--text); letter-spacing: 0.02em;
+    }
+
+    .step-block {
+      margin-bottom: 56px;
+      opacity: 0; transform: translateY(20px);
+    }
+    .step-block.visible { animation: fadeUp 0.65s ease forwards; }
+
+    .step-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.55; margin-bottom: 10px;
+    }
+    .step-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--gold-pale); letter-spacing: 0.03em;
+      line-height: 1.2; margin-bottom: 18px;
+    }
+    .step-text {
+      font-size: 1.06rem; color: var(--text-mid);
+      line-height: 1.82; margin-bottom: 22px;
+    }
+
+    /* Instruction card */
+    .instruction-card {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 10px 10px 0;
+      padding: 22px 24px; margin-bottom: 16px;
+    }
+    .instruction-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.7; margin-bottom: 10px;
+    }
+    .instruction-text {
+      font-size: 1rem; color: var(--text); line-height: 1.75;
+    }
+    .instruction-text strong { color: var(--gold-pale); font-weight: 600; }
+
+    /* The Question */
+    .the-question {
+      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+      position: relative; overflow: hidden;
+      margin: 20px 0;
+    }
+    .the-question::before {
+      content: '';
+      position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    }
+    .the-question-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); opacity: 0.6; margin-bottom: 18px;
+    }
+    .the-question-text {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+      font-weight: 600; color: var(--gold-pale);
+      line-height: 1.5; letter-spacing: 0.02em;
+      position: relative; z-index: 1;
+    }
+    .the-question-note {
+      margin-top: 16px; font-size: 0.9rem;
+      color: var(--text-dim); line-height: 1.6;
+    }
+
+    /* Letter template */
+    .letter-template {
+      background: var(--bg3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 32px 28px;
+      margin-top: 20px; position: relative;
+    }
+    .letter-template::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 14px 14px 0 0;
+    }
+    .letter-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-dim); opacity: 0.7; margin-bottom: 20px;
+    }
+    .letter-opening {
+      font-size: 1rem; color: var(--text-mid);
+      line-height: 1.7; margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .letter-prompt {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 16px; padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .letter-prompt:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .letter-prompt-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); opacity: 0.35;
+      flex-shrink: 0; margin-top: 8px;
+    }
+    .letter-prompt-text {
+      font-size: 1rem; color: var(--text-mid); line-height: 1.65;
+    }
+    .letter-prompt-text strong {
+      color: var(--gold); font-weight: 600;
+      font-family: 'Cinzel', serif; font-size: 0.72rem;
+      letter-spacing: 0.06em; display: block; margin-bottom: 4px;
+    }
+
+    /* The Seal */
+    .seal-block {
+      background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.03));
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 16px; padding: 36px 28px;
+      text-align: center; margin: 20px 0;
+      position: relative; overflow: hidden;
+    }
+    .seal-block::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .seal-symbol { font-size: 2.8rem; margin-bottom: 16px; display: block; position: relative; z-index: 1; }
+    .seal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--gold-pale); margin-bottom: 14px; letter-spacing: 0.04em;
+      position: relative; z-index: 1;
+    }
+    .seal-text {
+      font-size: 1rem; color: var(--text-mid); line-height: 1.75;
+      max-width: 480px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .seal-instruction {
+      margin-top: 20px; padding: 16px 20px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 10px;
+      font-size: 1rem; color: var(--text);
+      line-height: 1.65; max-width: 460px;
+      margin-left: auto; margin-right: auto;
+      position: relative; z-index: 1;
+    }
+
+    /* ── FINAL BLESSING ── */
+    .final-blessing {
+      max-width: 720px; margin: 64px auto 0; padding: 0 5%;
+      opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+    .final-blessing-inner {
+      background: linear-gradient(160deg, rgba(201,168,76,0.13) 0%, rgba(201,168,76,0.04) 60%, transparent 100%);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 20px; padding: 52px 40px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .final-blessing-inner::before {
+      content: '';
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    }
+    .final-crown { font-size: 3rem; display: block; margin-bottom: 24px; position: relative; z-index: 1; filter: drop-shadow(0 0 30px rgba(201,168,76,0.6)); }
+    .final-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 700; color: var(--gold-pale);
+      letter-spacing: 0.04em; line-height: 1.2;
+      margin-bottom: 24px; position: relative; z-index: 1;
+    }
+    .final-text {
+      font-size: 1.1rem; color: var(--text-mid);
+      line-height: 1.85; max-width: 520px;
+      margin: 0 auto 28px; position: relative; z-index: 1;
+    }
+    .final-verse {
+      font-size: 1.05rem; color: var(--gold-pale);
+      font-style: italic; line-height: 1.6;
+      max-width: 480px; margin: 0 auto 12px;
+      position: relative; z-index: 1;
+    }
+    .final-verse-ref {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem; color: var(--gold);
+      letter-spacing: 0.12em; opacity: 0.65;
+      position: relative; z-index: 1;
+    }
+    .final-stars {
+      font-size: 0.9rem; color: var(--gold);
+      letter-spacing: 0.5em; opacity: 0.5;
+      margin-top: 28px; display: block;
+      position: relative; z-index: 1;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap { text-align: center; padding: 48px 5% 60px; }
+    .btn-back-journey {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      cursor: pointer; transition: all 0.25s;
+      background: linear-gradient(135deg, rgba(201,168,76,0.18), rgba(201,168,76,0.08));
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold-pale); text-decoration: none;
+    }
+    .btn-back-journey:hover {
+      background: linear-gradient(135deg, rgba(201,168,76,0.28), rgba(201,168,76,0.14));
+      box-shadow: 0 6px 28px rgba(201,168,76,0.18);
+      transform: translateY(-2px);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+    @media(max-width: 768px) {
+      .gift-hero { padding: 60px 5% 52px; }
+      .forty-grid { grid-template-columns: 1fr; gap: 12px; }
+      .final-blessing-inner { padding: 36px 22px; }
+      .letter-template { padding: 22px 18px; }
+      .the-question { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <a href="journey.html" class="back-btn">← Back</a>
+  <div class="nav-divider"></div>
+  <span class="nav-gift-label">Day 40 · Sacred Gift</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="gift-hero">
+    <div class="hero-particles">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="gift-day-badge">✦ Day 40 Milestone · The Final Gift</div>
+    <span class="gift-symbol-large">🔥</span>
+    <h1 class="gift-title">The Sacred Mission</h1>
+    <div class="gift-subtitle">The End of Preparation · The Beginning of Everything</div>
+    <p class="gift-intro">
+      Forty days. You have done what very few do.
+      Every morning you returned. Every practice you honored.
+      The preparation is over. What begins today
+      is not another journey — it is the mission.
+    </p>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- VERSE BANNER -->
+  <div class="verse-banner">
+    <div class="verse-banner-text">
+      "Well done, good and faithful servant. You have been faithful over a little;
+      I will set you over much. Enter into the joy of your master."
+    </div>
+    <span class="verse-banner-ref">Matthew 25:21</span>
+  </div>
+
+  <!-- 40 DAYS IN SCRIPTURE -->
+  <div class="forty-section">
+    <div class="forty-eyebrow">As It Was in Scripture</div>
+    <div class="forty-title">What Happened After 40 Days</div>
+    <div class="forty-grid" id="forty-grid">
+      <div class="forty-card">
+        <span class="forty-symbol">🌊</span>
+        <div class="forty-name">Noah — 40 Days of Rain</div>
+        <div class="forty-desc">The flood lasted 40 days. When it ended, the world was new. Every flood in your life has been preparing new ground.</div>
+        <div class="forty-verse">Genesis 7:17</div>
+      </div>
+      <div class="forty-card">
+        <span class="forty-symbol">⛰️</span>
+        <div class="forty-name">Moses — 40 Days on the Mountain</div>
+        <div class="forty-desc">Moses spent 40 days with God and came down carrying the Law — the foundation of an entire nation. He went up alone and came down with a mission.</div>
+        <div class="forty-verse">Exodus 24:18</div>
+      </div>
+      <div class="forty-card">
+        <span class="forty-symbol">🏜️</span>
+        <div class="forty-name">Elijah — 40 Days in the Desert</div>
+        <div class="forty-desc">Elijah ran in exhaustion. For 40 days God fed him and led him — until he heard the still small voice that gave him his next assignment.</div>
+        <div class="forty-verse">1 Kings 19:8</div>
+      </div>
+      <div class="forty-card">
+        <span class="forty-symbol">✝️</span>
+        <div class="forty-name">Jesus — 40 Days of Testing</div>
+        <div class="forty-desc">After 40 days in the wilderness, Jesus returned in the power of the Spirit and began His ministry. The wilderness was not punishment — it was preparation.</div>
+        <div class="forty-verse">Luke 4:1-14</div>
+      </div>
+    </div>
+    <div class="forty-conclusion">
+      In every case, the 40 days were not the destination. They were the doorway.
+      What you have built in these 40 days — the identity, the protection, the declarations,
+      the vision — was never meant to stay on paper. It was meant to walk out into the world with you.
+      Today, you step through the door.
+    </div>
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-section">
+
+    <div class="section-header">
+      <div class="section-eyebrow">Your Final Ritual</div>
+      <div class="section-title">Three Acts of Completion</div>
+    </div>
+
+    <!-- ACT 1 -->
+    <div class="step-block">
+      <div class="step-number">Act One</div>
+      <div class="step-title">The Question That Changes Everything</div>
+      <div class="step-text">
+        Before you write your letter, you must sit with one question.
+        Not answer it quickly — sit with it. Let it move through you slowly,
+        the way light moves through a stained glass window.
+        This question has been waiting for someone who has done 40 days of preparation to receive it.
+        Now you are that person.
+      </div>
+      <div class="the-question">
+        <div class="the-question-label">The Question</div>
+        <div class="the-question-text">
+          "If you knew — with absolute certainty —
+          that God had already secured every resource,
+          every door, and every person you would need…
+          what is the first step of your mission?"
+        </div>
+        <div class="the-question-note">
+          Do not answer with what seems realistic. Answer with what is true.
+          God is not asking for a careful plan — He is asking for an honest answer.
+          Write it down before you move on.
+        </div>
+      </div>
+    </div>
+
+    <!-- ACT 2 -->
+    <div class="step-block">
+      <div class="step-number">Act Two</div>
+      <div class="step-title">Write the Letter to Your Future Self</div>
+      <div class="step-text">
+        Now you are going to write a letter — addressed to yourself,
+        to be opened exactly one year from today.
+        This letter is not a wish list. It is a covenant.
+        You are writing to the version of yourself who will open this letter
+        having walked in faith for an entire year after these 40 days.
+        Write to that person with honesty, love, and authority.
+      </div>
+      <div class="instruction-card">
+        <div class="instruction-label">Your Instruction</div>
+        <div class="instruction-text">
+          Take a new piece of paper. At the top, write:
+          <strong>"To [your new name], one year from today — [today's date + 1 year]."</strong>
+          Then write freely, using the prompts below as your guide.
+          Do not hold back. This letter will be sealed with your Golden Scroll
+          and opened by someone stronger than the person writing it now.
+        </div>
+      </div>
+      <div class="letter-template">
+        <div class="letter-label">Letter Prompts — Write as if speaking to a beloved friend</div>
+        <div class="letter-opening">
+          Begin with: <em style="color:var(--text);">"By the time you read this, I want you to remember where we started..."</em>
+        </div>
+        <div class="letter-prompt">
+          <div class="letter-prompt-dot"></div>
+          <div class="letter-prompt-text">
+            <strong>What You Believed</strong>
+            Write about the faith you carried in these 40 days — what you dared to believe that felt too large, too impossible, too far away.
+          </div>
+        </div>
+        <div class="letter-prompt">
+          <div class="letter-prompt-dot"></div>
+          <div class="letter-prompt-text">
+            <strong>What You Surrendered</strong>
+            Name the fears, the doubts, and the threats you handed over. Remind your future self what you let go of — and what arrived when you did.
+          </div>
+        </div>
+        <div class="letter-prompt">
+          <div class="letter-prompt-dot"></div>
+          <div class="letter-prompt-text">
+            <strong>Your New Name</strong>
+            Write your new name and why you chose it. Tell your future self what it cost to step into that identity — and why it was worth every day.
+          </div>
+        </div>
+        <div class="letter-prompt">
+          <div class="letter-prompt-dot"></div>
+          <div class="letter-prompt-text">
+            <strong>The First Step of Your Mission</strong>
+            Write down the answer to the question from Act One. Make it specific. Make it real. Your future self will read this and know whether you had the courage to begin.
+          </div>
+        </div>
+        <div class="letter-prompt">
+          <div class="letter-prompt-dot"></div>
+          <div class="letter-prompt-text">
+            <strong>The Blessing</strong>
+            Close the letter with a blessing over your future self. Speak to them with the voice of someone who knows what God is capable of. Because now, you do.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACT 3 -->
+    <div class="step-block">
+      <div class="step-number">Act Three</div>
+      <div class="step-title">The Sealing of the Golden Scroll</div>
+      <div class="step-text">
+        Your Golden Scroll began on Day 3 with the identity of a king.
+        It grew through declarations of wealth, acts of protection, a new name, a six-month vision,
+        and now — a letter to the person you are becoming.
+        Today, you seal it.
+      </div>
+      <div class="seal-block">
+        <span class="seal-symbol">🔏</span>
+        <div class="seal-title">Gather Everything You Have Written</div>
+        <div class="seal-text">
+          Your Golden Scroll from Day 3. The flow you activated on Day 7.
+          The threats you surrendered on Day 15. Your new name and scripting from Day 21.
+          And now — this letter. Place them all together.
+          This is your sacred archive. It is a record of 40 days of faith
+          that Heaven has been watching.
+        </div>
+        <div class="seal-instruction">
+          Fold your letter and place it with your Scroll.
+          Hold everything in your hands for a moment of silence.
+          Then speak these final words aloud:
+          <br><br>
+          <strong>"It is written. It is sealed. I step forward now — not in my strength, but in Yours.
+          The mission begins today. In Jesus' name. Amen."</strong>
+        </div>
+      </div>
+      <div class="instruction-card">
+        <div class="instruction-label">Keep It Sacred</div>
+        <div class="instruction-text">
+          Store your sealed archive somewhere meaningful — a Bible, a drawer only you open,
+          a box kept close. Set a reminder on your phone for exactly one year from today
+          with the words: <strong>"Open the letter."</strong>
+          When that day comes, you will know exactly why you wrote it.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sacred-divider">
+    <span class="sacred-divider-symbol">✦ ✦ ✦</span>
+  </div>
+
+  <!-- FINAL BLESSING -->
+  <div class="final-blessing">
+    <div class="final-blessing-inner">
+      <span class="final-crown">👑</span>
+      <div class="final-title">You Have Done What Few Do</div>
+      <div class="final-text">
+        Forty days ago, you made a decision. You did not know where it would lead —
+        you only knew that something in you needed to return to God.
+        You showed up on the days it was easy, and on the days it was not.
+        You declared things that felt impossible and protected what was growing.
+        You chose a new name and began to live inside it.
+        That is not nothing. That is everything.
+      </div>
+      <div class="final-verse">
+        "The Lord your God is with you, the Mighty Warrior who saves.
+        He will take great delight in you; in His love He will no longer rebuke you,
+        but will rejoice over you with singing."
+      </div>
+      <div class="final-verse-ref">Zephaniah 3:17</div>
+      <span class="final-stars">✦ ✦ ✦ ✦ ✦</span>
+    </div>
+  </div>
+
+  <!-- BACK -->
+  <div class="back-wrap">
+    <a href="journey.html" class="btn-back-journey">← Return to My Journey</a>
+  </div>
+
+</div>
+
+<script>
+const fortyCards = document.querySelectorAll('.forty-card');
+const stepBlocks = document.querySelectorAll('.step-block');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+fortyCards.forEach(c => observer.observe(c));
+stepBlocks.forEach(s => observer.observe(s));
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) document.body.style.opacity = '';
+});
+</script>
+</body>
+</html>
