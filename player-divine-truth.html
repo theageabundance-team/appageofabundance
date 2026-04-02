@@ -32,10 +32,9 @@
     .card-theme{font-family:'Cinzel',serif;font-size:24px;font-weight:600;color:var(--acc);margin-bottom:16px;}
     .week-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;background:var(--acc-dim);border:1px solid var(--acc-border);color:var(--acc);border-radius:2px;padding:4px 12px;margin-bottom:20px;}
     .card-divider{height:1px;background:var(--acc-border);margin-bottom:24px;}
-    .verse-box{background:rgba(91,159,212,0.07);border-left:3px solid var(--acc);border-radius:0 4px 4px 0;padding:24px 28px;margin-bottom:16px;}
-    .verse-text{font-size:20px;color:var(--text);line-height:1.75;font-style:italic;margin-bottom:12px;}
-    .verse-ref{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);opacity:.75;}
-    .card-desc-text{font-size:16px;color:var(--text-dim);line-height:1.85;margin-bottom:32px;margin-top:20px;}
+    .verse-box{background:rgba(91,159,212,0.07);border-left:3px solid var(--acc);border-radius:0 4px 4px 0;padding:20px 24px;margin-bottom:8px;font-style:italic;font-size:18px;color:var(--acc-light);line-height:1.7;}
+    .verse-ref{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);opacity:.7;margin-bottom:24px;padding-left:4px;}
+    .card-body-text{font-size:16px;color:var(--text-dim);line-height:1.85;margin-bottom:32px;}
     .done-btn{width:100%;background:transparent;border:1px solid var(--acc-border);color:var(--text-dim);font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border-radius:3px;padding:16px 24px;cursor:pointer;transition:all .25s;}
     .done-btn:hover{border-color:var(--acc);color:var(--acc);background:var(--acc-dim);}
     .done-btn.done{background:var(--acc-dim);border-color:var(--acc);color:var(--acc);cursor:default;}
@@ -58,11 +57,7 @@
     .celeb-text{font-size:15px;color:#b8a898;line-height:1.75;margin-bottom:20px;}
     .celeb-verse{font-style:italic;font-size:13px;color:rgba(201,168,76,.6);margin-bottom:28px;}
     .celeb-btn{background:linear-gradient(135deg,#8a6020,#c9a84c);color:#0a0508;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border:none;border-radius:3px;padding:15px 32px;cursor:pointer;width:100%;}
-    .nav-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
-    .nav-card{background:var(--card);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:16px 12px;text-align:center;cursor:pointer;text-decoration:none;transition:all .2s;display:block;}
-    .nav-card:hover{border-color:var(--acc-border);}
-    .nav-card-icon{font-size:22px;margin-bottom:6px;}
-    .nav-card-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);line-height:1.3;}
+    @keyframes particleFly{to{transform:translate(var(--tx),var(--ty));opacity:0;}}
     @media(max-width:600px){.focus-card{padding:28px 20px;}}
   </style>
 </head>
@@ -75,27 +70,20 @@
     <div class="hero-glow"></div>
     <div class="day-pill" id="dayPill"></div>
     <h1 class="hero-title">Divine Truth</h1>
-    <p class="hero-sub">The Word Heaven speaks over you today</p>
+    <p class="hero-sub">A word from Scripture for your day</p>
     <div class="hero-divider"></div>
     <p class="hero-date" id="heroDate"></p>
   </section>
   <div class="content-wrap">
     <div class="focus-card" style="animation-delay:0.1s">
-      <div class="card-eyebrow">✝️ Today's Scripture</div>
+      <div class="card-eyebrow">✝️ Today's Word</div>
       <div class="card-theme" id="focusTheme"></div>
       <div class="week-badge" id="weekBadge"></div>
       <div class="card-divider"></div>
-      <div class="verse-box">
-        <div class="verse-text" id="verseText"></div>
-        <div class="verse-ref" id="verseRef"></div>
-      </div>
-      <div class="card-desc-text" id="focusDesc"></div>
+      <div class="verse-box" id="verseText"></div>
+      <div class="verse-ref" id="verseRef"></div>
+      <div class="card-body-text" id="focusDesc"></div>
       <button class="done-btn" id="doneBtn" onclick="markDone()">✦ Receive This Truth</button>
-    </div>
-    <div class="nav-cards">
-      <a class="nav-card" href="player-daily-focus.html" onclick="navigateTo(event,'player-daily-focus.html')"><div class="nav-card-icon">🎯</div><div class="nav-card-label">Daily Focus</div></a>
-      <a class="nav-card" href="player-solomons-wisdom.html" onclick="navigateTo(event,'player-solomons-wisdom.html')"><div class="nav-card-icon">👑</div><div class="nav-card-label">Solomon's Wisdom</div></a>
-      <a class="nav-card" href="player-daily-decree.html" onclick="navigateTo(event,'player-daily-decree.html')"><div class="nav-card-icon">📜</div><div class="nav-card-label">Daily Decree</div></a>
     </div>
   </div>
   <script>
@@ -104,19 +92,14 @@
     const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     function getContent(){let s=localStorage.getItem('abundance_start_date');if(!s){s=new Date().toISOString().split('T')[0];localStorage.setItem('abundance_start_date',s);}const start=new Date(s+'T00:00:00');const today=new Date();today.setHours(0,0,0,0);const days=Math.floor((today-start)/86400000);const wi=Math.floor(days/7)%4;const dow=today.getDay();return{data:DIVINE_TRUTH[wi][dow],wi,dow};}
     function init(){const{data,wi,dow}=getContent();const today=new Date();document.getElementById('dayPill').textContent=DOW[dow];document.getElementById('heroDate').textContent=today.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});document.getElementById('focusTheme').textContent=data.theme;document.getElementById('weekBadge').textContent=WEEK_NAMES[wi];document.getElementById('verseText').textContent=data.verse;document.getElementById('verseRef').textContent=data.ref;document.getElementById('focusDesc').textContent=data.desc;const ts=today.toISOString().split('T')[0];if(localStorage.getItem('divine_truth_done')===ts){const btn=document.getElementById('doneBtn');btn.textContent='✓ Truth Received';btn.classList.add('done');btn.disabled=true;}}
-    function markDone(){
-      const btn=document.getElementById('doneBtn');
-      btn.textContent='✓ Truth Received';btn.classList.add('done');btn.disabled=true;
-      localStorage.setItem('divine_truth_done',new Date().toISOString().split('T')[0]);
-      spawnParticles();
-      setTimeout(()=>{ if(allDoneToday()) showCelebration(); else renderOtherCards('divine_truth_done'); },600);
-    }
+    function markDone(){const btn=document.getElementById('doneBtn');btn.textContent='✓ Truth Received';btn.classList.add('done');btn.disabled=true;localStorage.setItem('divine_truth_done',new Date().toISOString().split('T')[0]);spawnParticles();setTimeout(()=>{ if(allDoneToday()) showCelebration(); else renderOtherCards('divine_truth_done'); },600);}
+    function spawnParticles(){const colors=['#5b9fd4','#8dc4e8','#f0ece0','#c9a84c'];for(let i=0;i<30;i++){const p=document.createElement('div');p.className='particle';const size=4+Math.random()*7,angle=Math.random()*Math.PI*2,dist=80+Math.random()*150;p.style.cssText=`width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};position:fixed;left:${window.innerWidth/2}px;top:${window.innerHeight/2}px;border-radius:50%;pointer-events:none;z-index:700;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist-80}px;animation:particleFly ${0.9+Math.random()*0.7}s ease-out ${Math.random()*0.2}s forwards;`;document.body.appendChild(p);setTimeout(()=>p.remove(),1800);}}
     function navigateTo(e,url){e.preventDefault();document.body.classList.add('page-fade-out');setTimeout(()=>window.location.href=url,350);}
     const ALL_CARDS=[{key:'daily_focus_done',emoji:'🎯',label:'Daily Focus',url:'player-daily-focus.html'},{key:'divine_truth_done',emoji:'✝️',label:'Divine Truth',url:'player-divine-truth.html'},{key:'solomons_wisdom_done',emoji:'👑',label:"Solomon's Wisdom",url:'player-solomons-wisdom.html'},{key:'daily_decree_done',emoji:'📜',label:'Daily Decree',url:'player-daily-decree.html'}];
     const todayStr=new Date().toISOString().split('T')[0];
     function isDoneToday(k){return localStorage.getItem(k)===todayStr;}
     function allDoneToday(){return ALL_CARDS.every(c=>isDoneToday(c.key));}
-    function renderOtherCards(currentKey){const others=ALL_CARDS.filter(c=>c.key!==currentKey);const pending=others.filter(c=>!isDoneToday(c.key));if(pending.length===0)return;const s=document.createElement('div');s.className='other-cards-section';s.innerHTML=`<div class="other-cards-title">Continue Today's Practice</div><div class="other-cards-grid">${others.map(c=>`<a class="other-card${isDoneToday(c.key)?' is-done':''}" href="${c.url}" onclick="navigateTo(event,'${c.url}')">${isDoneToday(c.key)?'<span class="other-card-check">✓</span>':''}<div class="other-card-icon">${c.emoji}</div><div class="other-card-label">${c.label}</div></a>`).join('')}</div>`;document.body.appendChild(s);}
+    function renderOtherCards(currentKey){const others=ALL_CARDS.filter(c=>c.key!==currentKey);const s=document.createElement('div');s.className='other-cards-section';s.innerHTML=`<div class="other-cards-title">Today's Practice</div><div class="other-cards-grid">${others.map(c=>`<a class="other-card${isDoneToday(c.key)?' is-done':''}" href="${c.url}" onclick="navigateTo(event,'${c.url}')">${isDoneToday(c.key)?'<span class="other-card-check">✓</span>':''}<div class="other-card-icon">${c.emoji}</div><div class="other-card-label">${c.label}</div></a>`).join('')}</div>`;document.body.appendChild(s);}
     function showCelebration(){const m=document.createElement('div');m.className='celeb-overlay';m.innerHTML=`<div class="celeb-modal"><div class="celeb-stars">✦ ✦ ✦</div><div class="celeb-emoji">🙌</div><div class="celeb-title">All Done Today!</div><div class="celeb-text">You have walked in full alignment today. Your faithfulness has been registered in Heaven.</div><div class="celeb-verse">"Well done, good and faithful servant." — Matthew 25:23</div><button class="celeb-btn" onclick="navigateTo(event,'index.html')">Return Home</button></div>`;document.body.appendChild(m);setTimeout(()=>m.classList.add('visible'),50);spawnCelebParticles();}
     function spawnCelebParticles(){const colors=['#c9a84c','#e8c96d','#fff8e7','#ffffff'];for(let i=0;i<50;i++){const p=document.createElement('div');p.className='particle';const size=4+Math.random()*8,angle=Math.random()*Math.PI*2,dist=100+Math.random()*200;p.style.cssText=`width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};position:fixed;left:${window.innerWidth/2}px;top:${window.innerHeight/2}px;border-radius:50%;pointer-events:none;z-index:700;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist-80}px;animation:particleFly ${0.9+Math.random()*0.7}s ease-out ${Math.random()*0.2}s forwards;`;document.body.appendChild(p);setTimeout(()=>p.remove(),1800);}}
     init();
