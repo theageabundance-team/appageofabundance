@@ -37,7 +37,6 @@
       overflow-x: hidden;
     }
 
-    /* Grain texture overlay */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -45,7 +44,6 @@
       opacity: 0.4;
     }
 
-    /* Radial golden glow at top */
     body::after {
       content: '';
       position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
@@ -270,7 +268,6 @@
     }
     .milestone-item:last-child { border-bottom: none; }
 
-    /* Vertical line connecting milestones */
     .milestone-line {
       position: absolute; left: 19px; top: 52px;
       width: 2px; height: calc(100% - 32px);
@@ -325,26 +322,47 @@
     .milestone-name.locked { color: var(--text-dim); opacity: 0.6; }
     .milestone-desc {
       font-size: 0.88rem; line-height: 1.55; color: var(--text-dim);
+      margin-bottom: 6px;
     }
     .milestone-desc.current { color: var(--text-mid); }
+
+    /* Gift tag below description */
+    .milestone-gift-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 10px; padding: 5px 12px; border-radius: 999px;
+      font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.08em;
+    }
+    .milestone-gift-tag.done {
+      background: rgba(201,168,76,0.1); color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+    .milestone-gift-tag.current {
+      background: rgba(201,168,76,0.12); color: var(--gold-light);
+      border: 1px solid rgba(201,168,76,0.28);
+    }
+    .milestone-gift-tag.locked {
+      background: rgba(255,255,255,0.03); color: var(--text-dim);
+      border: 1px solid rgba(255,255,255,0.06);
+      opacity: 0.6;
+    }
+
     .milestone-badge {
       display: inline-flex; align-items: center; gap: 5px;
       margin-top: 8px; padding: 4px 12px; border-radius: 999px;
       font-size: 0.72rem; font-family: 'Cinzel', serif; letter-spacing: 0.06em;
     }
-    .milestone-badge.done {
-      background: rgba(201,168,76,0.15); color: var(--gold);
-      border: 1px solid rgba(201,168,76,0.25);
-    }
-    .milestone-badge.current {
-      background: rgba(201,168,76,0.1); color: var(--gold);
-      border: 1px solid rgba(201,168,76,0.2);
-      animation: pulse-gold 2s ease-in-out infinite;
-    }
     .milestone-badge.locked {
       background: rgba(255,255,255,0.03); color: var(--text-dim);
       border: 1px solid rgba(255,255,255,0.06);
     }
+
+    /* Scroll connector hint */
+    .scroll-connector {
+      font-size: 0.75rem; color: var(--text-dim);
+      font-style: italic; margin-top: 4px;
+      opacity: 0.7;
+    }
+    .scroll-connector.current { color: var(--gold); opacity: 0.8; }
 
     /* ── GIFTS GRID ── */
     .gifts-grid {
@@ -375,7 +393,6 @@
       opacity: 0.55; cursor: default;
     }
 
-    /* Golden shimmer on unlocked */
     .gift-card.unlocked::before {
       content: '';
       position: absolute; top: 0; left: -100%;
@@ -424,27 +441,7 @@
       border: 1px solid rgba(255,255,255,0.06);
       font-size: 0.58rem;
     }
-    .btn-redeem {
-      display: block; width: 100%; margin-top: 12px;
-      padding: 9px 12px; border-radius: 8px;
-      font-family: 'Cinzel', serif; font-size: 0.7rem;
-      font-weight: 600; letter-spacing: 0.06em;
-      cursor: pointer; transition: all 0.2s; border: none;
-      background: linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.15));
-      border: 1px solid rgba(201,168,76,0.4);
-      color: var(--gold-pale);
-    }
-    .btn-redeem:hover {
-      background: linear-gradient(135deg, rgba(201,168,76,0.45), rgba(201,168,76,0.25));
-      box-shadow: 0 4px 20px rgba(201,168,76,0.2);
-      transform: translateY(-1px);
-    }
-    .btn-redeem.redeemed {
-      background: rgba(255,255,255,0.03);
-      border-color: rgba(255,255,255,0.08);
-      color: var(--text-dim); cursor: default;
-      transform: none; box-shadow: none;
-    }
+
     .btn-claim {
       display: inline-flex; align-items: center; gap: 6px;
       margin-top: 10px; padding: 8px 16px; border-radius: 8px;
@@ -475,7 +472,7 @@
     /* ── MOBILE ── */
     @media(max-width: 768px) {
       nav:not(.bottom-nav) { display: none !important; }
-      .mobile-nav { display: none !important; }
+      .mobile-nav { display: flex !important; }
       .bottom-nav { display: flex; flex-direction: column; }
       .page { padding-top: 20px; padding-bottom: calc(62px + 20px); }
       .counter-card { padding: 28px 24px; }
@@ -550,11 +547,11 @@
       <div class="counter-number" id="day-count">7</div>
       <div class="counter-unit">Days</div>
       <div class="counter-message" id="counter-msg">
-        "Seven is the number of divine completion.<br>You have walked a full sacred cycle."
+        "Seven is the number of divine completion. You have walked a full sacred cycle."
       </div>
       <div class="next-milestone">
         <div class="next-milestone-label">Next Milestone</div>
-        <div class="next-milestone-name" id="next-name">Day 15 — The Gift of Perseverance</div>
+        <div class="next-milestone-name" id="next-name">Day 15 — The Hidden Key of 444</div>
         <div class="progress-bar-wrap">
           <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
         </div>
@@ -600,11 +597,15 @@
       <span class="nav-icon">📖</span>
       <span>Journal</span>
     </a>
+    <a href="community.html" class="bottom-nav-item">
+      <span class="nav-icon">👥</span>
+      <span>Community</span>
+    </a>
   </div>
 </nav>
 
 <script>
-// ── NAME — vem do login via localStorage ──
+// ── NAME ──
 function getGreeting() {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';
@@ -623,55 +624,81 @@ function applyName(name) {
 const savedName = localStorage.getItem('abundance_name');
 if (savedName) applyName(savedName);
 
-// ── STATE (simulated: 7 days, 2 modules completed) ──
+// ── STATE ──
 const USER = {
   days: 7,
-  completedModules: ['age-of-abundance', 'king-solomon']
+  completedModules: ['prayers-michael', 'sacred-chant']
 };
 
 // ── MILESTONES ──
+// Each milestone has a 'scroll' field describing how the Golden Scroll connects
 const MILESTONES = [
   {
     day: 3,
-    name: 'First Steps of Faith',
-    desc: 'You took the first step. Heaven noticed.',
+    name: 'The Golden Scroll',
+
+    desc: 'You took your first step. Now it is time to write your new story in the Kingdom.',
+    giftName: '📜 The Golden Scroll — Activation of the Royal Image',
+    giftDesc: 'Look in the mirror, speak your identity, and write your 3 victories as if already done. Your Scroll begins here.',
+    scrollNote: 'Your Golden Scroll is born at this milestone. Keep it close — it will grow with you.',
+    giftUrl: 'gift-golden-scroll.html',
     icon: '🌱'
   },
   {
     day: 7,
-    name: 'The Sacred Week',
-    desc: 'Seven days of faithfulness. God sees every morning you chose to return.',
+    name: 'The Solomon Wealth Map',
+    desc: 'Seven days of faithfulness. God sees every morning you chose to return. Now receive a tool the wise king used.',
+    giftName: '👑 The Solomon Wealth Map — 7 Flows from Proverbs',
+    giftDesc: 'Discover the 7 sacred flows of abundance from the book of Proverbs. Then open your Golden Scroll and write: which flow will you activate first?',
+    scrollNote: 'After receiving this gift, open your Golden Scroll and write: "The flow I am activating: ___"',
+    giftUrl: null,
     icon: '⭐'
   },
   {
     day: 15,
-    name: 'Through the Middle',
-    desc: 'You have walked through the middle — the place where most turn back. God is proud of you.',
+    name: 'The Hidden Key of 444',
+    desc: 'You have walked through the middle — the place where most turn back. A hidden key has been waiting for this exact moment.',
+    giftName: '🔑 The Hidden Key of 444 — Sacred Protection Ritual',
+    giftDesc: 'A secret technique of command prayer and house protection, not found in any module. Then write your 3 threats and their promises in your Golden Scroll.',
+    scrollNote: 'After this ritual, open your Golden Scroll and write the 3 threats you are surrendering and the 3 divine promises that defeat them.',
+    giftUrl: null,
     icon: '🔥'
   },
   {
     day: 21,
-    name: 'The New Creation',
-    desc: 'Twenty-one days. You are no longer the same person who began this journey. He has been renewing you.',
+    name: 'The New Name',
+    desc: 'Twenty-one days. You are no longer the same person who began this journey. God has been renewing you — and now it is time to receive your new name.',
+    giftName: '🦋 The New Name — Identity Protocol + 6-Month Scripting',
+    giftDesc: 'Re-read everything written in your Golden Scroll since Day 3. Choose the one word that represents who you have become. Then script the next 6 months as this new person.',
+    scrollNote: 'Today you read your entire Golden Scroll from the beginning, choose your new name, and write it at the top.',
+    giftUrl: null,
     icon: '🦋'
   },
   {
     day: 40,
-    name: 'The Desert Overcomer',
-    desc: 'Forty days. You have done what few do. "Well done, good and faithful servant." — Matthew 25:21',
+    name: 'The Sacred Mission',
+    desc: '"Well done, good and faithful servant." — Matthew 25:21. Forty days. You have done what few do. Now the preparation ends and the mission begins.',
+    giftName: '🔥 The Sacred Mission — Letter to Your Future Self',
+    giftDesc: 'Answer the question that changes everything. Write a letter to be opened in 1 year. Seal it alongside your Golden Scroll — which is now a complete sacred archive.',
+    scrollNote: 'Your Golden Scroll is now complete. Seal it alongside your letter. You have built something sacred over 40 days.',
+    giftUrl: null,
     icon: '👑'
   }
 ];
 
 // ── MODULE GIFTS ──
 const MODULE_GIFTS = [
-  { id:'age-of-abundance',  symbol:'☀️', name:'Blessing of Divine Abundance',   source:'The Age of Abundance'      },
-  { id:'king-solomon',      symbol:'📜', name:"Gift of Solomon's Wisdom",        source:"King Solomon's Prosperity" },
-  { id:'7-frequencies',     symbol:'🎵', name:'Blessing of Sacred Frequencies',  source:'The 7 Frequencies'         },
-  { id:'sacred-protocol',   symbol:'🛡️', name:'Gift of Spiritual Protection',    source:'Sacred Protocol'           },
-  { id:'secret-of-power',   symbol:'⚡', name:'Blessing of Inner Power',         source:'The Secret of Power'       },
-  { id:'powerful-numbers',  symbol:'🔢', name:'Gift of Sacred Numbers',          source:'Powerful Numbers'          },
-  { id:'mindset-reset',     symbol:'🧠', name:'Blessing of the Renewed Mind',    source:'Mindset Reset Formula'     },
+  { id:'prayers-michael',   symbol:'👼', name:'Blessing of the Archangel',         source:'Powerful Prayers to Archangel Michael'  },
+  { id:'sacred-chant',      symbol:'🛡️', name:'Gift of Spiritual Protection',       source:'The Sacred Chant of Archangel Michael'  },
+  { id:'7-frequencies',     symbol:'⚡', name:'Gift of Divine Acceleration',        source:'The 7 Frequencies of Divine Acceleration'},
+  { id:'king-solomon',      symbol:'📜', name:"Gift of Solomon's Wisdom",            source:"The Hidden Secrets of King Solomon's Prosperity"},
+  { id:'secret-of-power',   symbol:'🔥', name:'Blessing of Inner Power',            source:'The Secret of Power'                    },
+  { id:'powerful-numbers',  symbol:'🔢', name:'Gift of Divine Frequency',           source:'Powerful Numbers'                       },
+  { id:'age-of-abundance',  symbol:'☀️', name:'Blessing of Divine Abundance',       source:'The Age of Abundance'                   },
+  { id:'mindset-reset',     symbol:'🧠', name:'Blessing of the Renewed Mind',       source:'Mindset Reset Formula'                  },
+  { id:'dream-journal',     symbol:'📖', name:'Gift of the Written Dream',          source:'Dream Life Journal'                     },
+  { id:'vision-board',      symbol:'🎯', name:'Gift of Divine Vision',              source:'Vision Board Academy'                   },
+  { id:'whisper-faith',     symbol:'🕊️', name:'Gift of Living Faith',               source:'The Whisper of Faith'                   },
 ];
 
 // ── RENDER MILESTONES ──
@@ -692,14 +719,24 @@ milestonesList.innerHTML = MILESTONES.map((m, i) => {
   const iconHtml = s === 'locked'
     ? `<span class="milestone-icon locked-icon">🔒</span>`
     : `<span class="milestone-icon">${m.icon}</span>`;
+
   let badgeHtml = '';
   if (s === 'done') {
-    badgeHtml = `<button class="btn-claim redeemed" disabled>✦ Gift Claimed</button>`;
+    badgeHtml = m.giftUrl
+      ? `<a href="${m.giftUrl}" class="btn-claim redeemed" style="text-decoration:none;">✦ Gift Claimed — Open Again</a>`
+      : `<button class="btn-claim redeemed" disabled>✦ Gift Claimed</button>`;
   } else if (s === 'current') {
-    badgeHtml = `<button class="btn-claim" onclick="claimMilestone(this)">🎁 Claim Your Gift</button>`;
+    badgeHtml = m.giftUrl
+      ? `<a href="${m.giftUrl}" class="btn-claim" style="text-decoration:none;">🎁 Claim Your Gift</a>`
+      : `<button class="btn-claim" onclick="claimMilestone(this)">🎁 Claim Your Gift</button>`;
   } else {
-    badgeHtml = `<span class="milestone-badge locked">🔒 Reach day ${m.day} to unlock your gift</span>`;
+    badgeHtml = `<span class="milestone-badge locked">🔒 Reach day ${m.day} to unlock</span>`;
   }
+
+  const scrollHtml = s !== 'locked'
+    ? `<div class="scroll-connector ${s}">📜 ${m.scrollNote}</div>`
+    : '';
+
   return `
     <div class="milestone-item">
       ${i < MILESTONES.length - 1 ? '<div class="milestone-line"></div>' : ''}
@@ -707,7 +744,10 @@ milestonesList.innerHTML = MILESTONES.map((m, i) => {
       <div class="milestone-content">
         <div class="milestone-day ${s}">Day ${m.day}</div>
         <div class="milestone-name ${s}">${m.name}</div>
+
         <div class="milestone-desc ${s}">${m.desc}</div>
+        ${s !== 'locked' ? `<div class="milestone-gift-tag ${s}">🎁 ${m.giftName}</div>` : ''}
+        ${scrollHtml}
         ${badgeHtml}
       </div>
     </div>
@@ -751,7 +791,7 @@ if (nextMilestone) {
   document.getElementById('progress-text').textContent = 'Journey complete';
 }
 
-// Counter message — uses the milestone desc of the last reached milestone
+// ── COUNTER MESSAGE ──
 const currentMilestone = [...MILESTONES].reverse().find(m => USER.days >= m.day);
 const userName = localStorage.getItem('abundance_name');
 const firstName = userName ? ', ' + userName.split(' ')[0] : '';
@@ -760,6 +800,13 @@ if (currentMilestone) {
 } else {
   document.getElementById('counter-msg').innerHTML = `"Every journey begins with a single step${firstName}. Yours has begun."`;
 }
+
+// ── PAGESHOW (back button fix) ──
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    document.body.style.opacity = '';
+  }
+});
 </script>
 </body>
 </html>
