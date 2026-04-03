@@ -1131,6 +1131,7 @@ const guardianAngelCard = `<div class="product-card" onclick="window.open('https
     </div>
     <div class="card-actions">
       <a class="card-btn card-btn-access" href="https://quizangel.vercel.app/" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ Access</a>
+      <button class="card-btn card-btn-details" onclick="event.stopPropagation();openGuardianAngelModal()">⊙ View Details</button>
     </div>
   </div>
 </div>`;
@@ -1159,6 +1160,16 @@ function toggleFav(id){
   b.textContent=b.classList.contains('active')?'♥':'♡';
 }
 
+function openGuardianAngelModal(){
+  const mc=document.getElementById('m-cat');
+  mc.textContent='Spirituality'; mc.className='cat-pill cat-spirituality';
+  document.getElementById('m-title').textContent='Discover Your Guardian Angel';
+  document.getElementById('m-rating').textContent='5.0';
+  document.getElementById('m-duration').textContent='🕐 5min';
+  document.getElementById('m-desc').textContent='Find out which angel watches over you and what divine message they carry for your life.';
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
 function openModal(idx,key){
   const p=DATA[key][idx]; if(!p)return;
   const mc=document.getElementById('m-cat');
