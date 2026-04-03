@@ -403,12 +403,10 @@
         '</div>';
       }).join('');
 
-      const replyHTML = isToday
-        ? '<div class="reply-box">' +
-            '<input class="amen-input" id="amenInput" type="text" placeholder="Share your amen..." maxlength="200"/>' +
-            '<button class="amen-send" onclick="sendAmen(\'' + dateStr + '\')">Send</button>' +
-          '</div>'
-        : '';
+      const replyHTML = '<div class="reply-box">' +
+          '<input class="amen-input" id="amenInput-' + dateStr + '" type="text" placeholder="Share your amen..." maxlength="200"/>' +
+          '<button class="amen-send" onclick="sendAmen(\'' + dateStr + '\')">Send</button>' +
+        '</div>';
 
       return '<div class="date-div"><span>' + dow + ', ' + mon + ' ' + day + '</span></div>' +
         '<div class="msg-wrap">' +
@@ -456,9 +454,11 @@
         document.getElementById('onboardOverlay').classList.add('hidden');
       }
 
-      // Enter key on today's input
-      const amenInput = document.getElementById('amenInput');
-      if (amenInput) amenInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendAmen(todayStr); });
+      // Enter key on every prayer input
+      dates.forEach(ds => {
+        const inp = document.getElementById('amenInput-' + ds);
+        if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') sendAmen(ds); });
+      });
 
       // Scroll to bottom (newest prayer)
       setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 80);
@@ -485,7 +485,7 @@
     }
 
     function sendAmen(dateStr) {
-      const input = document.getElementById('amenInput');
+      const input = document.getElementById('amenInput-' + dateStr);
       const val   = input.value.trim();
       if (!val) return;
       const colors  = ['#e67e22','#8b5cf6','#e74c3c','#2ecc71','#3498db','#f39c12','#c0392b'];
