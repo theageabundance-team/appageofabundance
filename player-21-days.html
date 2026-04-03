@@ -694,9 +694,9 @@
 <script src="supabase-client.js"></script>
 <script>
 const MODULE_ID = 'manifestation-21';
-const SK = 'challenge_21_start';
-const CK = 'challenge_21_completed';
-const NK = 'challenge_21_notes';
+const SK = '21day_start';
+const CK = '21day_completed';
+const NK = '21day_notes';
 
 // Day icons per theme
 const ICONS = {
@@ -981,6 +981,11 @@ function fadeOut(e, url) {
 }
 
 render();
+
+// ── SUPABASE HYDRATE ──
+onSupabaseReady(function() {
+  get21DayProgress().then(function() { render(); });
+});
 </script>
 </body>
 </html>

@@ -704,10 +704,10 @@ window.addEventListener('resize', positionNav);
 const savedName = localStorage.getItem('abundance_name');
 
 function isCompleted(id) {
-  return (JSON.parse(localStorage.getItem('completed_lessons') || '[]')).includes(id);
+  return (JSON.parse(localStorage.getItem('completed_lessons_' + MODULE_ID) || '[]')).includes(id);
 }
 function getCompletedCount() {
-  const done = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+  const done = JSON.parse(localStorage.getItem('completed_lessons_' + MODULE_ID) || '[]');
   return LESSONS.filter(l => done.includes(l.id)).length;
 }
 
@@ -715,7 +715,7 @@ function getCompletedCount() {
 function renderLesson(idx) {
   currentLesson = idx;
   localStorage.setItem('current_lesson_' + MODULE_ID, idx);
-  const completedSoFar = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+  const completedSoFar = JSON.parse(localStorage.getItem('completed_lessons_' + MODULE_ID) || '[]');
   saveModuleProgress(MODULE_ID, idx, completedSoFar);
   const lesson = LESSONS[idx];
 
@@ -817,9 +817,9 @@ function updateProgress() {
 function markComplete() {
   const lesson = LESSONS[currentLesson];
   if (isCompleted(lesson.id)) return;
-  const done = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+  const done = JSON.parse(localStorage.getItem('completed_lessons_' + MODULE_ID) || '[]');
   done.push(lesson.id);
-  localStorage.setItem('completed_lessons', JSON.stringify(done));
+  localStorage.setItem('completed_lessons_' + MODULE_ID, JSON.stringify(done));
   saveModuleProgress(MODULE_ID, currentLesson, done);
   document.getElementById('complete-icon').textContent = '✓';
   document.getElementById('complete-text').textContent = 'Completed';
@@ -929,6 +929,23 @@ function toggleSidebar() {
 
 // ── INIT ──
 renderLesson(currentLesson);
+// ── SUPABASE HYDRATE ──
+onSupabaseReady(function() {
+  var lid = LESSONS[currentLesson].id;
+  getLessonInteraction(lid).then(function(data) {
+    if (data.notes) document.getElementById('notes-input').value = data.notes;
+    if (data.rating) { currentRating = data.rating; renderStars(); }
+  });
+  getLessonComments(lid).then(function() { renderComments(); });
+  getModuleProgress(MODULE_ID).then(function(p) {
+    renderSidebar();
+    updateProgress();
+    var done = (p.completedLessons || []).includes(LESSONS[currentLesson].id);
+    document.getElementById('complete-icon').textContent = done ? '\u2713' : '\u25ef';
+    document.getElementById('complete-text').textContent = done ? 'Completed' : 'Mark as Complete';
+    document.getElementById('btn-complete').className = 'btn-complete' + (done ? ' done' : '');
+  });
+});
 </script>
 </body>
 </html>
