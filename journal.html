@@ -331,7 +331,7 @@
 
   <div class="stats-row fade-in delay-1">
     <div class="stat-card">
-      <div class="stat-number" id="stat-entries">7</div>
+      <div class="stat-number" id="stat-entries">0</div>
       <div class="stat-label">Days Written</div>
     </div>
     <div class="stat-card">
@@ -460,20 +460,6 @@ function selectMood(btn, mood) {
   selectedMood = mood;
 }
 
-const PAST_ENTRIES = [
-  { date:'Monday, March 30', day:6, milestone:'The Sacred Week', mood:'🙏 Grateful',
-    prompt:'"How has returning each day changed the way you see yourself?"',
-    text:'I notice something shifting in me. The mornings feel different — quieter, like I arrive at them instead of being swept away. I used to wake up already behind. Now there is a moment of stillness before the world speaks. That is new. That is God.' },
-  { date:'Sunday, March 29', day:5, milestone:'The Sacred Week', mood:'✨ Hopeful',
-    prompt:'"What are you believing God for this week?"',
-    text:'Provision in the business. Peace in my home. And something I have not said aloud — I am believing for a sign. Something small that only I would notice. A confirmation that He is near and has not forgotten me.' },
-  { date:'Saturday, March 28', day:4, milestone:'The Sacred Week', mood:'🕊 Peaceful',
-    prompt:'"Describe one moment this week where you felt divinely guided."',
-    text:'A conversation I almost avoided. Someone I almost did not call back. But something nudged me — and I made the call. What followed was exactly what both of us needed. I did not plan that. I could not have.' },
-  { date:'Friday, March 27', day:3, milestone:'First Steps of Faith', mood:'🔍 Seeking',
-    prompt:'"You took the first step. What moved you to begin this journey?"',
-    text:'Honestly? Desperation. But the beautiful kind — the kind that clears out everything that was not real and leaves you with only what matters. I began because I had nothing else to lose and everything to gain.' },
-];
 
 function saveEntry() {
   const text = document.getElementById('journal-input').value.trim();
@@ -544,8 +530,7 @@ let loadedEntries = JSON.parse(localStorage.getItem('abundance_journal') || '[]'
 if (loadedEntries.length > 0) {
   renderEntries(loadedEntries);
 } else {
-  renderEntries(PAST_ENTRIES);
-  loadedEntries = PAST_ENTRIES;
+  renderEntries([]);
 }
 
 // Try to load from Supabase in background

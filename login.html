@@ -499,6 +499,8 @@ function handleEnter() {
   btn.classList.add('loading');
   btn.querySelector('.btn-enter-text').innerHTML = '✦ &nbsp; Entering...';
 
+  // Clear any residual data from a previous session before logging in
+  localStorage.clear();
   // Save to localStorage + Supabase
   loginOrCreate(name, email).then(() => {
     // Load all user data from Supabase in background (hydrates localStorage)

@@ -690,12 +690,7 @@ async function migrateFromLocalStorage() {
 
 // ── LOGOUT ──────────────────────────────────────────────────
 function logoutUser() {
-  localStorage.removeItem('abundance_name');
-  localStorage.removeItem('abundance_email');
-  localStorage.removeItem('abundance_start_date');
-  localStorage.removeItem('abundance_gifts');
-  localStorage.removeItem('abundance_migrated_v2');
-  // Mantém dados de módulos e journal no localStorage como cache local
+  localStorage.clear();
 }
 
 
