@@ -860,11 +860,14 @@ const DAILY_FOCUS_DATA = [
   {0:{theme:'Rest & Celebration',title:'Celebrating the Creator'},1:{theme:'Prosperity',title:'Financial Stewardship'},2:{theme:'Mindset',title:'Divine Resilience'},3:{theme:'Connection',title:'Intuitive Action'},4:{theme:'Abundance',title:'Living in Overflow'},5:{theme:'Protection',title:'Armor of Light'},6:{theme:'Vision',title:'The Finished Work'}},
 ];
 
+function _localDateStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function getWeekIdx(){
   let s=localStorage.getItem('abundance_start_date');
-  if(!s){s=new Date().toISOString().split('T')[0];localStorage.setItem('abundance_start_date',s);}
+  if(!s||s==='null'||s==='undefined'){s=_localDateStr();localStorage.setItem('abundance_start_date',s);}
   const start=new Date(s+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);
-  const d=Math.max(0,Math.floor((today-start)/86400000));
+  const diff=(today-start)/86400000;
+  if(isNaN(diff)){return 0;}
+  const d=Math.max(0,Math.floor(diff));
   return Math.floor(d/7)%4;
 }
 const todayStr = new Date().toISOString().split('T')[0];
@@ -1122,7 +1125,7 @@ function openProfileMenu() {
   const name  = localStorage.getItem('abundance_name')  || 'Friend';
   const email = localStorage.getItem('abundance_email') || '';
   const start = localStorage.getItem('abundance_start_date');
-  const days  = start ? Math.max(1, Math.floor((new Date() - new Date(start + 'T00:00:00')) / 86400000) + 1) : 1;
+  const days  = _localDateStr ? (function(sd){if(!sd||sd==='null'||sd==='undefined')return 1;const diff=(new Date()-new Date(sd+'T00:00:00'))/86400000;return isNaN(diff)?1:Math.max(1,Math.floor(diff)+1);})(start) : 1;
   const first = name.split(' ')[0];
   document.getElementById('profile-avatar-large').textContent = first[0].toUpperCase();
   document.getElementById('profile-name').textContent = name;

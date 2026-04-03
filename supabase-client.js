@@ -101,20 +101,25 @@ async function loginOrCreate(name, email) {
   try {
     const startDate = localStorage.getItem('abundance_start_date') || _sbToday();
 
-    // Single upsert — avoids race condition between select+insert
-    const { data, error } = await sb().from('profiles')
-      .upsert(
-        { email, name, start_date: startDate, updated_at: new Date().toISOString() },
-        { onConflict: 'email', ignoreDuplicates: false }
-      )
+    // Check if profile already exists
+    const { data: existing } = await sb().from('profiles')
       .select('email, name, start_date')
+      .eq('email', email)
       .maybeSingle();
 
-    if (error) throw error;
-
-    // If the row already existed, Supabase returns the merged row — sync start_date
-    if (data && data.start_date) {
-      localStorage.setItem('abundance_start_date', data.start_date);
+    if (existing) {
+      // Existing user: update name only — NEVER overwrite start_date
+      await sb().from('profiles')
+        .update({ name, updated_at: new Date().toISOString() })
+        .eq('email', email);
+      // Sync original start_date back to localStorage
+      if (existing.start_date) {
+        localStorage.setItem('abundance_start_date', existing.start_date);
+      }
+    } else {
+      // New user: insert with today as start_date
+      await sb().from('profiles')
+        .insert({ email, name, start_date: startDate, updated_at: new Date().toISOString() });
     }
 
     return email;
@@ -133,8 +138,8 @@ async function loadProfile() {
     const { data } = await sb().from('profiles')
       .select('*').eq('email', email).single();
     if (data) {
-      localStorage.setItem('abundance_name', data.name);
-      localStorage.setItem('abundance_start_date', data.start_date);
+      if (data.name) localStorage.setItem('abundance_name', data.name);
+      if (data.start_date) localStorage.setItem('abundance_start_date', data.start_date);
       localStorage.setItem('circle_member', String(data.circle_member || false));
     }
     return data;
