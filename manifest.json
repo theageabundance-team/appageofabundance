@@ -1,0 +1,18 @@
+{
+  "name": "The Age of Abundance",
+  "short_name": "Age of Abundance",
+  "description": "Your divine journey to spiritual abundance and manifestation.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0d12",
+  "theme_color": "#c9a84c",
+  "icons": [
+    {
+      "src": "images/Copy of Whisk_566d7d5bf10336b9f184205567b5715eeg.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
