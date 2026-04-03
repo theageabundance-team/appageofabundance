@@ -724,7 +724,8 @@ window.addEventListener('resize', positionNav);
 // ── NAME ──
 const savedName = localStorage.getItem('abundance_name');
 if (savedName) {
-  document.getElementById('nav-avatar').textContent = savedName[0].toUpperCase();
+  const navAvatar = document.getElementById('nav-avatar');
+  if (navAvatar) navAvatar.textContent = savedName[0].toUpperCase();
 }
 
 // ── HELPERS ──

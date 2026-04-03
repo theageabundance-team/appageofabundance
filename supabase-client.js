@@ -94,27 +94,24 @@ async function loginOrCreate(name, email) {
   if (!ready) return null;
 
   try {
-    // Tenta buscar perfil existente
-    const { data: existing } = await sb().from('profiles')
+    const startDate = localStorage.getItem('abundance_start_date') || _sbToday();
+
+    // Single upsert — avoids race condition between select+insert
+    const { data, error } = await sb().from('profiles')
+      .upsert(
+        { email, name, start_date: startDate, updated_at: new Date().toISOString() },
+        { onConflict: 'email', ignoreDuplicates: false }
+      )
       .select('email, name, start_date')
-      .eq('email', email)
       .maybeSingle();
 
-    if (existing) {
-      // Usuário já existe: sincroniza start_date e atualiza nome se mudou
-      localStorage.setItem('abundance_start_date', existing.start_date);
-      await sb().from('profiles')
-        .update({ name, updated_at: new Date().toISOString() })
-        .eq('email', email);
-      return email;
+    if (error) throw error;
+
+    // If the row already existed, Supabase returns the merged row — sync start_date
+    if (data && data.start_date) {
+      localStorage.setItem('abundance_start_date', data.start_date);
     }
 
-    // Novo usuário: cria perfil
-    const startDate = localStorage.getItem('abundance_start_date') || _sbToday();
-    const { error } = await sb().from('profiles')
-      .insert({ email, name, start_date: startDate });
-
-    if (error) throw error;
     return email;
   } catch (e) {
     console.warn('[Supabase] loginOrCreate failed', e);
@@ -489,7 +486,10 @@ async function saveCommunityReaction(reactionType, date) {
   const userName = localStorage.getItem('abundance_name') || 'Anonymous';
   try {
     await sb().from('community_interactions')
-      .insert({ user_email: email, interaction_date: date, reaction_type: reactionType, user_name: userName });
+      .upsert(
+        { user_email: email, interaction_date: date, reaction_type: reactionType, user_name: userName },
+        { onConflict: 'user_email,interaction_date,reaction_type' }
+      );
   } catch (e) { console.warn('[Supabase] saveCommunityReaction failed', e); }
 }
 
