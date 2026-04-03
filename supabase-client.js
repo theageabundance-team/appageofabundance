@@ -476,23 +476,13 @@ async function saveCommunityReaction(reactionType, date) {
 }
 
 async function saveCommunityAmen(text, date) {
-  const existing = _safeParse(localStorage.getItem(`amens_${date}`), []);
   const userName = localStorage.getItem('abundance_name') || 'Blessed Soul';
-  const newAmen = {
-    name: userName,
-    text,
-    date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  };
-  existing.push(newAmen);
-  localStorage.setItem(`amens_${date}`, JSON.stringify(existing));
-
-  if (!await _ready()) return newAmen;
+  if (!await _ready()) return;
   const email = getUserEmail();
   try {
     await sb().from('community_interactions')
       .insert({ user_email: email, interaction_date: date, amen_text: text, user_name: userName });
   } catch (e) { console.warn('[Supabase] saveCommunityAmen failed', e); }
-  return newAmen;
 }
 
 async function getCommunityAmens(date) {
