@@ -47,7 +47,8 @@ function getUserId() { return _userId || localStorage.getItem('abundance_user_id
 function isOnline() { return _sdkReady && _supabase !== null; }
 
 // ── Helper: today as YYYY-MM-DD ─────────────────────────────
-function todayStr() { return new Date().toISOString().split('T')[0]; }
+function _sbToday() { return new Date().toISOString().split('T')[0]; }
+
 
 // ── PROFILES ────────────────────────────────────────────────
 async function loginOrCreate(name, email) {
@@ -55,7 +56,7 @@ async function loginOrCreate(name, email) {
   localStorage.setItem('abundance_name', name);
   localStorage.setItem('abundance_email', email);
   if (!localStorage.getItem('abundance_start_date')) {
-    localStorage.setItem('abundance_start_date', todayStr());
+    localStorage.setItem('abundance_start_date', _sbToday());
   }
 
   if (!isOnline()) return null;
@@ -77,7 +78,7 @@ async function loginOrCreate(name, email) {
     }
 
     // Create new profile
-    const startDate = localStorage.getItem('abundance_start_date') || todayStr();
+    const startDate = localStorage.getItem('abundance_start_date') || _sbToday();
     const { data: newProfile, error: insertErr } = await sb().from('profiles')
       .insert({ name, email, start_date: startDate })
       .select('id')
@@ -131,13 +132,13 @@ async function ensureUserIdFromEmail() {
 // ── DAILY PROGRESS ──────────────────────────────────────────
 async function saveDailyProgress(practiceKey) {
   // Always save to localStorage
-  localStorage.setItem(practiceKey + '_done', todayStr());
+  localStorage.setItem(practiceKey + '_done', _sbToday());
 
   const uid = getUserId();
   if (!isOnline() || !uid) return;
   try {
     await sb().from('daily_progress')
-      .upsert({ user_id: uid, practice_key: practiceKey, completed_date: todayStr() },
+      .upsert({ user_id: uid, practice_key: practiceKey, completed_date: _sbToday() },
         { onConflict: 'user_id,practice_key,completed_date' });
   } catch (e) { console.warn('[Supabase] saveDailyProgress failed', e); }
 }
@@ -145,7 +146,7 @@ async function saveDailyProgress(practiceKey) {
 async function isDailyDone(practiceKey) {
   // Check localStorage first (fast)
   const local = localStorage.getItem(practiceKey + '_done');
-  if (local === todayStr()) return true;
+  if (local === _sbToday()) return true;
 
   const uid = getUserId();
   if (!isOnline() || !uid) return false;
@@ -154,16 +155,16 @@ async function isDailyDone(practiceKey) {
       .select('id')
       .eq('user_id', uid)
       .eq('practice_key', practiceKey)
-      .eq('completed_date', todayStr())
+      .eq('completed_date', _sbToday())
       .maybeSingle();
     if (data) {
-      localStorage.setItem(practiceKey + '_done', todayStr());
+      localStorage.setItem(practiceKey + '_done', _sbToday());
       return true;
     }
     return false;
   } catch (e) {
     console.warn('[Supabase] isDailyDone failed', e);
-    return local === todayStr();
+    return local === _sbToday();
   }
 }
 
