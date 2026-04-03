@@ -1049,7 +1049,22 @@ function expandCardHTML(p,i){
   </div>`;
 }
 
-document.getElementById('track-my').innerHTML = DATA.my.map((p,i)=>cardHTML(p,'my',i)).join('');
+const guardianAngelCard = `<div class="product-card" onclick="window.open('https://quizangel.vercel.app/','_blank')" style="cursor:pointer;">
+  <div class="card-img-wrap">
+    <img src="images/newguardiann.jpeg" alt="Discover Your Guardian Angel" loading="lazy"/>
+    <div class="card-badges">
+      <span class="badge badge-gold" style="font-size:0.68rem;padding:3px 9px;">✦ Exclusive</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <span class="cat-pill cat-spirituality">Spirituality</span>
+    <div class="card-title">Discover Your Guardian Angel</div>
+    <div class="card-actions">
+      <a class="card-btn card-btn-access" href="https://quizangel.vercel.app/" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ Access</a>
+    </div>
+  </div>
+</div>`;
+document.getElementById('track-my').innerHTML = guardianAngelCard + DATA.my.map((p,i)=>cardHTML(p,'my',i)).join('');
 document.getElementById('track-expand').innerHTML = EXPAND_DATA.map((p,i)=>expandCardHTML(p,i)).join('');
 
 function scrollRow(key,dir){
