@@ -15,8 +15,9 @@
       display: flex; flex-direction: column;
       transform: translateX(100%);
       transition: transform 0.32s cubic-bezier(0.22,1,0.36,1);
+      -webkit-backdrop-filter: none; backdrop-filter: none;
     }
-    .profile-menu.open { transform: translateX(0); }
+    .profile-menu-overlay.open .profile-menu { transform: translateX(0); }
     .profile-menu-header {
       padding: 28px 24px 20px;
       border-bottom: 1px solid rgba(201,168,76,0.1);
@@ -67,7 +68,7 @@
   const overlay = document.createElement('div');
   overlay.className = 'profile-menu-overlay';
   overlay.id = 'profile-menu-overlay';
-  overlay.onclick = closeProfileMenu;
+  overlay.onclick = function() { window.closeProfileMenu && window.closeProfileMenu(); };
 
   const menu = document.createElement('div');
   menu.className = 'profile-menu';
@@ -110,9 +111,13 @@
     </div>
   `;
 
+  // Put menu inside overlay so clicks on overlay (outside menu) bubble up to close handler
+  // This prevents iOS Safari's backdrop-filter compositing layer from intercepting menu taps
+  overlay.appendChild(menu);
+  menu.addEventListener('click', function(e) { e.stopPropagation(); });
+
   document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(overlay);
-    document.body.appendChild(menu);
 
     // Wire up nav avatar / username clicks
     ['nav-avatar', 'nav-username'].forEach(function (id) {
@@ -140,13 +145,11 @@
     document.getElementById('profile-email').textContent = email;
     document.getElementById('profile-days').textContent = days;
     document.getElementById('profile-menu-overlay').classList.add('open');
-    document.getElementById('profile-menu').classList.add('open');
     document.body.style.overflow = 'hidden';
   };
 
   window.closeProfileMenu = function () {
     document.getElementById('profile-menu-overlay').classList.remove('open');
-    document.getElementById('profile-menu').classList.remove('open');
     document.body.style.overflow = '';
   };
 
