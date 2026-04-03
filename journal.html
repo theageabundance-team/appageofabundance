@@ -313,7 +313,7 @@
   <div class="mobile-nav-right">
     <button class="nav-icon-btn">🔍</button>
     <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
-    <div class="nav-avatar">F</div>
+    <div class="nav-avatar"></div>
   </div>
 </div>
 
@@ -417,8 +417,9 @@ function getGreeting() {
 
 function applyName(name) {
   const first = name.split(' ')[0];
-  document.getElementById('nav-username').textContent = first;
-  document.getElementById('nav-avatar').textContent = first[0].toUpperCase();
+  const letter = first[0].toUpperCase();
+  document.querySelectorAll('.nav-avatar').forEach(function(el) { el.textContent = letter; });
+  document.querySelectorAll('.nav-username').forEach(function(el) { el.textContent = first; });
   document.getElementById('journal-subtitle').textContent =
     `${getGreeting()}, ${first}. What is God doing in you today?`;
 }

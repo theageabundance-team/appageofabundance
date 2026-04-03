@@ -828,7 +828,7 @@
   <div class="mobile-nav-right">
     <button class="nav-icon-btn">🔍</button>
     <button class="nav-icon-btn" id="bell-mobile" style="position:relative;" onclick="toggleNotifPanel(event)">🔔<span class="notif-dot" id="notif-dot-mobile"></span></button>
-    <div class="nav-avatar" onclick="openProfileMenu()" style="cursor:pointer;">F</div>
+    <div class="nav-avatar" onclick="openProfileMenu()" style="cursor:pointer;"></div>
   </div>
 </div>
 
@@ -1441,10 +1441,9 @@ function logout() {
 function applyNavName(name) {
   if (!name) return;
   const first = name.split(' ')[0];
-  const avatarEl = document.getElementById('nav-avatar');
-  const usernameEl = document.getElementById('nav-username');
-  if (avatarEl) avatarEl.textContent = first[0].toUpperCase();
-  if (usernameEl) usernameEl.textContent = first;
+  const letter = first[0].toUpperCase();
+  document.querySelectorAll('.nav-avatar').forEach(function(el) { el.textContent = letter; });
+  document.querySelectorAll('.nav-username').forEach(function(el) { el.textContent = first; });
 }
 
 // Apply immediately from cache, then refresh from Supabase
