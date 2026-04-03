@@ -41,7 +41,7 @@
       background: #4c1d95;
       border: 1px solid rgba(167,139,250,0.4);
       border-radius: 999px;
-      padding: 5px 10px 5px 8px;
+      padding: 8px 14px 8px 11px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.45);
       cursor: pointer;
       animation: _ibChipIn 0.32s cubic-bezier(0.16,1,0.3,1);
@@ -58,12 +58,12 @@
       to { transform: scale(0.7) translateY(-6px); opacity: 0; }
     }
     #_ib_chip_icon {
-      font-size: 13px;
+      font-size: 17px;
       line-height: 1;
     }
     #_ib_chip_label {
       font-family: "Cinzel", serif;
-      font-size: 0.65rem;
+      font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.06em;
       color: #ddd6fe;
@@ -73,7 +73,7 @@
       background: none;
       border: none;
       color: rgba(221,214,254,0.55);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       cursor: pointer;
       padding: 0 0 0 3px;
       line-height: 1;
