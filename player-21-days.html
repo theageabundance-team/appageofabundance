@@ -816,17 +816,13 @@ const DAYS = [
 
 // Storage
 function getStart() {
-  // Source of truth: abundance_start_date set at registration (same as journey.html)
-  const sd = localStorage.getItem('abundance_start_date');
-  if (sd && sd !== 'null' && sd !== 'undefined') return sd;
-  // Fallback: own key (legacy / first access before Supabase syncs)
   let d = localStorage.getItem(SK);
   if (!d) { d = _sbToday(); localStorage.setItem(SK, d); save21DayProgress(d, null, null); }
   return d;
 }
 function getCurrentDay() {
   const sd = getStart();
-  // Parse as local midnight regardless of stored format (YYYY-MM-DD or ISO)
+  // Calendar-day diff (local midnight to local midnight, not elapsed hours)
   const start = new Date((sd.length > 10 ? sd.split('T')[0] : sd) + 'T00:00:00');
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const diff = Math.floor((today - start) / 86400000);
