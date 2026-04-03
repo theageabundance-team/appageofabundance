@@ -738,6 +738,7 @@ function submitComment() {
   const comments = JSON.parse(localStorage.getItem(key) || '[]');
   comments.unshift({ name, text, rating: currentRating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
   localStorage.setItem(key, JSON.stringify(comments));
+  saveComment(LESSONS[currentLesson].id, text, currentRating, name);
   document.getElementById('comment-input').value = '';
   renderComments();
 }

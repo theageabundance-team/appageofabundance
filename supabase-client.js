@@ -221,8 +221,10 @@ async function saveLessonInteraction(lessonId, notes, rating) {
   if (notes !== undefined) localStorage.setItem('notes_' + lessonId, notes);
   if (rating !== undefined) localStorage.setItem('rating_' + lessonId, String(rating));
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!isOnline()) return;
+  // Ensure user_id is resolved (handles users who logged in before Supabase integration)
+  const uid = getUserId() || await ensureUserIdFromEmail();
+  if (!uid) return;
   try {
     const payload = { user_id: uid, lesson_id: lessonId, updated_at: new Date().toISOString() };
     if (notes !== undefined) payload.notes = notes;
@@ -230,6 +232,49 @@ async function saveLessonInteraction(lessonId, notes, rating) {
     await sb().from('lesson_interactions')
       .upsert(payload, { onConflict: 'user_id,lesson_id' });
   } catch (e) { console.warn('[Supabase] saveLessonInteraction failed', e); }
+}
+
+// ── LESSON COMMENTS ──────────────────────────────────────────
+async function saveComment(lessonId, text, rating, userName) {
+  // Always save to localStorage (append to existing)
+  const key = 'comments_' + lessonId;
+  const comments = JSON.parse(localStorage.getItem(key) || '[]');
+  comments.unshift({ name: userName, text, rating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
+  localStorage.setItem(key, JSON.stringify(comments));
+
+  if (!isOnline()) return;
+  const uid = getUserId() || await ensureUserIdFromEmail();
+  if (!uid) return;
+  try {
+    await sb().from('lesson_comments')
+      .insert({ user_id: uid, lesson_id: lessonId, comment_text: text, rating: rating || 0, user_name: userName });
+  } catch (e) { console.warn('[Supabase] saveComment failed', e); }
+}
+
+async function getLessonComments(lessonId) {
+  const local = JSON.parse(localStorage.getItem('comments_' + lessonId) || '[]');
+  if (!isOnline()) return local;
+  try {
+    const { data } = await sb().from('lesson_comments')
+      .select('user_name, comment_text, rating, created_at')
+      .eq('lesson_id', lessonId)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (data && data.length > 0) {
+      const remote = data.map(r => ({
+        name: r.user_name || 'Member',
+        text: r.comment_text,
+        rating: r.rating,
+        date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      }));
+      localStorage.setItem('comments_' + lessonId, JSON.stringify(remote));
+      return remote;
+    }
+    return local;
+  } catch (e) {
+    console.warn('[Supabase] getLessonComments failed', e);
+    return local;
+  }
 }
 
 async function getLessonInteraction(lessonId) {
@@ -443,15 +488,10 @@ async function saveCircleMember(isMember) {
 
 // ── JOURNAL ─────────────────────────────────────────────────
 async function saveJournalEntry(date, content) {
-  // Save to localStorage
-  const entries = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
-  const existingIdx = entries.findIndex(e => e.date === date);
-  if (existingIdx >= 0) { entries[existingIdx].content = content; }
-  else { entries.push({ date, content }); }
-  localStorage.setItem('abundance_journal', JSON.stringify(entries));
-
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  // localStorage is handled by journal.html — only persist to Supabase here
+  if (!isOnline()) return;
+  const uid = getUserId() || await ensureUserIdFromEmail();
+  if (!uid) return;
   try {
     await sb().from('journal_entries')
       .upsert({ user_id: uid, entry_date: date, content, updated_at: new Date().toISOString() },

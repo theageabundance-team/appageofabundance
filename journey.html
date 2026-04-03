@@ -647,7 +647,7 @@ if (savedName) applyName(savedName);
 
 // ── STATE (dynamic from localStorage/Supabase) ──
 const _startDate = localStorage.getItem('abundance_start_date');
-const _userDays = _startDate ? Math.floor((new Date() - new Date(_startDate + 'T00:00:00')) / 86400000) : 0;
+const _userDays = _startDate ? Math.floor((new Date() - new Date(_startDate + 'T00:00:00')) / 86400000) + 1 : 1;
 const _localGifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
 const USER = {
   days: _userDays,
