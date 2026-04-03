@@ -236,6 +236,8 @@
 
     function fmt(n){ return n.toLocaleString(); }
     function initials(name){ return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+    function escHtml(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+    function safeParse(s,d){try{return s!=null?JSON.parse(s):d;}catch(e){return d;}}
 
     function init() {
       const today = new Date();
@@ -282,14 +284,14 @@
 
     function renderAmens(idx, todayStr) {
       const list = document.getElementById('amensList');
-      const userAmens = JSON.parse(localStorage.getItem(`amens_${todayStr}`) || '[]');
+      const userAmens = safeParse(localStorage.getItem(`amens_${todayStr}`), []);
       const seedCount = 3 + (idx % 4);
       const seeds = SEED_AMENS.slice(0, seedCount);
       const all = [...seeds, ...userAmens];
       list.innerHTML = all.map(a => `
         <div class="amen-item">
-          <div class="amen-avatar" style="background:${a.color}">${initials(a.name)}</div>
-          <div class="amen-text"><strong style="color:var(--text);font-size:12px;">${a.name}</strong> ${a.text}</div>
+          <div class="amen-avatar" style="background:${a.color}">${escHtml(initials(a.name||'?'))}</div>
+          <div class="amen-text"><strong style="color:var(--text);font-size:12px;">${escHtml(a.name||'')}</strong> ${escHtml(a.text||'')}</div>
           <div class="amen-time">${a.time || ''}</div>
         </div>`).join('');
     }
@@ -308,7 +310,7 @@
         text: val,
         time: timeStr
       };
-      const existing = JSON.parse(localStorage.getItem(`amens_${todayStr}`) || '[]');
+      const existing = safeParse(localStorage.getItem(`amens_${todayStr}`), []);
       existing.push(amen);
       localStorage.setItem(`amens_${todayStr}`, JSON.stringify(existing));
       saveCommunityAmen(val, todayStr);

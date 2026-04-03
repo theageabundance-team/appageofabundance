@@ -69,6 +69,9 @@ function _sbToday() {
     String(d.getDate()).padStart(2, '0');
 }
 
+/** Safe JSON.parse — returns default on null or parse error */
+function _safeParse(s, d) { try { return s != null ? JSON.parse(s) : d; } catch(e) { return d; } }
+
 /**
  * Aguarda SDK inicializar e verifica se usuário está logado.
  * @returns {Promise<boolean>} true se pode usar Supabase
@@ -166,7 +169,7 @@ async function loadAllUserData() {
     const { data: gifts } = await sb().from('user_gifts')
       .select('gift_id').eq('user_email', email);
     if (gifts && gifts.length > 0) {
-      const localGifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
+      const localGifts = _safeParse(localStorage.getItem('abundance_gifts'), []);
       const merged = [...new Set([...localGifts, ...gifts.map(g => g.gift_id)])];
       localStorage.setItem('abundance_gifts', JSON.stringify(merged));
     }
@@ -278,7 +281,7 @@ async function saveModuleProgress(moduleId, currentLesson, completedLessons) {
 async function getModuleProgress(moduleId) {
   const local = {
     currentLesson: parseInt(localStorage.getItem('current_lesson_' + moduleId) || '0'),
-    completedLessons: JSON.parse(localStorage.getItem('completed_lessons_' + moduleId) || '[]')
+    completedLessons: _safeParse(localStorage.getItem('completed_lessons_' + moduleId), [])
   };
 
   if (!await _ready()) return local;
@@ -368,7 +371,7 @@ async function getLessonComments(lessonId) {
 // ── GIFTS / ACHIEVEMENTS ────────────────────────────────────
 
 async function saveGift(giftId) {
-  const gifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
+  const gifts = _safeParse(localStorage.getItem('abundance_gifts'), []);
   if (!gifts.includes(giftId)) {
     gifts.push(giftId);
     localStorage.setItem('abundance_gifts', JSON.stringify(gifts));
@@ -383,7 +386,7 @@ async function saveGift(giftId) {
 }
 
 async function getGifts() {
-  const local = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
+  const local = _safeParse(localStorage.getItem('abundance_gifts'), []);
 
   if (!await _ready()) return local;
   const email = getUserEmail();
@@ -426,8 +429,8 @@ async function save21DayProgress(startDate, completedDays, notes) {
 async function get21DayProgress() {
   const local = {
     startDate: localStorage.getItem('21day_start') || null,
-    completedDays: JSON.parse(localStorage.getItem('21day_completed') || '[]'),
-    notes: JSON.parse(localStorage.getItem('21day_notes') || '{}')
+    completedDays: _safeParse(localStorage.getItem('21day_completed'), []),
+    notes: _safeParse(localStorage.getItem('21day_notes'), {})
   };
 
   if (!await _ready()) return local;
@@ -473,7 +476,7 @@ async function saveCommunityReaction(reactionType, date) {
 }
 
 async function saveCommunityAmen(text, date) {
-  const existing = JSON.parse(localStorage.getItem(`amens_${date}`) || '[]');
+  const existing = _safeParse(localStorage.getItem(`amens_${date}`), []);
   const userName = localStorage.getItem('abundance_name') || 'Blessed Soul';
   const newAmen = {
     name: userName,
@@ -493,7 +496,7 @@ async function saveCommunityAmen(text, date) {
 }
 
 async function getCommunityAmens(date) {
-  const local = JSON.parse(localStorage.getItem(`amens_${date}`) || '[]');
+  const local = _safeParse(localStorage.getItem(`amens_${date}`), []);
 
   if (!await _ready()) return local;
   try {
@@ -572,7 +575,7 @@ async function saveJournalEntry(date, content) {
 }
 
 async function getJournalEntries() {
-  const local = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
+  const local = _safeParse(localStorage.getItem('abundance_journal'), []);
 
   if (!await _ready()) return local;
   const email = getUserEmail();
@@ -598,7 +601,7 @@ async function getJournalEntries() {
 }
 
 async function deleteJournalEntry(date) {
-  const entries = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
+  const entries = _safeParse(localStorage.getItem('abundance_journal'), []);
   localStorage.setItem('abundance_journal', JSON.stringify(entries.filter(e => e.date !== date)));
 
   if (!await _ready()) return;
@@ -621,7 +624,7 @@ async function migrateFromLocalStorage() {
   console.log('[Supabase] Starting migration from localStorage...');
   try {
     // 1. Gifts
-    const gifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
+    const gifts = _safeParse(localStorage.getItem('abundance_gifts'), []);
     for (const giftId of gifts) {
       await sb().from('user_gifts')
         .upsert({ user_email: email, gift_id: giftId }, { onConflict: 'user_email,gift_id' });
@@ -645,8 +648,8 @@ async function migrateFromLocalStorage() {
         .upsert({
           user_email: email,
           start_date: day21Start,
-          completed_days: JSON.parse(localStorage.getItem('21day_completed') || '[]'),
-          notes: JSON.parse(localStorage.getItem('21day_notes') || '{}')
+          completed_days: _safeParse(localStorage.getItem('21day_completed'), []),
+          notes: _safeParse(localStorage.getItem('21day_notes'), {})
         }, { onConflict: 'user_email' });
     }
 
@@ -672,7 +675,7 @@ async function migrateFromLocalStorage() {
             user_email: email,
             module_id: mid,
             current_lesson: parseInt(cl || '0'),
-            completed_lessons: JSON.parse(comp || '[]')
+            completed_lessons: _safeParse(comp, [])
           }, { onConflict: 'user_email,module_id' });
       }
     }
