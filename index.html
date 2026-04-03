@@ -576,6 +576,60 @@
       font-feature-settings: normal;
     }
 
+    /* ── NOTIFICATIONS PANEL ── */
+    .notif-panel {
+      display: none; position: fixed; top: 62px; right: 16px; z-index: 210;
+      width: min(340px, calc(100vw - 32px));
+      background: #0e0e12; border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 14px; box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+      overflow: hidden;
+      animation: notifSlideIn 0.22s ease;
+    }
+    .notif-panel.open { display: block; }
+    @keyframes notifSlideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .notif-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px 10px;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .notif-header-title {
+      font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);
+    }
+    .notif-header-clear {
+      font-size: 0.75rem; color: var(--text-dim); cursor: pointer;
+      background: none; border: none; padding: 0; transition: color 0.2s;
+    }
+    .notif-header-clear:hover { color: var(--gold); }
+    .notif-list { padding: 6px 0; }
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 18px; cursor: pointer; transition: background 0.15s;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      text-decoration: none;
+    }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:hover { background: rgba(201,168,76,0.06); }
+    .notif-item.read { opacity: 0.5; }
+    .notif-icon {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .notif-body { flex: 1; min-width: 0; }
+    .notif-title {
+      font-family: 'Crimson Pro', Georgia, serif; font-size: 0.95rem;
+      font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 2px;
+    }
+    .notif-sub {
+      font-size: 0.8rem; color: var(--text-dim); line-height: 1.3;
+    }
+    .notif-unread-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #e74c3c;
+      flex-shrink: 0; margin-top: 6px;
+    }
+    .notif-item.read .notif-unread-dot { display: none; }
+
     /* ── PROFILE MENU ── */
     .profile-menu-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -654,7 +708,7 @@
   </ul>
   <div class="nav-right">
     <button class="nav-icon-btn">🔍</button>
-    <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
+    <button class="nav-icon-btn" id="bell-desktop" style="position:relative;" onclick="toggleNotifPanel(event)">🔔<span class="notif-dot" id="notif-dot-desktop"></span></button>
     <div class="nav-avatar" id="nav-avatar" onclick="openProfileMenu()" style="cursor:pointer;"></div>
     <span class="nav-username" id="nav-username" onclick="openProfileMenu()" style="cursor:pointer;"></span>
   </div>
@@ -668,7 +722,7 @@
   </div>
   <div class="mobile-nav-right">
     <button class="nav-icon-btn">🔍</button>
-    <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
+    <button class="nav-icon-btn" id="bell-mobile" style="position:relative;" onclick="toggleNotifPanel(event)">🔔<span class="notif-dot" id="notif-dot-mobile"></span></button>
     <div class="nav-avatar" onclick="openProfileMenu()" style="cursor:pointer;">F</div>
   </div>
 </div>
@@ -1150,6 +1204,86 @@ fadeSections.forEach((el, i) => {
   setTimeout(() => el.classList.add('visible'), i * 150);
 });
 
+// ── NOTIFICATIONS ──
+const NOTIFS = [
+  { id:'practice', icon:'🎯', title:"Your practice for today is waiting", sub:'', action: function(){ closeNotifPanel(); const el=document.getElementById('track-practice'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } },
+  { id:'angel',    icon:'👼', title:"Discover Your Guardian Angel",       sub:'See what it has for you', action: function(){ closeNotifPanel(); window.open('https://quizangel.vercel.app/','_blank'); } },
+];
+
+function _getNotifState() {
+  try { return JSON.parse(localStorage.getItem('notif_read') || '{}'); } catch(e) { return {}; }
+}
+function _saveNotifState(s) { localStorage.setItem('notif_read', JSON.stringify(s)); }
+
+function renderNotifPanel() {
+  const state = _getNotifState();
+  const list = document.getElementById('notif-list');
+  if (!list) return;
+  list.innerHTML = NOTIFS.map(n => `
+    <div class="notif-item ${state[n.id] ? 'read' : ''}" onclick="clickNotif('${n.id}')">
+      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-title">${n.title}</div>
+        ${n.sub ? `<div class="notif-sub">${n.sub}</div>` : ''}
+      </div>
+      <div class="notif-unread-dot"></div>
+    </div>`).join('');
+}
+
+function updateNotifBadge() {
+  const state = _getNotifState();
+  const hasUnread = NOTIFS.some(n => !state[n.id]);
+  ['notif-dot-desktop','notif-dot-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = hasUnread ? '' : 'none';
+  });
+}
+
+function toggleNotifPanel(e) {
+  e.stopPropagation();
+  const panel = document.getElementById('notif-panel');
+  const isOpen = panel.classList.contains('open');
+  closeNotifPanel();
+  if (!isOpen) {
+    renderNotifPanel();
+    panel.classList.add('open');
+  }
+}
+
+function closeNotifPanel() {
+  document.getElementById('notif-panel').classList.remove('open');
+}
+
+function clickNotif(id) {
+  const state = _getNotifState();
+  state[id] = true;
+  _saveNotifState(state);
+  updateNotifBadge();
+  renderNotifPanel();
+  const notif = NOTIFS.find(n => n.id === id);
+  if (notif) notif.action();
+}
+
+function markAllRead() {
+  const state = {};
+  NOTIFS.forEach(n => state[n.id] = true);
+  _saveNotifState(state);
+  updateNotifBadge();
+  renderNotifPanel();
+}
+
+// Close panel when clicking outside
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('notif-panel');
+  if (panel && panel.classList.contains('open') &&
+      !panel.contains(e.target) &&
+      e.target.id !== 'bell-desktop' && e.target.id !== 'bell-mobile') {
+    closeNotifPanel();
+  }
+});
+
+updateNotifBadge();
+
 // ── PROFILE MENU ──
 function openProfileMenu() {
   const name  = localStorage.getItem('abundance_name')  || 'Friend';
@@ -1192,6 +1326,15 @@ onSupabaseReady(function() {
   });
 });
 </script>
+
+<!-- NOTIFICATIONS PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-header">
+    <span class="notif-header-title">Notifications</span>
+    <button class="notif-header-clear" onclick="markAllRead()">Mark all as read</button>
+  </div>
+  <div class="notif-list" id="notif-list"></div>
+</div>
 
 <!-- PROFILE MENU -->
 <div class="profile-menu-overlay" id="profile-menu-overlay" onclick="closeProfileMenu()"></div>
