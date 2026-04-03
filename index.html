@@ -629,6 +629,15 @@
       flex-shrink: 0; margin-top: 6px;
     }
     .notif-item.read .notif-unread-dot { display: none; }
+    .notif-btn {
+      display: inline-block; margin-top: 8px;
+      background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold); border-radius: 6px; padding: 5px 14px;
+      font-family: 'Cinzel', serif; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; cursor: pointer; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .notif-btn:hover { background: rgba(201,168,76,0.28); }
 
     /* ── PROFILE MENU ── */
     .profile-menu-overlay {
@@ -1206,7 +1215,7 @@ fadeSections.forEach((el, i) => {
 
 // ── NOTIFICATIONS ──
 const NOTIFS = [
-  { id:'angel',    icon:'👼', title:"Discover Your Guardian Angel",       sub:'See what it has for you', action: function(){ closeNotifPanel(); window.open('https://quizangel.vercel.app/','_blank'); } },
+  { id:'angel',    icon:'👼', title:"Discover Your Guardian Angel",       sub:'See what it has for you', btn:'Open', btnUrl:'https://quizangel.vercel.app/', action: function(){ closeNotifPanel(); window.open('https://quizangel.vercel.app/','_blank'); } },
   { id:'practice', icon:'🎯', title:"Your practice for today is waiting", sub:'', action: function(){ closeNotifPanel(); const el=document.getElementById('track-practice'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } },
 ];
 
@@ -1225,6 +1234,7 @@ function renderNotifPanel() {
       <div class="notif-body">
         <div class="notif-title">${n.title}</div>
         ${n.sub ? `<div class="notif-sub">${n.sub}</div>` : ''}
+        ${n.btn ? `<a class="notif-btn" href="${n.btnUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation();clickNotif('${n.id}')">${n.btn}</a>` : ''}
       </div>
       <div class="notif-unread-dot"></div>
     </div>`).join('');
