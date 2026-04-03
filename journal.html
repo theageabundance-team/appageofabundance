@@ -401,6 +401,7 @@
 </nav>
 
 <script src="supabase-client.js"></script>
+<script src="profile-menu.js"></script>
 <script>
 const startDate = localStorage.getItem('abundance_start_date');
 const USER = { days: startDate ? Math.floor((new Date() - new Date(startDate + 'T00:00:00')) / 86400000) + 1 : 1 };
