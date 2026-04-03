@@ -549,7 +549,7 @@
   <div class="counter-wrap fade-in delay-1">
     <div class="counter-card">
       <div class="counter-label">Days of Connection</div>
-      <div class="counter-number" id="day-count">7</div>
+      <div class="counter-number" id="day-count">1</div>
       <div class="counter-unit">Days</div>
       <div class="counter-message" id="counter-msg">
         "Seven is the number of divine completion. You have walked a full sacred cycle."
@@ -654,12 +654,58 @@ const USER = {
   completedModules: _localGifts
 };
 
-// Refresh gifts from Supabase in background
+// Refresh profile + gifts from Supabase in background
 onSupabaseReady(function() {
+  // 1. Sync profile (start_date may differ on new browser)
+  loadProfile().then(function() {
+    const sd = localStorage.getItem('abundance_start_date');
+    if (!sd) return;
+    const days = Math.floor((new Date() - new Date(sd + 'T00:00:00')) / 86400000) + 1;
+    USER.days = days;
+
+    // Update day counter
+    const dcEl = document.getElementById('day-count');
+    if (dcEl) dcEl.textContent = days;
+
+    // Update progress bar
+    const nm = MILESTONES.find(function(m) { return days < m.day; });
+    if (nm) {
+      const prevDay = MILESTONES.filter(function(m) { return m.day <= days; })
+        .reduce(function(a, m) { return Math.max(a, m.day); }, 0);
+      const pct = ((days - prevDay) / (nm.day - prevDay)) * 100;
+      const fillEl = document.getElementById('progress-fill');
+      if (fillEl) fillEl.style.width = pct + '%';
+      const nextNameEl = document.getElementById('next-name');
+      if (nextNameEl) nextNameEl.textContent = 'Day ' + nm.day + ' \u2014 ' + nm.name;
+      const ptEl = document.getElementById('progress-text');
+      if (ptEl) ptEl.textContent = days + ' of ' + nm.day + ' days';
+    } else {
+      const fillEl = document.getElementById('progress-fill');
+      if (fillEl) fillEl.style.width = '100%';
+      const nextNameEl = document.getElementById('next-name');
+      if (nextNameEl) nextNameEl.textContent = 'All milestones completed 🎉';
+      const ptEl = document.getElementById('progress-text');
+      if (ptEl) ptEl.textContent = 'Journey complete';
+    }
+
+    // Update counter message
+    const cm = [...MILESTONES].reverse().find(function(m) { return days >= m.day; });
+    const uName = localStorage.getItem('abundance_name');
+    const fName = uName ? ', ' + uName.split(' ')[0] : '';
+    const msgEl = document.getElementById('counter-msg');
+    if (msgEl) {
+      if (cm) {
+        msgEl.innerHTML = '"' + cm.desc.replace('You ', uName ? uName.split(' ')[0] + ', you ' : 'You ') + '"';
+      } else {
+        msgEl.innerHTML = '"Every journey begins with a single step' + fName + '. Yours has begun."';
+      }
+    }
+  });
+
+  // 2. Refresh gifts grid
   getGifts().then(function(gifts) {
     if (gifts && gifts.length > 0) {
       USER.completedModules = gifts;
-      // Re-render gifts grid
       const gg = document.getElementById('gifts-grid');
       if (gg) {
         gg.innerHTML = MODULE_GIFTS.map(function(g) {

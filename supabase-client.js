@@ -1,109 +1,139 @@
 /**
- * Age of Abundance - Supabase Client
- * Cliente centralizado para persistencia de dados.
- * Mantem localStorage como cache/fallback offline.
+ * Age of Abundance - Supabase Client (v2 — email as PK)
+ * Usa o email como identificador único em todas as tabelas.
+ * Mantém localStorage como cache/fallback offline.
  */
 
 const SUPABASE_URL = 'https://uaicoxhobzpinkaqvepk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Jowm5dnurL2PDucXh1hZaQ_OzNBIbmt';
 
 let _supabase = null;
-let _userId = null;
+let _initPromise = null;          // singleton — garante init apenas uma vez
 let _sdkReady = false;
 const _readyCallbacks = [];
 
 // ── SDK Loader ──────────────────────────────────────────────
-function _loadSupabaseSDK() {
-  return new Promise((resolve, reject) => {
-    if (window.supabase) { resolve(); return; }
+function initSupabase() {
+  if (_initPromise) return _initPromise;
+  _initPromise = new Promise((resolve) => {
+    if (window.supabase) {
+      _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      _sdkReady = true;
+      _readyCallbacks.forEach(cb => { try { cb(); } catch(e){} });
+      _readyCallbacks.length = 0;
+      resolve(true);
+      return;
+    }
     const s = document.createElement('script');
     s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-    s.onload = resolve;
-    s.onerror = () => reject(new Error('Failed to load Supabase SDK'));
+    s.onload = () => {
+      try {
+        _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        _sdkReady = true;
+        _readyCallbacks.forEach(cb => { try { cb(); } catch(e){} });
+        _readyCallbacks.length = 0;
+        resolve(true);
+      } catch(e) {
+        console.warn('[Supabase] createClient failed', e);
+        resolve(false);
+      }
+    };
+    s.onerror = () => {
+      console.warn('[Supabase] SDK load failed — usando localStorage');
+      resolve(false);
+    };
     document.head.appendChild(s);
   });
+  return _initPromise;
 }
 
-async function initSupabase() {
-  try {
-    await _loadSupabaseSDK();
-    _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    _userId = localStorage.getItem('abundance_user_id') || null;
-    _sdkReady = true;
-    _readyCallbacks.forEach(cb => cb());
-    _readyCallbacks.length = 0;
-  } catch (e) {
-    console.warn('[Supabase] SDK load failed, using localStorage fallback', e);
-    _sdkReady = false;
-  }
-}
-
+/** Registra callback para quando o SDK estiver pronto */
 function onSupabaseReady(cb) {
-  if (_sdkReady) { cb(); } else { _readyCallbacks.push(cb); }
+  if (_sdkReady) { try { cb(); } catch(e){} }
+  else { _readyCallbacks.push(cb); }
 }
 
 function sb() { return _supabase; }
-function getUserId() { return _userId || localStorage.getItem('abundance_user_id'); }
 function isOnline() { return _sdkReady && _supabase !== null; }
 
-// ── Helper: today as YYYY-MM-DD ─────────────────────────────
+/** Retorna o email do usuário logado */
+function getUserEmail() {
+  return localStorage.getItem('abundance_email') || null;
+}
+
+/** Helper: today as YYYY-MM-DD */
 function _sbToday() { return new Date().toISOString().split('T')[0]; }
+
+/**
+ * Aguarda SDK inicializar e verifica se usuário está logado.
+ * @returns {Promise<boolean>} true se pode usar Supabase
+ */
+async function _ready() {
+  await initSupabase();
+  return isOnline() && !!getUserEmail();
+}
 
 
 // ── PROFILES ────────────────────────────────────────────────
+
+/**
+ * Cria ou atualiza o perfil do usuário no Supabase.
+ * Sempre salva em localStorage primeiro (cache).
+ * Para usuários existentes, sincroniza start_date do Supabase.
+ */
 async function loginOrCreate(name, email) {
-  // Always save to localStorage (cache)
+  // 1. Salva em localStorage imediatamente
   localStorage.setItem('abundance_name', name);
   localStorage.setItem('abundance_email', email);
   if (!localStorage.getItem('abundance_start_date')) {
     localStorage.setItem('abundance_start_date', _sbToday());
   }
 
-  if (!isOnline()) return null;
+  // 2. Aguarda SDK carregar (resolve mesmo se offline)
+  const ready = await _ready();
+  if (!ready) return null;
 
   try {
-    // Try to find existing profile
-    let { data, error } = await sb().from('profiles')
-      .select('id, start_date')
+    // Tenta buscar perfil existente
+    const { data: existing } = await sb().from('profiles')
+      .select('email, name, start_date')
       .eq('email', email)
       .maybeSingle();
 
-    if (data) {
-      // Update name if changed
-      await sb().from('profiles').update({ name }).eq('id', data.id);
-      _userId = data.id;
-      localStorage.setItem('abundance_user_id', data.id);
-      localStorage.setItem('abundance_start_date', data.start_date);
-      return data.id;
+    if (existing) {
+      // Usuário já existe: sincroniza start_date e atualiza nome se mudou
+      localStorage.setItem('abundance_start_date', existing.start_date);
+      await sb().from('profiles')
+        .update({ name, updated_at: new Date().toISOString() })
+        .eq('email', email);
+      return email;
     }
 
-    // Create new profile
+    // Novo usuário: cria perfil
     const startDate = localStorage.getItem('abundance_start_date') || _sbToday();
-    const { data: newProfile, error: insertErr } = await sb().from('profiles')
-      .insert({ name, email, start_date: startDate })
-      .select('id')
-      .single();
+    const { error } = await sb().from('profiles')
+      .insert({ email, name, start_date: startDate });
 
-    if (insertErr) throw insertErr;
-    _userId = newProfile.id;
-    localStorage.setItem('abundance_user_id', newProfile.id);
-    return newProfile.id;
+    if (error) throw error;
+    return email;
   } catch (e) {
     console.warn('[Supabase] loginOrCreate failed', e);
     return null;
   }
 }
 
+/** Carrega perfil do Supabase e atualiza localStorage */
 async function loadProfile() {
-  const uid = getUserId();
-  if (!isOnline() || !uid) return null;
+  const email = getUserEmail();
+  const ready = await _ready();
+  if (!ready || !email) return null;
   try {
     const { data } = await sb().from('profiles')
-      .select('*').eq('id', uid).single();
+      .select('*').eq('email', email).single();
     if (data) {
       localStorage.setItem('abundance_name', data.name);
-      localStorage.setItem('abundance_email', data.email);
       localStorage.setItem('abundance_start_date', data.start_date);
+      localStorage.setItem('circle_member', String(data.circle_member || false));
     }
     return data;
   } catch (e) {
@@ -112,48 +142,98 @@ async function loadProfile() {
   }
 }
 
-async function ensureUserIdFromEmail() {
-  const uid = getUserId();
-  if (uid) return uid;
-  const email = localStorage.getItem('abundance_email');
-  if (!email || !isOnline()) return null;
+/**
+ * Carrega todos os dados do usuário do Supabase para o localStorage.
+ * Chamado após login para hidratar a sessão em qualquer dispositivo.
+ */
+async function loadAllUserData() {
+  const email = getUserEmail();
+  const ready = await _ready();
+  if (!ready || !email) return;
+
   try {
-    const { data } = await sb().from('profiles')
-      .select('id').eq('email', email).maybeSingle();
-    if (data) {
-      _userId = data.id;
-      localStorage.setItem('abundance_user_id', data.id);
-      return data.id;
+    // Perfil (start_date, circle_member)
+    await loadProfile();
+
+    // Gifts
+    const { data: gifts } = await sb().from('user_gifts')
+      .select('gift_id').eq('user_email', email);
+    if (gifts && gifts.length > 0) {
+      const localGifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
+      const merged = [...new Set([...localGifts, ...gifts.map(g => g.gift_id)])];
+      localStorage.setItem('abundance_gifts', JSON.stringify(merged));
     }
-  } catch (e) { console.warn('[Supabase] ensureUserId failed', e); }
-  return null;
+
+    // Daily progress (hoje)
+    const today = _sbToday();
+    const { data: daily } = await sb().from('daily_progress')
+      .select('practice_key').eq('user_email', email).eq('completed_date', today);
+    if (daily) {
+      daily.forEach(r => localStorage.setItem(r.practice_key + '_done', today));
+    }
+
+    // Module progress (todos os módulos)
+    const { data: modules } = await sb().from('module_progress')
+      .select('module_id, current_lesson, completed_lessons').eq('user_email', email);
+    if (modules) {
+      modules.forEach(r => {
+        localStorage.setItem('current_lesson_' + r.module_id, String(r.current_lesson));
+        localStorage.setItem('completed_lessons_' + r.module_id, JSON.stringify(r.completed_lessons || []));
+      });
+    }
+
+    // 21-day challenge
+    const { data: challenge } = await sb().from('challenge_21days')
+      .select('start_date, completed_days, notes').eq('user_email', email).maybeSingle();
+    if (challenge) {
+      if (challenge.start_date) localStorage.setItem('21day_start', challenge.start_date);
+      if (challenge.completed_days) localStorage.setItem('21day_completed', JSON.stringify(challenge.completed_days));
+      if (challenge.notes) localStorage.setItem('21day_notes', JSON.stringify(challenge.notes));
+    }
+
+    // Journal entries
+    const { data: journal } = await sb().from('journal_entries')
+      .select('entry_date, content').eq('user_email', email).order('entry_date', { ascending: false });
+    if (journal && journal.length > 0) {
+      const entries = journal.map(r => {
+        let parsed;
+        try { parsed = JSON.parse(r.content); } catch(e) { parsed = { text: r.content }; }
+        return { date: r.entry_date, isoDate: r.entry_date, ...parsed };
+      });
+      localStorage.setItem('abundance_journal', JSON.stringify(entries));
+    }
+
+    console.log('[Supabase] loadAllUserData complete');
+  } catch (e) {
+    console.warn('[Supabase] loadAllUserData partial failure', e);
+  }
 }
 
+
 // ── DAILY PROGRESS ──────────────────────────────────────────
+
 async function saveDailyProgress(practiceKey) {
-  // Always save to localStorage
   localStorage.setItem(practiceKey + '_done', _sbToday());
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('daily_progress')
-      .upsert({ user_id: uid, practice_key: practiceKey, completed_date: _sbToday() },
-        { onConflict: 'user_id,practice_key,completed_date' });
+      .upsert({ user_email: email, practice_key: practiceKey, completed_date: _sbToday() },
+        { onConflict: 'user_email,practice_key,completed_date' });
   } catch (e) { console.warn('[Supabase] saveDailyProgress failed', e); }
 }
 
 async function isDailyDone(practiceKey) {
-  // Check localStorage first (fast)
   const local = localStorage.getItem(practiceKey + '_done');
   if (local === _sbToday()) return true;
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return false;
+  if (!await _ready()) return false;
+  const email = getUserEmail();
   try {
     const { data } = await sb().from('daily_progress')
       .select('id')
-      .eq('user_id', uid)
+      .eq('user_email', email)
       .eq('practice_key', practiceKey)
       .eq('completed_date', _sbToday())
       .maybeSingle();
@@ -163,49 +243,48 @@ async function isDailyDone(practiceKey) {
     }
     return false;
   } catch (e) {
-    console.warn('[Supabase] isDailyDone failed', e);
     return local === _sbToday();
   }
 }
 
+
 // ── MODULE PROGRESS ─────────────────────────────────────────
+
 async function saveModuleProgress(moduleId, currentLesson, completedLessons) {
-  // Always save to localStorage
   localStorage.setItem('current_lesson_' + moduleId, String(currentLesson));
   localStorage.setItem('completed_lessons_' + moduleId, JSON.stringify(completedLessons));
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('module_progress')
       .upsert({
-        user_id: uid,
+        user_email: email,
         module_id: moduleId,
         current_lesson: currentLesson,
         completed_lessons: completedLessons,
         updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id,module_id' });
+      }, { onConflict: 'user_email,module_id' });
   } catch (e) { console.warn('[Supabase] saveModuleProgress failed', e); }
 }
 
 async function getModuleProgress(moduleId) {
-  // Start with localStorage
   const local = {
     currentLesson: parseInt(localStorage.getItem('current_lesson_' + moduleId) || '0'),
     completedLessons: JSON.parse(localStorage.getItem('completed_lessons_' + moduleId) || '[]')
   };
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return local;
+  if (!await _ready()) return local;
+  const email = getUserEmail();
   try {
     const { data } = await sb().from('module_progress')
       .select('current_lesson, completed_lessons')
-      .eq('user_id', uid)
+      .eq('user_email', email)
       .eq('module_id', moduleId)
       .maybeSingle();
     if (data) {
       localStorage.setItem('current_lesson_' + moduleId, String(data.current_lesson));
-      localStorage.setItem('completed_lessons_' + moduleId, JSON.stringify(data.completed_lessons));
+      localStorage.setItem('completed_lessons_' + moduleId, JSON.stringify(data.completed_lessons || []));
       return { currentLesson: data.current_lesson, completedLessons: data.completed_lessons || [] };
     }
     return local;
@@ -215,45 +294,77 @@ async function getModuleProgress(moduleId) {
   }
 }
 
+
 // ── LESSON INTERACTIONS (notes, rating) ─────────────────────
+
 async function saveLessonInteraction(lessonId, notes, rating) {
-  // Always save to localStorage
   if (notes !== undefined) localStorage.setItem('notes_' + lessonId, notes);
   if (rating !== undefined) localStorage.setItem('rating_' + lessonId, String(rating));
 
-  if (!isOnline()) return;
-  // Ensure user_id is resolved (handles users who logged in before Supabase integration)
-  const uid = getUserId() || await ensureUserIdFromEmail();
-  if (!uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
-    const payload = { user_id: uid, lesson_id: lessonId, updated_at: new Date().toISOString() };
+    const payload = { user_email: email, lesson_id: lessonId, updated_at: new Date().toISOString() };
     if (notes !== undefined) payload.notes = notes;
     if (rating !== undefined) payload.rating = rating;
     await sb().from('lesson_interactions')
-      .upsert(payload, { onConflict: 'user_id,lesson_id' });
+      .upsert(payload, { onConflict: 'user_email,lesson_id' });
   } catch (e) { console.warn('[Supabase] saveLessonInteraction failed', e); }
 }
 
+async function getLessonInteraction(lessonId) {
+  const local = {
+    notes: localStorage.getItem('notes_' + lessonId) || '',
+    rating: parseInt(localStorage.getItem('rating_' + lessonId) || '0')
+  };
+
+  if (!await _ready()) return local;
+  const email = getUserEmail();
+  try {
+    const { data } = await sb().from('lesson_interactions')
+      .select('notes, rating')
+      .eq('user_email', email)
+      .eq('lesson_id', lessonId)
+      .maybeSingle();
+    if (data) {
+      if (data.notes) localStorage.setItem('notes_' + lessonId, data.notes);
+      if (data.rating) localStorage.setItem('rating_' + lessonId, String(data.rating));
+      return { notes: data.notes || '', rating: data.rating || 0 };
+    }
+    return local;
+  } catch (e) {
+    console.warn('[Supabase] getLessonInteraction failed', e);
+    return local;
+  }
+}
+
+
 // ── LESSON COMMENTS ──────────────────────────────────────────
+
 async function saveComment(lessonId, text, rating, userName) {
-  // Always save to localStorage (append to existing)
+  // Append to localStorage
   const key = 'comments_' + lessonId;
   const comments = JSON.parse(localStorage.getItem(key) || '[]');
-  comments.unshift({ name: userName, text, rating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
+  const newComment = {
+    name: userName,
+    text,
+    rating,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  };
+  comments.unshift(newComment);
   localStorage.setItem(key, JSON.stringify(comments));
 
-  if (!isOnline()) return;
-  const uid = getUserId() || await ensureUserIdFromEmail();
-  if (!uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('lesson_comments')
-      .insert({ user_id: uid, lesson_id: lessonId, comment_text: text, rating: rating || 0, user_name: userName });
+      .insert({ user_email: email, lesson_id: lessonId, comment_text: text, rating: rating || 0, user_name: userName });
   } catch (e) { console.warn('[Supabase] saveComment failed', e); }
 }
 
 async function getLessonComments(lessonId) {
   const local = JSON.parse(localStorage.getItem('comments_' + lessonId) || '[]');
-  if (!isOnline()) return local;
+  if (!await _ready()) return local;
   try {
     const { data } = await sb().from('lesson_comments')
       .select('user_name, comment_text, rating, created_at')
@@ -277,61 +388,34 @@ async function getLessonComments(lessonId) {
   }
 }
 
-async function getLessonInteraction(lessonId) {
-  const local = {
-    notes: localStorage.getItem('notes_' + lessonId) || '',
-    rating: parseInt(localStorage.getItem('rating_' + lessonId) || '0')
-  };
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return local;
-  try {
-    const { data } = await sb().from('lesson_interactions')
-      .select('notes, rating')
-      .eq('user_id', uid)
-      .eq('lesson_id', lessonId)
-      .maybeSingle();
-    if (data) {
-      if (data.notes) localStorage.setItem('notes_' + lessonId, data.notes);
-      if (data.rating) localStorage.setItem('rating_' + lessonId, String(data.rating));
-      return { notes: data.notes || '', rating: data.rating || 0 };
-    }
-    return local;
-  } catch (e) {
-    console.warn('[Supabase] getLessonInteraction failed', e);
-    return local;
-  }
-}
+// ── GIFTS / ACHIEVEMENTS ────────────────────────────────────
 
-// ── GIFTS / ACHIEVEMENTS ───────────────────────────────────
 async function saveGift(giftId) {
-  // Always save to localStorage
   const gifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
   if (!gifts.includes(giftId)) {
     gifts.push(giftId);
     localStorage.setItem('abundance_gifts', JSON.stringify(gifts));
   }
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('user_gifts')
-      .upsert({ user_id: uid, gift_id: giftId }, { onConflict: 'user_id,gift_id' });
+      .upsert({ user_email: email, gift_id: giftId }, { onConflict: 'user_email,gift_id' });
   } catch (e) { console.warn('[Supabase] saveGift failed', e); }
 }
 
 async function getGifts() {
   const local = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return local;
+  if (!await _ready()) return local;
+  const email = getUserEmail();
   try {
     const { data } = await sb().from('user_gifts')
-      .select('gift_id')
-      .eq('user_id', uid);
+      .select('gift_id').eq('user_email', email);
     if (data && data.length > 0) {
       const giftIds = data.map(r => r.gift_id);
-      // Merge with local (union)
       const merged = [...new Set([...local, ...giftIds])];
       localStorage.setItem('abundance_gifts', JSON.stringify(merged));
       return merged;
@@ -343,22 +427,23 @@ async function getGifts() {
   }
 }
 
+
 // ── 21-DAY CHALLENGE ────────────────────────────────────────
+
 async function save21DayProgress(startDate, completedDays, notes) {
-  // Always save to localStorage
   if (startDate) localStorage.setItem('21day_start', startDate);
   if (completedDays) localStorage.setItem('21day_completed', JSON.stringify(completedDays));
   if (notes) localStorage.setItem('21day_notes', JSON.stringify(notes));
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
-    const payload = { user_id: uid, updated_at: new Date().toISOString() };
+    const payload = { user_email: email, updated_at: new Date().toISOString() };
     if (startDate) payload.start_date = startDate;
     if (completedDays) payload.completed_days = completedDays;
     if (notes) payload.notes = notes;
     await sb().from('challenge_21days')
-      .upsert(payload, { onConflict: 'user_id' });
+      .upsert(payload, { onConflict: 'user_email' });
   } catch (e) { console.warn('[Supabase] save21DayProgress failed', e); }
 }
 
@@ -369,12 +454,12 @@ async function get21DayProgress() {
     notes: JSON.parse(localStorage.getItem('21day_notes') || '{}')
   };
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return local;
+  if (!await _ready()) return local;
+  const email = getUserEmail();
   try {
     const { data } = await sb().from('challenge_21days')
       .select('start_date, completed_days, notes')
-      .eq('user_id', uid)
+      .eq('user_email', email)
       .maybeSingle();
     if (data) {
       if (data.start_date) localStorage.setItem('21day_start', data.start_date);
@@ -393,32 +478,37 @@ async function get21DayProgress() {
   }
 }
 
+
 // ── COMMUNITY ───────────────────────────────────────────────
+
 async function saveCommunityReaction(reactionType, date) {
   localStorage.setItem(`cr_${reactionType}_${date}`, '1');
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
+  const userName = localStorage.getItem('abundance_name') || 'Anonymous';
   try {
-    const userName = localStorage.getItem('abundance_name') || 'Anonymous';
     await sb().from('community_interactions')
-      .insert({ user_id: uid, interaction_date: date, reaction_type: reactionType, user_name: userName });
+      .insert({ user_email: email, interaction_date: date, reaction_type: reactionType, user_name: userName });
   } catch (e) { console.warn('[Supabase] saveCommunityReaction failed', e); }
 }
 
 async function saveCommunityAmen(text, date) {
-  // Save to localStorage
   const existing = JSON.parse(localStorage.getItem(`amens_${date}`) || '[]');
   const userName = localStorage.getItem('abundance_name') || 'Blessed Soul';
-  const newAmen = { name: userName, text, date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+  const newAmen = {
+    name: userName,
+    text,
+    date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
   existing.push(newAmen);
   localStorage.setItem(`amens_${date}`, JSON.stringify(existing));
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return newAmen;
+  if (!await _ready()) return newAmen;
+  const email = getUserEmail();
   try {
     await sb().from('community_interactions')
-      .insert({ user_id: uid, interaction_date: date, amen_text: text, user_name: userName });
+      .insert({ user_email: email, interaction_date: date, amen_text: text, user_name: userName });
   } catch (e) { console.warn('[Supabase] saveCommunityAmen failed', e); }
   return newAmen;
 }
@@ -426,7 +516,7 @@ async function saveCommunityAmen(text, date) {
 async function getCommunityAmens(date) {
   const local = JSON.parse(localStorage.getItem(`amens_${date}`) || '[]');
 
-  if (!isOnline()) return local;
+  if (!await _ready()) return local;
   try {
     const { data } = await sb().from('community_interactions')
       .select('user_name, amen_text, created_at')
@@ -450,12 +540,12 @@ async function getCommunityAmens(date) {
 }
 
 async function getCommunityReactions(date) {
-  const uid = getUserId();
-  if (!isOnline() || !uid) return {};
+  if (!await _ready()) return {};
+  const email = getUserEmail();
   try {
     const { data } = await sb().from('community_interactions')
       .select('reaction_type')
-      .eq('user_id', uid)
+      .eq('user_email', email)
       .eq('interaction_date', date)
       .not('reaction_type', 'is', null);
     if (data) {
@@ -477,40 +567,47 @@ async function saveCircleMember(isMember) {
   localStorage.setItem('circle_member', String(isMember));
   localStorage.setItem('circle_visited', 'true');
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('profiles')
-      .update({ circle_member: isMember })
-      .eq('id', uid);
+      .update({ circle_member: isMember, updated_at: new Date().toISOString() })
+      .eq('email', email);
   } catch (e) { console.warn('[Supabase] saveCircleMember failed', e); }
 }
 
+
 // ── JOURNAL ─────────────────────────────────────────────────
+
 async function saveJournalEntry(date, content) {
-  // localStorage is handled by journal.html — only persist to Supabase here
-  if (!isOnline()) return;
-  const uid = getUserId() || await ensureUserIdFromEmail();
-  if (!uid) return;
+  // localStorage é gerenciado pelo journal.html — aqui só persiste no Supabase
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('journal_entries')
-      .upsert({ user_id: uid, entry_date: date, content, updated_at: new Date().toISOString() },
-        { onConflict: 'user_id,entry_date' });
+      .upsert(
+        { user_email: email, entry_date: date, content, updated_at: new Date().toISOString() },
+        { onConflict: 'user_email,entry_date' }
+      );
   } catch (e) { console.warn('[Supabase] saveJournalEntry failed', e); }
 }
 
 async function getJournalEntries() {
   const local = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return local;
+  if (!await _ready()) return local;
+  const email = getUserEmail();
   try {
     const { data } = await sb().from('journal_entries')
       .select('entry_date, content, updated_at')
-      .eq('user_id', uid)
+      .eq('user_email', email)
       .order('entry_date', { ascending: false });
     if (data && data.length > 0) {
-      const entries = data.map(r => ({ date: r.entry_date, content: r.content }));
+      const entries = data.map(r => {
+        let parsed;
+        try { parsed = JSON.parse(r.content); } catch(e) { parsed = { text: r.content }; }
+        return { date: r.entry_date, isoDate: r.entry_date, ...parsed };
+      });
       localStorage.setItem('abundance_journal', JSON.stringify(entries));
       return entries;
     }
@@ -522,67 +619,66 @@ async function getJournalEntries() {
 }
 
 async function deleteJournalEntry(date) {
-  // Remove from localStorage
   const entries = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
-  const filtered = entries.filter(e => e.date !== date);
-  localStorage.setItem('abundance_journal', JSON.stringify(filtered));
+  localStorage.setItem('abundance_journal', JSON.stringify(entries.filter(e => e.date !== date)));
 
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
+  if (!await _ready()) return;
+  const email = getUserEmail();
   try {
     await sb().from('journal_entries')
       .delete()
-      .eq('user_id', uid)
+      .eq('user_email', email)
       .eq('entry_date', date);
   } catch (e) { console.warn('[Supabase] deleteJournalEntry failed', e); }
 }
 
+
 // ── MIGRATION: localStorage → Supabase ──────────────────────
 async function migrateFromLocalStorage() {
-  const uid = getUserId();
-  if (!isOnline() || !uid) return;
-  if (localStorage.getItem('abundance_migrated') === 'true') return;
+  if (localStorage.getItem('abundance_migrated_v2') === 'true') return;
+  if (!await _ready()) return;
 
+  const email = getUserEmail();
   console.log('[Supabase] Starting migration from localStorage...');
   try {
-    // 1. Migrate gifts
+    // 1. Gifts
     const gifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
     for (const giftId of gifts) {
       await sb().from('user_gifts')
-        .upsert({ user_id: uid, gift_id: giftId }, { onConflict: 'user_id,gift_id' });
+        .upsert({ user_email: email, gift_id: giftId }, { onConflict: 'user_email,gift_id' });
     }
 
-    // 2. Migrate daily progress (only today's)
+    // 2. Daily progress (apenas datas salvas)
     const dailyKeys = ['daily_focus', 'divine_truth', 'solomons_wisdom', 'daily_decree'];
     for (const key of dailyKeys) {
       const done = localStorage.getItem(key + '_done');
       if (done) {
         await sb().from('daily_progress')
-          .upsert({ user_id: uid, practice_key: key, completed_date: done },
-            { onConflict: 'user_id,practice_key,completed_date' });
+          .upsert({ user_email: email, practice_key: key, completed_date: done },
+            { onConflict: 'user_email,practice_key,completed_date' });
       }
     }
 
-    // 3. Migrate 21-day challenge
+    // 3. 21-day challenge
     const day21Start = localStorage.getItem('21day_start');
     if (day21Start) {
       await sb().from('challenge_21days')
         .upsert({
-          user_id: uid,
+          user_email: email,
           start_date: day21Start,
           completed_days: JSON.parse(localStorage.getItem('21day_completed') || '[]'),
           notes: JSON.parse(localStorage.getItem('21day_notes') || '{}')
-        }, { onConflict: 'user_id' });
+        }, { onConflict: 'user_email' });
     }
 
-    // 4. Migrate circle membership
+    // 4. Circle membership
     if (localStorage.getItem('circle_member') === 'true') {
       await sb().from('profiles')
-        .update({ circle_member: true })
-        .eq('id', uid);
+        .update({ circle_member: true, updated_at: new Date().toISOString() })
+        .eq('email', email);
     }
 
-    // 5. Migrate module progress (scan localStorage for known patterns)
+    // 5. Module progress
     const moduleIds = [
       'secret-of-power', 'solomon', '7frequencies', 'whisper-faith',
       'age-of-abundance', 'dream-journal', 'mindset-reset', 'sacred-chant',
@@ -594,35 +690,36 @@ async function migrateFromLocalStorage() {
       if (cl !== null || comp !== null) {
         await sb().from('module_progress')
           .upsert({
-            user_id: uid,
+            user_email: email,
             module_id: mid,
             current_lesson: parseInt(cl || '0'),
             completed_lessons: JSON.parse(comp || '[]')
-          }, { onConflict: 'user_id,module_id' });
+          }, { onConflict: 'user_email,module_id' });
       }
     }
 
-    localStorage.setItem('abundance_migrated', 'true');
+    localStorage.setItem('abundance_migrated_v2', 'true');
     console.log('[Supabase] Migration complete!');
   } catch (e) {
     console.warn('[Supabase] Migration failed (will retry next load)', e);
   }
 }
 
+
 // ── LOGOUT ──────────────────────────────────────────────────
 function logoutUser() {
-  _userId = null;
-  localStorage.removeItem('abundance_user_id');
   localStorage.removeItem('abundance_name');
   localStorage.removeItem('abundance_email');
-  localStorage.removeItem('abundance_migrated');
+  localStorage.removeItem('abundance_start_date');
+  localStorage.removeItem('abundance_gifts');
+  localStorage.removeItem('abundance_migrated_v2');
+  // Mantém dados de módulos e journal no localStorage como cache local
 }
+
 
 // ── AUTO-INIT ───────────────────────────────────────────────
 initSupabase().then(() => {
-  if (isOnline()) {
-    ensureUserIdFromEmail().then(uid => {
-      if (uid) migrateFromLocalStorage();
-    });
+  if (isOnline() && getUserEmail()) {
+    migrateFromLocalStorage();
   }
 });

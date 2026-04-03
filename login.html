@@ -501,6 +501,9 @@ function handleEnter() {
 
   // Save to localStorage + Supabase
   loginOrCreate(name, email).then(() => {
+    // Load all user data from Supabase in background (hydrates localStorage)
+    loadAllUserData();
+
     // Show success overlay after short delay
     setTimeout(() => {
       const firstName = name.split(' ')[0];
@@ -513,7 +516,7 @@ function handleEnter() {
         document.getElementById('success-bar').style.width = '100%';
       }, 100);
 
-      // Redirect
+      // Redirect after data has had time to load
       setTimeout(() => {
         window.location.href = 'index.html';
       }, 2200);
