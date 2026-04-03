@@ -655,8 +655,8 @@
   <div class="nav-right">
     <button class="nav-icon-btn">🔍</button>
     <button class="nav-icon-btn" style="position:relative;">🔔<span class="notif-dot"></span></button>
-    <div class="nav-avatar" id="nav-avatar" onclick="openProfileMenu()" style="cursor:pointer;">F</div>
-    <span class="nav-username" id="nav-username" onclick="openProfileMenu()" style="cursor:pointer;">fulano</span>
+    <div class="nav-avatar" id="nav-avatar" onclick="openProfileMenu()" style="cursor:pointer;"></div>
+    <span class="nav-username" id="nav-username" onclick="openProfileMenu()" style="cursor:pointer;"></span>
   </div>
 </nav>
 
@@ -1145,8 +1145,22 @@ function logout() {
   window.location.href = 'login.html';
 }
 
-// Load profile from Supabase on page load
-onSupabaseReady(function() { loadProfile(); });
+function applyNavName(name) {
+  if (!name) return;
+  const first = name.split(' ')[0];
+  const avatarEl = document.getElementById('nav-avatar');
+  const usernameEl = document.getElementById('nav-username');
+  if (avatarEl) avatarEl.textContent = first[0].toUpperCase();
+  if (usernameEl) usernameEl.textContent = first;
+}
+
+// Apply immediately from cache, then refresh from Supabase
+applyNavName(localStorage.getItem('abundance_name'));
+onSupabaseReady(function() {
+  loadProfile().then(function() {
+    applyNavName(localStorage.getItem('abundance_name'));
+  });
+});
 </script>
 
 <!-- PROFILE MENU -->
