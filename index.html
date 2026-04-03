@@ -873,7 +873,7 @@ function getWeekIdx(){
 const todayStr = new Date().toISOString().split('T')[0];
 const todayDOW = new Date().getDay();
 const weekIdx = getWeekIdx();
-const todayFocus = DAILY_FOCUS_DATA[weekIdx][todayDOW];
+const todayFocus = (DAILY_FOCUS_DATA[weekIdx] || DAILY_FOCUS_DATA[0])[todayDOW] || {theme:'Abundance',title:'Daily Reflection'};
 
 const DONE_KEYS = ['daily_focus_done','divine_truth_done','solomons_wisdom_done','daily_decree_done'];
 function isDone(key){ return localStorage.getItem(key) === todayStr; }
