@@ -662,7 +662,7 @@ async function migrateFromLocalStorage() {
 
     // 5. Module progress
     const moduleIds = [
-      'secret-of-power', 'solomon', '7frequencies', 'whisper-faith',
+      'secret-of-power', 'king-solomon', '7-frequencies', 'whisper-faith',
       'age-of-abundance', 'dream-journal', 'mindset-reset', 'sacred-chant',
       'vision-board', 'powerful-numbers', 'prayers-michael'
     ];
