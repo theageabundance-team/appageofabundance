@@ -140,7 +140,7 @@
 <body>
 
   <!-- ONBOARDING -->
-  <div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-overlay hidden" id="onboardOverlay">
     <div class="onboard-modal">
       <div class="onboard-avatar">🌿</div>
       <div class="onboard-name">Abundance Circle</div>
@@ -458,11 +458,6 @@
       // joinedNotice visibility
       if (localStorage.getItem('circle_member') === 'true') joinedNotice.classList.remove('hidden');
 
-      // onboarding
-      if (localStorage.getItem('circle_visited') === 'true') {
-        document.getElementById('onboardOverlay').classList.add('hidden');
-      }
-
       // Enter key on every prayer input
       dates.forEach(ds => {
         const inp = document.getElementById('amenInput-' + ds);
@@ -549,6 +544,25 @@
     });
 
     renderAll();
+
+    // ── ONBOARDING: check Supabase before showing overlay ──
+    // Fast path: localStorage already knows user is member/visited
+    if (localStorage.getItem('circle_member') === 'true' ||
+        localStorage.getItem('circle_visited') === 'true') {
+      // overlay stays hidden — nothing to do
+    } else {
+      // Wait for Supabase, then check the real profile value
+      onSupabaseReady(function () {
+        loadProfile().then(function () {
+          var isMember = localStorage.getItem('circle_member') === 'true';
+          var visited  = localStorage.getItem('circle_visited') === 'true';
+          if (!isMember && !visited) {
+            // Confirmed: user has never joined — show the overlay
+            document.getElementById('onboardOverlay').classList.remove('hidden');
+          }
+        });
+      });
+    }
   </script>
 
 <!-- BOTTOM NAV -->
