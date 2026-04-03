@@ -639,6 +639,101 @@
     }
     .notif-btn:hover { background: rgba(201,168,76,0.28); }
 
+    /* ── DAILY STREAK MODAL ── */
+    .dm-overlay {
+      display:none; position:fixed; inset:0; z-index:300;
+      background:rgba(0,0,0,0.88); backdrop-filter:blur(10px);
+      align-items:center; justify-content:center; padding:20px;
+    }
+    .dm-overlay.open { display:flex; }
+    .dm-box {
+      background:linear-gradient(160deg,#0d0d14,#111118);
+      border:1px solid rgba(201,168,76,0.28);
+      border-radius:22px; padding:36px 24px 28px;
+      max-width:440px; width:100%; text-align:center;
+      box-shadow:0 24px 80px rgba(0,0,0,0.8);
+      animation:dmPop 0.45s cubic-bezier(0.16,1,0.3,1);
+    }
+    @keyframes dmPop{from{opacity:0;transform:scale(0.9) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .dm-eyebrow {
+      font-family:'Cinzel',serif; font-size:0.65rem; font-weight:700;
+      letter-spacing:0.18em; text-transform:uppercase;
+      color:rgba(201,168,76,0.65); margin-bottom:10px;
+    }
+    .dm-title {
+      font-family:'Cinzel',serif; font-size:1.6rem; font-weight:700;
+      color:#f5e6b8; line-height:1.2; margin-bottom:6px;
+    }
+    .dm-title span { color:var(--gold); }
+    .dm-sub {
+      font-family:'Crimson Pro',Georgia,serif; font-size:1rem;
+      color:var(--text-dim); margin-bottom:28px;
+    }
+    /* Streak row */
+    .dm-streak {
+      display:flex; gap:0; overflow-x:auto; padding-bottom:8px;
+      justify-content:flex-start; margin:0 -8px 28px;
+      scrollbar-width:none;
+    }
+    .dm-streak::-webkit-scrollbar{display:none;}
+    .dm-cell {
+      display:flex; flex-direction:column; align-items:center; gap:5px;
+      flex-shrink:0; width:46px;
+    }
+    .dm-circle {
+      width:36px; height:36px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.78rem; font-weight:700; position:relative;
+      transition:all 0.2s;
+    }
+    .dm-cell.sc-past .dm-circle {
+      background:#1a3d25; border:1.5px solid #2a7a45; color:#4caf70;
+      font-size:1rem;
+    }
+    .dm-cell.sc-current .dm-circle {
+      background:linear-gradient(135deg,#8a6020,var(--gold));
+      border:2px solid var(--gold-light); color:#0a0508;
+      font-family:'Cinzel',serif; font-size:0.82rem;
+      box-shadow:0 0 16px rgba(201,168,76,0.55), 0 0 4px rgba(201,168,76,0.9);
+      animation:dmPulse 2s ease-in-out infinite;
+    }
+    @keyframes dmPulse{0%,100%{box-shadow:0 0 16px rgba(201,168,76,0.55),0 0 4px rgba(201,168,76,0.9)}50%{box-shadow:0 0 28px rgba(201,168,76,0.85),0 0 8px rgba(201,168,76,1)}}
+    .dm-cell.sc-future .dm-circle {
+      background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.1);
+      color:rgba(255,255,255,0.22); font-size:0.78rem;
+    }
+    /* Milestone gift override */
+    .dm-cell.sc-milestone-reached .dm-circle {
+      background:linear-gradient(135deg,#3d2800,#7a5020);
+      border:1.5px solid rgba(201,168,76,0.6); font-size:1rem; color:#fff;
+    }
+    .dm-cell.sc-milestone-locked .dm-circle {
+      background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.08);
+      font-size:1rem; filter:grayscale(1) opacity(0.35);
+    }
+    .dm-day-num {
+      font-family:'Cinzel',serif; font-size:0.6rem; font-weight:600;
+      color:rgba(255,255,255,0.25); letter-spacing:0.04em;
+    }
+    .dm-cell.sc-current .dm-day-num  { color:var(--gold); }
+    .dm-cell.sc-past .dm-day-num     { color:rgba(76,175,112,0.6); }
+    .dm-cell.sc-milestone-reached .dm-day-num { color:rgba(201,168,76,0.7); }
+    /* Connector line between circles */
+    .dm-connector {
+      height:2px; flex-shrink:0; align-self:center; margin-bottom:18px;
+      background:rgba(255,255,255,0.08); width:10px;
+    }
+    .dm-connector.cp { background:rgba(76,175,112,0.4); }
+    /* CTA button */
+    .dm-btn {
+      width:100%; padding:15px; border:none; border-radius:12px;
+      background:linear-gradient(135deg,#7a5020,var(--gold));
+      color:#0a0508; font-family:'Cinzel',serif; font-size:0.9rem;
+      font-weight:700; letter-spacing:0.08em; cursor:pointer;
+      transition:opacity 0.2s, transform 0.2s;
+    }
+    .dm-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
     /* ── PROFILE MENU ── */
     .profile-menu-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -1352,12 +1447,105 @@ function applyNavName(name) {
 
 // Apply immediately from cache, then refresh from Supabase
 applyNavName(localStorage.getItem('abundance_name'));
+
+// ── DAILY STREAK MODAL ──
+const DM_MILESTONES = [3, 7, 14, 21, 30];
+const DM_SUBS = [
+  'Every step of faith moves Heaven.',
+  'You are building something eternal.',
+  'Consistency is your superpower.',
+  'Heaven registers every return.',
+  'Your connection is growing deeper.',
+  'The faithful always receive.',
+  'Divine alignment is your reward.',
+];
+
+function _dmCalcDay() {
+  const s = localStorage.getItem('abundance_start_date');
+  if (!s || s === 'null' || s === 'undefined') return 1;
+  const diff = (new Date() - new Date(s + 'T00:00:00')) / 86400000;
+  return isNaN(diff) ? 1 : Math.max(1, Math.floor(diff) + 1);
+}
+
+function _dmShouldShow() {
+  return localStorage.getItem('daily_modal_shown') !== _localDateStr();
+}
+
+function _dmBuildStreak(day) {
+  const start = Math.max(1, day - 4);
+  const end = day + 6;
+  let html = '';
+  for (let d = start; d <= end; d++) {
+    const isMilestone = DM_MILESTONES.includes(d);
+    const isPast      = d < day;
+    const isCurrent   = d === day;
+
+    let cellClass, circleContent;
+    if (isMilestone) {
+      cellClass     = isPast || isCurrent ? 'sc-milestone-reached' : 'sc-milestone-locked';
+      circleContent = '🎁';
+    } else if (isPast) {
+      cellClass     = 'sc-past';
+      circleContent = '✓';
+    } else if (isCurrent) {
+      cellClass     = 'sc-current';
+      circleContent = String(d);
+    } else {
+      cellClass     = 'sc-future';
+      circleContent = String(d);
+    }
+
+    // connector line before each cell (except first)
+    if (d > start) {
+      html += `<div class="dm-connector ${isPast || isCurrent ? 'cp' : ''}"></div>`;
+    }
+    html += `<div class="dm-cell ${cellClass}">
+      <div class="dm-circle">${circleContent}</div>
+      <div class="dm-day-num">${d}</div>
+    </div>`;
+  }
+  return html;
+}
+
+function showDailyModal() {
+  const day = _dmCalcDay();
+  document.getElementById('dm-day-num').textContent = day;
+  document.getElementById('dm-sub').textContent = DM_SUBS[(day - 1) % DM_SUBS.length];
+  const streak = document.getElementById('dm-streak');
+  streak.innerHTML = _dmBuildStreak(day);
+  document.getElementById('dm-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // scroll the current day into view
+  const current = streak.querySelector('.sc-current');
+  if (current) setTimeout(() => current.scrollIntoView({inline:'center', behavior:'smooth'}), 150);
+}
+
+function closeDailyModal() {
+  document.getElementById('dm-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  localStorage.setItem('daily_modal_shown', _localDateStr());
+}
+
 onSupabaseReady(function() {
   loadProfile().then(function() {
     applyNavName(localStorage.getItem('abundance_name'));
+    if (_dmShouldShow()) {
+      setTimeout(showDailyModal, 900);
+    }
   });
 });
 </script>
+
+<!-- DAILY STREAK MODAL -->
+<div class="dm-overlay" id="dm-overlay" onclick="if(event.target===this)closeDailyModal()">
+  <div class="dm-box">
+    <div class="dm-eyebrow">✦ Your Journey ✦</div>
+    <div class="dm-title">Day <span id="dm-day-num">1</span> of Connection</div>
+    <div class="dm-sub" id="dm-sub">Keep walking — your breakthrough is near.</div>
+    <div class="dm-streak" id="dm-streak"></div>
+    <button class="dm-btn" onclick="closeDailyModal()">Continue My Journey</button>
+  </div>
+</div>
 
 <!-- NOTIFICATIONS PANEL -->
 <div class="notif-panel" id="notif-panel">
