@@ -870,7 +870,7 @@ function getWeekIdx(){
   const d=Math.max(0,Math.floor(diff));
   return Math.floor(d/7)%4;
 }
-const todayStr = new Date().toISOString().split('T')[0];
+const todayStr = _localDateStr();
 const todayDOW = new Date().getDay();
 const weekIdx = getWeekIdx();
 const todayFocus = (DAILY_FOCUS_DATA[weekIdx] || DAILY_FOCUS_DATA[0])[todayDOW] || {theme:'Abundance',title:'Daily Reflection'};
