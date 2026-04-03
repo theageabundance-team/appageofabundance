@@ -756,7 +756,6 @@ function switchTab(id, btn) {
 // ── RATING ──
 function setRating(n) {
   currentRating = n;
-  localStorage.setItem('rating_' + LESSONS[currentLesson].id, n);
   saveLessonInteraction(LESSONS[currentLesson].id, undefined, n);
   renderStars();
 }
@@ -771,24 +770,27 @@ function submitComment() {
   const text = document.getElementById('comment-input').value.trim();
   if (!text) return;
   const name = savedName ? savedName.split(' ')[0] : 'Member';
-  const key = 'comments_' + LESSONS[currentLesson].id;
-  const comments = JSON.parse(localStorage.getItem(key) || '[]');
-  comments.unshift({ name, text, rating: currentRating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
-  localStorage.setItem(key, JSON.stringify(comments));
-  saveComment(LESSONS[currentLesson].id, text, currentRating, name);
+  const newC = { name, text, rating: currentRating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) };
   document.getElementById('comment-input').value = '';
-  renderComments();
+  // Optimistic: prepend immediately
+  const list = document.getElementById('comments-list');
+  const el = document.createElement('div');
+  el.className = 'comment-card';
+  el.innerHTML = `<div class="comment-top"><div class="comment-avatar">${name[0]}</div><div class="comment-name">${name} · ${newC.date}</div>${newC.rating ? `<div class="comment-stars">${'★'.repeat(newC.rating)}</div>` : ''}</div><div class="comment-text">${text}</div>`;
+  list.prepend(el);
+  // Save to Supabase, then refresh from Supabase
+  saveComment(LESSONS[currentLesson].id, text, currentRating, name).then(function() { renderComments(); });
 }
 
 function renderComments() {
-  const key = 'comments_' + LESSONS[currentLesson].id;
-  const comments = JSON.parse(localStorage.getItem(key) || '[]');
   const demo = [
     { name: 'Catherine', text: 'I never understood why Solomon asked for wisdom instead of riches until this lesson. Now everything makes sense. God is a God of order — and wisdom always comes first.', rating: 5, date: 'Mar 30' },
     { name: 'David', text: 'The 5 signs hit me like a revelation. I have been in season 3 for months without realizing it was God preparing me. I will not despise this waiting anymore.', rating: 5, date: 'Mar 28' },
   ];
-  const all = [...comments, ...demo];
-  document.getElementById('comments-list').innerHTML = all.map(c => `
+  getLessonComments(LESSONS[currentLesson].id).then(function(sbComments) {
+    const all = [...sbComments, ...demo];
+    const list = document.getElementById('comments-list');
+    list.innerHTML = all.map(c => `
     <div class="comment-card">
       <div class="comment-top">
         <div class="comment-avatar">${c.name[0]}</div>
@@ -798,15 +800,15 @@ function renderComments() {
       <div class="comment-text">${c.text}</div>
     </div>
   `).join('');
+  });
 }
 
 // ── NOTES ──
 function saveNotes() {
-  localStorage.setItem('notes_' + LESSONS[currentLesson].id, document.getElementById('notes-input').value);
   saveLessonInteraction(LESSONS[currentLesson].id, document.getElementById('notes-input').value, undefined);
   const btn = document.querySelector('.btn-save-notes');
-  btn.textContent = '✦ Saved';
-  setTimeout(() => btn.textContent = '✦ Save Notes', 1800);
+  btn.textContent = '❆ Saved';
+  setTimeout(() => btn.textContent = '❆ Save Notes', 1800);
 }
 
 function closeGiftModal() {
@@ -836,7 +838,7 @@ onSupabaseReady(function() {
     if (data.notes) document.getElementById('notes-input').value = data.notes;
     if (data.rating) { currentRating = data.rating; renderStars(); }
   });
-  getLessonComments(lid).then(function() { renderComments(); });
+  renderComments();
   getModuleProgress(MODULE_ID).then(function(p) {
     renderSidebar();
     updateProgress();

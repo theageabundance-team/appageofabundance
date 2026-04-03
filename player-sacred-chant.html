@@ -856,7 +856,6 @@ function switchTab(id, btn) {
 // ── RATING ──
 function setRating(n) {
   currentRating = n;
-  localStorage.setItem('rating_' + LESSONS[currentLesson].id, n);
   saveLessonInteraction(LESSONS[currentLesson].id, undefined, n);
   renderStars();
 }
@@ -871,24 +870,27 @@ function submitComment() {
   const text = document.getElementById('comment-input').value.trim();
   if (!text) return;
   const name = savedName ? savedName.split(' ')[0] : 'Member';
-  const key = 'comments_' + LESSONS[currentLesson].id;
-  const comments = JSON.parse(localStorage.getItem(key) || '[]');
-  comments.unshift({ name, text, rating: currentRating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) });
-  localStorage.setItem(key, JSON.stringify(comments));
-  saveComment(LESSONS[currentLesson].id, text, currentRating, name);
+  const newC = { name, text, rating: currentRating, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) };
   document.getElementById('comment-input').value = '';
-  renderComments();
+  // Optimistic: prepend immediately
+  const list = document.getElementById('comments-list');
+  const el = document.createElement('div');
+  el.className = 'comment-card';
+  el.innerHTML = `<div class="comment-top"><div class="comment-avatar">${name[0]}</div><div class="comment-name">${name} · ${newC.date}</div>${newC.rating ? `<div class="comment-stars">${'★'.repeat(newC.rating)}</div>` : ''}</div><div class="comment-text">${text}</div>`;
+  list.prepend(el);
+  // Save to Supabase, then refresh from Supabase
+  saveComment(LESSONS[currentLesson].id, text, currentRating, name).then(function() { renderComments(); });
 }
 
 function renderComments() {
-  const key = 'comments_' + LESSONS[currentLesson].id;
-  const comments = JSON.parse(localStorage.getItem(key) || '[]');
   const demo = [
     { name: 'Lydia', text: 'The Sacred Chant moved something deep inside me. I felt a wall of protection surround me as I listened. Archangel Michael is real and near.', rating: 5, date: 'Apr 2' },
     { name: 'Thomas', text: 'The Guardian Angel activation brought me to tears. I finally feel I am not walking this journey alone. Profound and life-changing.', rating: 5, date: 'Mar 29' },
   ];
-  const all = [...comments, ...demo];
-  document.getElementById('comments-list').innerHTML = all.map(c => `
+  getLessonComments(LESSONS[currentLesson].id).then(function(sbComments) {
+    const all = [...sbComments, ...demo];
+    const list = document.getElementById('comments-list');
+    list.innerHTML = all.map(c => `
     <div class="comment-card">
       <div class="comment-top">
         <div class="comment-avatar">${c.name[0]}</div>
@@ -898,15 +900,15 @@ function renderComments() {
       <div class="comment-text">${c.text}</div>
     </div>
   `).join('');
+  });
 }
 
 // ── NOTES ──
 function saveNotes() {
-  localStorage.setItem('notes_' + LESSONS[currentLesson].id, document.getElementById('notes-input').value);
   saveLessonInteraction(LESSONS[currentLesson].id, document.getElementById('notes-input').value, undefined);
   const btn = document.querySelector('.btn-save-notes');
-  btn.textContent = '✦ Saved';
-  setTimeout(() => btn.textContent = '✦ Save Notes', 1800);
+  btn.textContent = '❆ Saved';
+  setTimeout(() => btn.textContent = '❆ Save Notes', 1800);
 }
 
 function closeGiftModal() {
@@ -936,7 +938,7 @@ onSupabaseReady(function() {
     if (data.notes) document.getElementById('notes-input').value = data.notes;
     if (data.rating) { currentRating = data.rating; renderStars(); }
   });
-  getLessonComments(lid).then(function() { renderComments(); });
+  renderComments();
   getModuleProgress(MODULE_ID).then(function(p) {
     renderSidebar();
     updateProgress();

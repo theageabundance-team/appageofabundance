@@ -305,9 +305,6 @@ async function getModuleProgress(moduleId) {
 // ── LESSON INTERACTIONS (notes, rating) ─────────────────────
 
 async function saveLessonInteraction(lessonId, notes, rating) {
-  if (notes !== undefined) localStorage.setItem('notes_' + lessonId, notes);
-  if (rating !== undefined) localStorage.setItem('rating_' + lessonId, String(rating));
-
   if (!await _ready()) return;
   const email = getUserEmail();
   try {
@@ -320,12 +317,7 @@ async function saveLessonInteraction(lessonId, notes, rating) {
 }
 
 async function getLessonInteraction(lessonId) {
-  const local = {
-    notes: localStorage.getItem('notes_' + lessonId) || '',
-    rating: parseInt(localStorage.getItem('rating_' + lessonId) || '0')
-  };
-
-  if (!await _ready()) return local;
+  if (!await _ready()) return { notes: '', rating: 0 };
   const email = getUserEmail();
   try {
     const { data } = await sb().from('lesson_interactions')
@@ -333,15 +325,10 @@ async function getLessonInteraction(lessonId) {
       .eq('user_email', email)
       .eq('lesson_id', lessonId)
       .maybeSingle();
-    if (data) {
-      if (data.notes) localStorage.setItem('notes_' + lessonId, data.notes);
-      if (data.rating) localStorage.setItem('rating_' + lessonId, String(data.rating));
-      return { notes: data.notes || '', rating: data.rating || 0 };
-    }
-    return local;
+    return { notes: (data && data.notes) || '', rating: (data && data.rating) || 0 };
   } catch (e) {
     console.warn('[Supabase] getLessonInteraction failed', e);
-    return local;
+    return { notes: '', rating: 0 };
   }
 }
 
@@ -349,18 +336,6 @@ async function getLessonInteraction(lessonId) {
 // ── LESSON COMMENTS ──────────────────────────────────────────
 
 async function saveComment(lessonId, text, rating, userName) {
-  // Append to localStorage
-  const key = 'comments_' + lessonId;
-  const comments = JSON.parse(localStorage.getItem(key) || '[]');
-  const newComment = {
-    name: userName,
-    text,
-    rating,
-    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  };
-  comments.unshift(newComment);
-  localStorage.setItem(key, JSON.stringify(comments));
-
   if (!await _ready()) return;
   const email = getUserEmail();
   try {
@@ -370,28 +345,22 @@ async function saveComment(lessonId, text, rating, userName) {
 }
 
 async function getLessonComments(lessonId) {
-  const local = JSON.parse(localStorage.getItem('comments_' + lessonId) || '[]');
-  if (!await _ready()) return local;
+  if (!await _ready()) return [];
   try {
     const { data } = await sb().from('lesson_comments')
       .select('user_name, comment_text, rating, created_at')
       .eq('lesson_id', lessonId)
       .order('created_at', { ascending: false })
       .limit(50);
-    if (data && data.length > 0) {
-      const remote = data.map(r => ({
-        name: r.user_name || 'Member',
-        text: r.comment_text,
-        rating: r.rating,
-        date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      }));
-      localStorage.setItem('comments_' + lessonId, JSON.stringify(remote));
-      return remote;
-    }
-    return local;
+    return (data || []).map(r => ({
+      name: r.user_name || 'Member',
+      text: r.comment_text,
+      rating: r.rating,
+      date: new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }));
   } catch (e) {
     console.warn('[Supabase] getLessonComments failed', e);
-    return local;
+    return [];
   }
 }
 
