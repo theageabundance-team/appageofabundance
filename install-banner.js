@@ -17,9 +17,8 @@
   var ua = navigator.userAgent;
   var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
   var isAndroid = /Android/.test(ua);
-  var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
 
-  // Only show on iOS Safari or Android (Chrome PWA install)
+  // Only show on iOS or Android
   if (!isIOS && !isAndroid) return;
 
   // ── CAPTURE beforeinstallprompt (Android) ───────────────────
@@ -27,130 +26,231 @@
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     _deferredPrompt = e;
-    // If banner already in DOM, enable the install button
-    var btn = document.getElementById('_ib_install_btn');
+    // Enable install button if modal already open
+    var btn = document.getElementById('_ib_modal_install_btn');
     if (btn) btn.disabled = false;
   });
 
   // ── CSS ─────────────────────────────────────────────────────
   var style = document.createElement('style');
   style.textContent = [
+
+    /* ── BANNER (small strip at top) ── */
     '#_install_banner {',
     '  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;',
-    '  background: linear-gradient(135deg, #0d0d12, #141420);',
-    '  border-bottom: 1px solid rgba(201,168,76,0.3);',
-    '  padding: 12px 16px;',
-    '  display: flex; align-items: center; gap: 12px;',
-    '  box-shadow: 0 4px 24px rgba(0,0,0,0.6);',
-    '  animation: _ibSlide 0.35s cubic-bezier(0.16,1,0.3,1);',
+    '  background: #3d1f6e;',
+    '  padding: 8px 14px;',
+    '  display: flex; align-items: center; gap: 10px;',
+    '  box-shadow: 0 2px 12px rgba(0,0,0,0.5);',
+    '  cursor: pointer;',
+    '  animation: _ibSlideIn 0.32s cubic-bezier(0.16,1,0.3,1);',
     '}',
-    '@keyframes _ibSlide { from { transform:translateY(-100%); opacity:0; } to { transform:translateY(0); opacity:1; } }',
+    '@keyframes _ibSlideIn {',
+    '  from { transform: translateY(-100%); opacity: 0; }',
+    '  to   { transform: translateY(0);     opacity: 1; }',
+    '}',
     '#_install_banner._ib_hiding {',
-    '  animation: _ibHide 0.25s ease forwards;',
+    '  animation: _ibSlideOut 0.24s ease forwards;',
     '}',
-    '@keyframes _ibHide { to { transform:translateY(-100%); opacity:0; } }',
-    '#_ib_icon {',
-    '  width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;',
-    '  background: linear-gradient(135deg,#7a5020,#c9a84c);',
-    '  display: flex; align-items: center; justify-content: center; font-size: 20px;',
+    '@keyframes _ibSlideOut {',
+    '  to { transform: translateY(-100%); opacity: 0; }',
     '}',
-    '#_ib_body { flex: 1; min-width: 0; }',
-    '#_ib_title {',
-    '  font-family: "Cinzel", serif; font-size: 0.78rem; font-weight: 700;',
-    '  color: #f5e6b8; letter-spacing: 0.04em; margin-bottom: 3px;',
+
+    /* icon */
+    '#_ib_app_icon {',
+    '  width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0;',
+    '  background: linear-gradient(135deg,#5b2d9e,#8b5cf6);',
+    '  display: flex; align-items: center; justify-content: center;',
+    '  font-size: 16px;',
     '}',
-    '#_ib_desc {',
-    '  font-family: "Crimson Pro", Georgia, serif; font-size: 0.82rem;',
-    '  color: rgba(200,184,152,0.8); line-height: 1.4;',
+
+    /* label */
+    '#_ib_label {',
+    '  flex: 1; font-family: "Cinzel", serif; font-size: 0.78rem;',
+    '  font-weight: 700; letter-spacing: 0.05em; color: #e9d5ff;',
     '}',
-    '#_ib_desc b { color: #c9a84c; font-style: normal; }',
-    '#_ib_install_btn {',
-    '  flex-shrink: 0;',
-    '  background: linear-gradient(135deg,#7a5020,#c9a84c);',
-    '  color: #0a0508; border: none; border-radius: 8px;',
-    '  padding: 9px 18px;',
-    '  font-family: "Cinzel", serif; font-size: 0.72rem; font-weight: 700;',
-    '  letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s;',
-    '  white-space: nowrap;',
-    '}',
-    '#_ib_install_btn:disabled { opacity: 0.45; cursor: default; }',
-    '#_ib_install_btn:not(:disabled):hover { opacity: 0.85; }',
-    '#_ib_close {',
+
+    /* dismiss X on banner */
+    '#_ib_banner_close {',
     '  flex-shrink: 0; background: none; border: none;',
-    '  color: rgba(200,184,152,0.5); font-size: 1.1rem; cursor: pointer;',
-    '  padding: 4px 6px; line-height: 1; transition: color 0.2s;',
+    '  color: rgba(233,213,255,0.5); font-size: 1rem; cursor: pointer;',
+    '  padding: 4px 4px 4px 10px; line-height: 1; transition: color 0.2s;',
     '}',
-    '#_ib_close:hover { color: #f5e6b8; }',
-  ].join('');
+    '#_ib_banner_close:hover { color: #e9d5ff; }',
+
+    /* ── MODAL OVERLAY ── */
+    '#_ib_overlay {',
+    '  display: none; position: fixed; inset: 0; z-index: 10000;',
+    '  background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);',
+    '  align-items: center; justify-content: center;',
+    '}',
+    '#_ib_overlay.open { display: flex; }',
+
+    /* modal box */
+    '#_ib_modal {',
+    '  background: #1a0a2e;',
+    '  border: 1px solid rgba(139,92,246,0.35);',
+    '  border-radius: 18px;',
+    '  padding: 28px 24px 24px;',
+    '  width: min(340px, 92vw);',
+    '  box-shadow: 0 16px 48px rgba(0,0,0,0.7);',
+    '  position: relative;',
+    '  animation: _ibModalIn 0.28s cubic-bezier(0.16,1,0.3,1);',
+    '}',
+    '@keyframes _ibModalIn {',
+    '  from { transform: scale(0.88) translateY(16px); opacity: 0; }',
+    '  to   { transform: scale(1)    translateY(0);    opacity: 1; }',
+    '}',
+
+    /* modal close */
+    '#_ib_modal_close {',
+    '  position: absolute; top: 14px; right: 14px;',
+    '  background: rgba(255,255,255,0.06); border: none; border-radius: 50%;',
+    '  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;',
+    '  color: rgba(233,213,255,0.6); font-size: 0.95rem; cursor: pointer;',
+    '  transition: background 0.2s, color 0.2s;',
+    '}',
+    '#_ib_modal_close:hover { background: rgba(255,255,255,0.12); color: #e9d5ff; }',
+
+    /* modal icon */
+    '#_ib_modal_icon {',
+    '  width: 52px; height: 52px; border-radius: 13px;',
+    '  background: linear-gradient(135deg,#5b2d9e,#8b5cf6);',
+    '  display: flex; align-items: center; justify-content: center;',
+    '  font-size: 26px; margin: 0 auto 16px;',
+    '}',
+
+    /* modal title */
+    '#_ib_modal_title {',
+    '  font-family: "Cinzel", serif; font-size: 1rem; font-weight: 700;',
+    '  color: #e9d5ff; text-align: center; margin-bottom: 14px;',
+    '  letter-spacing: 0.04em;',
+    '}',
+
+    /* instruction box */
+    '.ib-instruction {',
+    '  background: rgba(139,92,246,0.1);',
+    '  border: 1px solid rgba(139,92,246,0.25);',
+    '  border-radius: 10px;',
+    '  padding: 14px 16px;',
+    '  font-family: "Crimson Pro", Georgia, serif; font-size: 0.95rem;',
+    '  color: rgba(233,213,255,0.85); line-height: 1.55;',
+    '}',
+    '.ib-instruction b { color: #c4b5fd; font-style: normal; }',
+
+    /* android install btn */
+    '#_ib_modal_install_btn {',
+    '  display: block; width: 100%; margin-top: 16px;',
+    '  background: linear-gradient(135deg,#5b2d9e,#8b5cf6);',
+    '  color: #fff; border: none; border-radius: 10px;',
+    '  padding: 13px; cursor: pointer;',
+    '  font-family: "Cinzel", serif; font-size: 0.82rem; font-weight: 700;',
+    '  letter-spacing: 0.07em; transition: opacity 0.2s;',
+    '}',
+    '#_ib_modal_install_btn:disabled { opacity: 0.4; cursor: default; }',
+    '#_ib_modal_install_btn:not(:disabled):hover { opacity: 0.85; }',
+
+  ].join('\n');
   document.head.appendChild(style);
 
-  // ── BUILD HTML ───────────────────────────────────────────────
-  function buildBanner() {
-    var banner = document.createElement('div');
-    banner.id = '_install_banner';
-
-    var icon = '<div id="_ib_icon">👑</div>';
-
-    var body, action;
-
-    if (isIOS) {
-      body = '<div id="_ib_body">'
-        + '<div id="_ib_title">Add to Home Screen</div>'
-        + '<div id="_ib_desc">Tap <b>□↑ Share</b>, then <b>"Add to Home Screen"</b></div>'
-        + '</div>';
-      action = ''; // no button for iOS, instruction is enough
-    } else {
-      body = '<div id="_ib_body">'
-        + '<div id="_ib_title">Install the App</div>'
-        + '<div id="_ib_desc">Get the full experience on your device</div>'
-        + '</div>';
-      action = '<button id="_ib_install_btn" disabled>Install App</button>';
-    }
-
-    var close = '<button id="_ib_close" aria-label="Dismiss">✕</button>';
-
-    banner.innerHTML = icon + body + action + close;
-    return banner;
-  }
-
-  // ── DISMISS ──────────────────────────────────────────────────
-  function dismiss() {
+  // ── DISMISS BANNER ───────────────────────────────────────────
+  function dismissBanner() {
     var banner = document.getElementById('_install_banner');
     if (!banner) return;
     banner.classList.add('_ib_hiding');
-    setTimeout(function () { if (banner.parentNode) banner.parentNode.removeChild(banner); }, 280);
+    setTimeout(function () {
+      if (banner.parentNode) banner.parentNode.removeChild(banner);
+      document.body.style.paddingTop = '';
+    }, 260);
     localStorage.setItem(STORAGE_KEY, String(Date.now()));
   }
 
-  // ── INJECT ───────────────────────────────────────────────────
+  // ── OPEN / CLOSE MODAL ───────────────────────────────────────
+  function openModal() {
+    var overlay = document.getElementById('_ib_overlay');
+    if (overlay) overlay.classList.add('open');
+  }
+
+  function closeModal() {
+    var overlay = document.getElementById('_ib_overlay');
+    if (overlay) overlay.classList.remove('open');
+  }
+
+  // ── BUILD & INJECT ───────────────────────────────────────────
   function inject() {
-    var banner = buildBanner();
+
+    // ── MINI BANNER ──
+    var banner = document.createElement('div');
+    banner.id = '_install_banner';
+    banner.innerHTML =
+      '<div id="_ib_app_icon">👑</div>' +
+      '<div id="_ib_label">Install App</div>' +
+      '<button id="_ib_banner_close" aria-label="Dismiss">✕</button>';
     document.body.insertBefore(banner, document.body.firstChild);
 
-    // Push page content down
-    document.body.style.paddingTop = (document.body.style.paddingTop
-      ? parseInt(document.body.style.paddingTop) + banner.offsetHeight
-      : banner.offsetHeight) + 'px';
+    // Nudge content down so banner doesn't overlap
+    var bh = banner.offsetHeight;
+    document.body.style.paddingTop = (parseInt(document.body.style.paddingTop || '0', 10) + bh) + 'px';
 
-    // Close button
-    document.getElementById('_ib_close').addEventListener('click', function () {
-      document.body.style.paddingTop = '';
-      dismiss();
+    // Clicking anywhere on the banner (except ✕) opens modal
+    banner.addEventListener('click', function (e) {
+      if (e.target.id !== '_ib_banner_close') openModal();
     });
+
+    // ✕ on banner → permanent dismiss for 1 week
+    document.getElementById('_ib_banner_close').addEventListener('click', function (e) {
+      e.stopPropagation();
+      dismissBanner();
+      closeModal();
+    });
+
+    // ── MODAL ──
+    var overlay = document.createElement('div');
+    overlay.id = '_ib_overlay';
+
+    var instructionHTML;
+    if (isIOS) {
+      instructionHTML =
+        '<div class="ib-instruction">' +
+        'Tap the <b>Share button (□↑ or ⋯)</b> at the bottom of your screen, ' +
+        'then tap <b>"Add to Home Screen"</b>.' +
+        '</div>';
+    } else {
+      instructionHTML =
+        '<div class="ib-instruction">' +
+        'Tap <b>Install</b> below to add the app directly to your home screen.' +
+        '</div>' +
+        '<button id="_ib_modal_install_btn" disabled>Install App</button>';
+    }
+
+    overlay.innerHTML =
+      '<div id="_ib_modal">' +
+      '  <button id="_ib_modal_close" aria-label="Close">✕</button>' +
+      '  <div id="_ib_modal_icon">👑</div>' +
+      '  <div id="_ib_modal_title">Install The Age of Abundance</div>' +
+      instructionHTML +
+      '</div>';
+
+    document.body.appendChild(overlay);
+
+    // Close modal on overlay click or X button
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeModal();
+    });
+    document.getElementById('_ib_modal_close').addEventListener('click', closeModal);
 
     // Android install button
     if (!isIOS) {
-      var btn = document.getElementById('_ib_install_btn');
-      // Enable immediately if prompt already captured
+      var btn = document.getElementById('_ib_modal_install_btn');
       if (_deferredPrompt) btn.disabled = false;
 
       btn.addEventListener('click', function () {
         if (!_deferredPrompt) return;
         _deferredPrompt.prompt();
-        _deferredPrompt.userChoice.then(function (result) {
+        _deferredPrompt.userChoice.then(function () {
           _deferredPrompt = null;
-          document.body.style.paddingTop = '';
-          dismiss();
+          closeModal();
+          dismissBanner();
         });
       });
     }
