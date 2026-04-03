@@ -864,7 +864,8 @@ function getWeekIdx(){
   let s=localStorage.getItem('abundance_start_date');
   if(!s){s=new Date().toISOString().split('T')[0];localStorage.setItem('abundance_start_date',s);}
   const start=new Date(s+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);
-  return Math.floor(Math.floor((today-start)/86400000)/7)%4;
+  const d=Math.max(0,Math.floor((today-start)/86400000));
+  return Math.floor(d/7)%4;
 }
 const todayStr = new Date().toISOString().split('T')[0];
 const todayDOW = new Date().getDay();
@@ -1121,7 +1122,7 @@ function openProfileMenu() {
   const name  = localStorage.getItem('abundance_name')  || 'Friend';
   const email = localStorage.getItem('abundance_email') || '';
   const start = localStorage.getItem('abundance_start_date');
-  const days  = start ? Math.floor((new Date() - new Date(start + 'T00:00:00')) / 86400000) : 0;
+  const days  = start ? Math.max(1, Math.floor((new Date() - new Date(start + 'T00:00:00')) / 86400000) + 1) : 1;
   const first = name.split(' ')[0];
   document.getElementById('profile-avatar-large').textContent = first[0].toUpperCase();
   document.getElementById('profile-name').textContent = name;

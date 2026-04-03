@@ -647,7 +647,7 @@ if (savedName) applyName(savedName);
 
 // ── STATE (dynamic from localStorage/Supabase) ──
 const _startDate = localStorage.getItem('abundance_start_date');
-const _userDays = _startDate ? Math.floor((new Date() - new Date(_startDate + 'T00:00:00')) / 86400000) + 1 : 1;
+const _userDays = _startDate ? Math.max(1, Math.floor((new Date() - new Date(_startDate + 'T00:00:00')) / 86400000) + 1) : 1;
 const _localGifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
 const USER = {
   days: _userDays,
@@ -660,7 +660,7 @@ onSupabaseReady(function() {
   loadProfile().then(function() {
     const sd = localStorage.getItem('abundance_start_date');
     if (!sd) return;
-    const days = Math.floor((new Date() - new Date(sd + 'T00:00:00')) / 86400000) + 1;
+    const days = Math.max(1, Math.floor((new Date() - new Date(sd + 'T00:00:00')) / 86400000) + 1);
     USER.days = days;
 
     // Update day counter
@@ -818,9 +818,13 @@ milestonesList.innerHTML = MILESTONES.map((m, i) => {
       ? `<a href="${m.giftUrl}" class="btn-claim redeemed" style="text-decoration:none;">✦ Gift Claimed — Open Again</a>`
       : `<button class="btn-claim redeemed" disabled>✦ Gift Claimed</button>`;
   } else if (s === 'current') {
-    badgeHtml = m.giftUrl
-      ? `<a href="${m.giftUrl}" class="btn-claim" style="text-decoration:none;">🎁 Claim Your Gift</a>`
-      : `<button class="btn-claim" onclick="claimMilestone(this)">🎁 Claim Your Gift</button>`;
+    if (USER.days >= m.day) {
+      badgeHtml = m.giftUrl
+        ? `<a href="${m.giftUrl}" class="btn-claim" style="text-decoration:none;">🎁 Claim Your Gift</a>`
+        : `<button class="btn-claim" onclick="claimMilestone(this)">🎁 Claim Your Gift</button>`;
+    } else {
+      badgeHtml = `<span class="milestone-badge locked">🔒 Reach day ${m.day} to unlock</span>`;
+    }
   } else {
     badgeHtml = `<span class="milestone-badge locked">🔒 Reach day ${m.day} to unlock</span>`;
   }

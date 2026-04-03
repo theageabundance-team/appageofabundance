@@ -62,7 +62,12 @@ function getUserEmail() {
 }
 
 /** Helper: today as YYYY-MM-DD */
-function _sbToday() { return new Date().toISOString().split('T')[0]; }
+function _sbToday() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
 
 /**
  * Aguarda SDK inicializar e verifica se usuário está logado.

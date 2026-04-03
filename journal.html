@@ -525,7 +525,7 @@ function renderEntries(entries) {
         </div>
       </div>
       <div class="entry-prompt-preview">${e.prompt}</div>
-      <div class="entry-text clipped" id="entry-text-${i}">${e.text}</div>
+      <div class="entry-text clipped" id="entry-text-${i}">${e.text || ''}</div>
       <div class="entry-expand-hint" id="entry-hint-${i}">Read more ↓</div>
     </div>
   `).join('');
@@ -552,11 +552,7 @@ if (loadedEntries.length > 0) {
 onSupabaseReady(function() {
   getJournalEntries().then(function(entries) {
     if (entries && entries.length > 0) {
-      loadedEntries = entries.map(function(e) {
-        try { return JSON.parse(e.content); } catch(x) {
-          return { date: e.date, text: e.content, day: 0, milestone: '', mood: '✦ Written', prompt: '' };
-        }
-      });
+      loadedEntries = entries;
       renderEntries(loadedEntries);
       const el = document.getElementById('stat-entries');
       if (el) el.textContent = loadedEntries.length;
