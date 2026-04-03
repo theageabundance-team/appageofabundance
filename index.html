@@ -1206,8 +1206,8 @@ fadeSections.forEach((el, i) => {
 
 // ── NOTIFICATIONS ──
 const NOTIFS = [
-  { id:'practice', icon:'🎯', title:"Your practice for today is waiting", sub:'', action: function(){ closeNotifPanel(); const el=document.getElementById('track-practice'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } },
   { id:'angel',    icon:'👼', title:"Discover Your Guardian Angel",       sub:'See what it has for you', action: function(){ closeNotifPanel(); window.open('https://quizangel.vercel.app/','_blank'); } },
+  { id:'practice', icon:'🎯', title:"Your practice for today is waiting", sub:'', action: function(){ closeNotifPanel(); const el=document.getElementById('track-practice'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } },
 ];
 
 function _getNotifState() {
