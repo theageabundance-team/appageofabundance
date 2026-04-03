@@ -399,8 +399,10 @@
   </div>
 </nav>
 
+<script src="supabase-client.js"></script>
 <script>
-const USER = { days: 7 };
+const startDate = localStorage.getItem('abundance_start_date');
+const USER = { days: startDate ? Math.floor((new Date() - new Date(startDate + 'T00:00:00')) / 86400000) : 0 };
 
 // ── NAME — vem do login via localStorage ──
 function getGreeting() {
@@ -485,15 +487,25 @@ function saveEntry() {
   btn.disabled = true;
   document.getElementById('save-confirm').classList.add('show');
 
-  const el = document.getElementById('stat-entries');
-  el.textContent = parseInt(el.textContent) + 1;
-
-  renderEntries([{
+  // Save to localStorage + Supabase
+  const todayDate = new Date().toISOString().split('T')[0];
+  const entryData = {
     date: now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}),
+    isoDate: todayDate,
     day: USER.days, milestone: currentMilestone.name,
     mood: selectedMood || '✦ Written',
     prompt: currentMilestone.prompt, text
-  }, ...PAST_ENTRIES]);
+  };
+  const savedEntries = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
+  savedEntries.unshift(entryData);
+  localStorage.setItem('abundance_journal', JSON.stringify(savedEntries));
+  saveJournalEntry(todayDate, JSON.stringify(entryData));
+
+  const el = document.getElementById('stat-entries');
+  el.textContent = parseInt(el.textContent) + 1;
+
+  renderEntries([entryData, ...loadedEntries]);
+  loadedEntries.unshift(entryData);
 }
 
 function renderEntries(entries) {
@@ -526,17 +538,41 @@ function toggleEntry(card, i) {
   card.classList.toggle('expanded', !isClipped);
 }
 
-renderEntries(PAST_ENTRIES);
+// Load saved entries from localStorage (Supabase syncs in background)
+let loadedEntries = JSON.parse(localStorage.getItem('abundance_journal') || '[]');
+if (loadedEntries.length > 0) {
+  renderEntries(loadedEntries);
+} else {
+  renderEntries(PAST_ENTRIES);
+  loadedEntries = PAST_ENTRIES;
+}
+
+// Try to load from Supabase in background
+onSupabaseReady(function() {
+  getJournalEntries().then(function(entries) {
+    if (entries && entries.length > 0) {
+      loadedEntries = entries.map(function(e) {
+        try { return JSON.parse(e.content); } catch(x) {
+          return { date: e.date, text: e.content, day: 0, milestone: '', mood: '✦ Written', prompt: '' };
+        }
+      });
+      renderEntries(loadedEntries);
+      const el = document.getElementById('stat-entries');
+      if (el) el.textContent = loadedEntries.length;
+    }
+  });
+});
 
 function animateNumber(el, target) {
   let n = 0;
   const step = Math.ceil(target / 16);
   const t = setInterval(() => { n = Math.min(n + step, target); el.textContent = n; if (n >= target) clearInterval(t); }, 55);
 }
+const entryCount = loadedEntries.length || 0;
 setTimeout(() => {
-  animateNumber(document.getElementById('stat-entries'), 7);
-  animateNumber(document.getElementById('stat-streak'), 5);
-  animateNumber(document.getElementById('stat-journey'), 7);
+  animateNumber(document.getElementById('stat-entries'), entryCount);
+  animateNumber(document.getElementById('stat-streak'), Math.min(entryCount, USER.days));
+  animateNumber(document.getElementById('stat-journey'), USER.days);
 }, 350);
 </script>
 </body>

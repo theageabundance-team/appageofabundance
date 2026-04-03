@@ -827,7 +827,9 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="supabase-client.js"></script>
+<script>
 const DATA = {
   my:[
     {title:"Powerful Prayers to Archangel Michael",desc:"Connect with divine protection and spiritual strength through powerful prayers to the Archangel.",cat:"Spirituality",catClass:"cat-spirituality",rating:"4.9",count:"847",dur:"3h",img:"images/prayersmichael.jpg",available:true,player:"player.html"},
@@ -1134,10 +1136,12 @@ function closeProfileMenu() {
   document.body.style.overflow = '';
 }
 function logout() {
-  localStorage.removeItem('abundance_name');
-  localStorage.removeItem('abundance_email');
+  logoutUser();
   window.location.href = 'login.html';
 }
+
+// Load profile from Supabase on page load
+onSupabaseReady(function() { loadProfile(); });
 </script>
 
 <!-- PROFILE MENU -->

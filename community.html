@@ -197,6 +197,7 @@
     <button class="amen-send" onclick="sendAmen()">➤</button>
   </div>
 
+  <script src="supabase-client.js"></script>
   <script>
     // ── POSTS ──
     const POSTS = [
@@ -309,6 +310,7 @@
       const existing = JSON.parse(localStorage.getItem(`amens_${todayStr}`) || '[]');
       existing.push(amen);
       localStorage.setItem(`amens_${todayStr}`, JSON.stringify(existing));
+      saveCommunityAmen(val, todayStr);
       input.value = '';
       renderAmens(getDayIndex(), todayStr);
       spawnParticles('🙏');
@@ -325,6 +327,7 @@
       btn.classList.add('reacted');
       el.textContent = fmt(parseInt(el.textContent.replace(/,/g,'')) + 1);
       localStorage.setItem(`cr_${key}_${todayStr}`, '1');
+      saveCommunityReaction(key, todayStr);
       spawnParticles(emoji);
     }
 
@@ -343,6 +346,7 @@
     function joinCircle() {
       localStorage.setItem('circle_member', 'true');
       localStorage.setItem('circle_visited', 'true');
+      saveCircleMember(true);
       document.getElementById('onboardOverlay').classList.add('hidden');
       document.getElementById('joinedNotice').classList.remove('hidden');
       spawnParticles('✨');

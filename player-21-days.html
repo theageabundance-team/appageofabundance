@@ -690,6 +690,7 @@
   </div>
 </div>
 
+<script src="supabase-client.js"></script>
 <script>
 const MODULE_ID = 'manifestation-21';
 const SK = 'challenge_21_start';
@@ -814,7 +815,7 @@ const DAYS = [
 // Storage
 function getStart() {
   let d = localStorage.getItem(SK);
-  if (!d) { d = new Date().toISOString(); localStorage.setItem(SK, d); }
+  if (!d) { d = new Date().toISOString(); localStorage.setItem(SK, d); save21DayProgress(d, null, null); }
   return d;
 }
 function getCurrentDay() {
@@ -822,11 +823,11 @@ function getCurrentDay() {
   return Math.min(diff + 1, 21);
 }
 function getComp() { return JSON.parse(localStorage.getItem(CK) || '[]'); }
-function saveComp(a) { localStorage.setItem(CK, JSON.stringify(a)); }
+function saveComp(a) { localStorage.setItem(CK, JSON.stringify(a)); save21DayProgress(null, a, null); }
 function getNote(day) { return (JSON.parse(localStorage.getItem(NK) || '{}'))[day] || ''; }
 function saveNote(day, text) {
   const n = JSON.parse(localStorage.getItem(NK) || '{}');
-  n[day] = text; localStorage.setItem(NK, JSON.stringify(n));
+  n[day] = text; localStorage.setItem(NK, JSON.stringify(n)); save21DayProgress(null, null, n);
 }
 
 let openDay = null;
@@ -949,7 +950,7 @@ function markDone(day) {
   render();
   if (comp.length === 21) {
     const gifts = JSON.parse(localStorage.getItem('abundance_gifts') || '[]');
-    if (!gifts.includes(MODULE_ID)) { gifts.push(MODULE_ID); localStorage.setItem('abundance_gifts', JSON.stringify(gifts)); }
+    if (!gifts.includes(MODULE_ID)) { gifts.push(MODULE_ID); localStorage.setItem('abundance_gifts', JSON.stringify(gifts)); saveGift(MODULE_ID); }
     setTimeout(() => document.getElementById('gift-modal').classList.add('show'), 800);
   }
 }

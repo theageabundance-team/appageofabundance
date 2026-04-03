@@ -543,6 +543,7 @@
   </div>
 </div>
 
+<script src="supabase-client.js"></script>
 <script>
 const LESSONS = [
   {
@@ -592,6 +593,8 @@ function getCompletedCount() {
 function renderLesson(idx) {
   currentLesson = idx;
   localStorage.setItem('current_lesson_' + MODULE_ID, idx);
+  const completedSoFar = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
+  saveModuleProgress(MODULE_ID, idx, completedSoFar);
   const lesson = LESSONS[idx];
 
   document.getElementById('video-container').innerHTML = lesson.videoHTML;
@@ -661,6 +664,7 @@ function markComplete() {
   const done = JSON.parse(localStorage.getItem('completed_lessons') || '[]');
   done.push(lesson.id);
   localStorage.setItem('completed_lessons', JSON.stringify(done));
+  saveModuleProgress(MODULE_ID, currentLesson, done);
   document.getElementById('complete-icon').textContent = '✓';
   document.getElementById('complete-text').textContent = 'Completed';
   document.getElementById('btn-complete').className = 'btn-complete done';
@@ -672,6 +676,7 @@ function markComplete() {
     if (!gifts.includes(MODULE_ID)) {
       gifts.push(MODULE_ID);
       localStorage.setItem('abundance_gifts', JSON.stringify(gifts));
+      saveGift(MODULE_ID);
     }
     setTimeout(() => document.getElementById('gift-modal').classList.add('show'), 800);
   }
@@ -693,6 +698,7 @@ function switchTab(id, btn) {
 function setRating(n) {
   currentRating = n;
   localStorage.setItem('rating_' + LESSONS[currentLesson].id, n);
+  saveLessonInteraction(LESSONS[currentLesson].id, undefined, n);
   renderStars();
 }
 function renderStars() {
@@ -735,6 +741,7 @@ function renderComments() {
 
 function saveNotes() {
   localStorage.setItem('notes_' + LESSONS[currentLesson].id, document.getElementById('notes-input').value);
+  saveLessonInteraction(LESSONS[currentLesson].id, document.getElementById('notes-input').value, undefined);
   const btn = document.querySelector('.btn-save-notes');
   btn.textContent = '✦ Saved';
   setTimeout(() => btn.textContent = '✦ Save Notes', 1800);
