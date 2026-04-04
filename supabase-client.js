@@ -99,35 +99,56 @@ async function loginOrCreate(name, email) {
 
   // 2. Aguarda SDK carregar (resolve mesmo se offline)
   const ready = await _ready();
-  if (!ready) return null;
+  if (!ready) {
+    console.warn('[Supabase] loginOrCreate: SDK not ready or offline — profile saved to localStorage only');
+    return null;
+  }
 
   try {
     const startDate = localStorage.getItem('abundance_start_date') || _sbToday();
 
     // Check if profile already exists
-    const { data: existing } = await sb().from('profiles')
+    const { data: existing, error: selectErr } = await sb().from('profiles')
       .select('email, name, start_date')
       .eq('email', email)
       .maybeSingle();
 
+    if (selectErr) {
+      console.error('[Supabase] loginOrCreate: error reading profile:', selectErr.message, selectErr);
+    }
+
     if (existing) {
       // Existing user: update name only — NEVER overwrite start_date
-      await sb().from('profiles')
+      const { error: updateErr } = await sb().from('profiles')
         .update({ name, updated_at: new Date().toISOString() })
         .eq('email', email);
+      if (updateErr) {
+        console.error('[Supabase] loginOrCreate: error updating profile:', updateErr.message, updateErr);
+      }
       // Sync original start_date back to localStorage
       if (existing.start_date) {
         localStorage.setItem('abundance_start_date', existing.start_date);
       }
     } else {
       // New user: insert with today as start_date
-      await sb().from('profiles')
-        .insert({ email, name, start_date: startDate, updated_at: new Date().toISOString() });
+      const { error: insertErr } = await sb().from('profiles')
+        .insert({ email, name, start_date: startDate, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
+      if (insertErr) {
+        console.error('[Supabase] loginOrCreate: error inserting profile:', insertErr.message, insertErr);
+        // Retry without created_at in case column doesn't exist on this schema
+        const { error: retryErr } = await sb().from('profiles')
+          .insert({ email, name, start_date: startDate, updated_at: new Date().toISOString() });
+        if (retryErr) {
+          console.error('[Supabase] loginOrCreate: retry insert also failed:', retryErr.message, retryErr);
+          return null;
+        }
+      }
+      console.log('[Supabase] New profile created for', email);
     }
 
     return email;
   } catch (e) {
-    console.warn('[Supabase] loginOrCreate failed', e);
+    console.error('[Supabase] loginOrCreate: unexpected exception', e);
     return null;
   }
 }
@@ -138,8 +159,12 @@ async function loadProfile() {
   const ready = await _ready();
   if (!ready || !email) return null;
   try {
-    const { data } = await sb().from('profiles')
-      .select('*').eq('email', email).single();
+    const { data, error } = await sb().from('profiles')
+      .select('*').eq('email', email).maybeSingle();
+    if (error) {
+      console.error('[Supabase] loadProfile error:', error.message, error);
+      return null;
+    }
     if (data) {
       if (data.name) localStorage.setItem('abundance_name', data.name);
       if (data.start_date) localStorage.setItem('abundance_start_date', data.start_date);
@@ -147,7 +172,7 @@ async function loadProfile() {
     }
     return data;
   } catch (e) {
-    console.warn('[Supabase] loadProfile failed', e);
+    console.error('[Supabase] loadProfile exception', e);
     return null;
   }
 }
