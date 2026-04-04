@@ -24,25 +24,38 @@ function initSupabase() {
       resolve(true);
       return;
     }
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-    s.onload = () => {
-      try {
-        _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        _sdkReady = true;
-        _readyCallbacks.forEach(cb => { try { cb(); } catch(e){} });
-        _readyCallbacks.length = 0;
-        resolve(true);
-      } catch(e) {
-        console.warn('[Supabase] createClient failed', e);
-        resolve(false);
-      }
-    };
-    s.onerror = () => {
-      console.warn('[Supabase] SDK load failed — usando localStorage');
-      resolve(false);
-    };
-    document.head.appendChild(s);
+    function tryLoad(src, onFail) {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => {
+        try {
+          _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+          _sdkReady = true;
+          _readyCallbacks.forEach(cb => { try { cb(); } catch(e){} });
+          _readyCallbacks.length = 0;
+          resolve(true);
+        } catch(e) {
+          console.warn('[Supabase] createClient failed', e);
+          resolve(false);
+        }
+      };
+      s.onerror = () => {
+        console.warn('[Supabase] SDK failed to load from:', src);
+        if (onFail) onFail();
+        else resolve(false);
+      };
+      document.head.appendChild(s);
+    }
+
+    // Tenta local primeiro, depois CDN como fallback
+    tryLoad('supabase.min.js', () => {
+      tryLoad('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js', () => {
+        tryLoad('https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js', () => {
+          console.warn('[Supabase] Todos os SDKs falharam — usando localStorage');
+          resolve(false);
+        });
+      });
+    });
   });
   return _initPromise;
 }
