@@ -98,9 +98,11 @@ async function loginOrCreate(name, email) {
   }
 
   // 2. Aguarda SDK carregar (resolve mesmo se offline)
+  await initSupabase();
+  console.log('[Supabase] loginOrCreate: sdkReady=', _sdkReady, 'email=', email, 'client=', !!_supabase);
   const ready = await _ready();
   if (!ready) {
-    console.warn('[Supabase] loginOrCreate: SDK not ready or offline — profile saved to localStorage only');
+    console.error('[Supabase] loginOrCreate: FALHOU — SDK not ready or no email. sdkReady=' + _sdkReady + ' email=' + getUserEmail());
     return null;
   }
 
