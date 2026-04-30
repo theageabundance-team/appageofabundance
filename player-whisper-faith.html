@@ -635,7 +635,7 @@ const LESSONS = [
     desc: 'Learn how to open your heart and awaken to divine love and spiritual connection through sacred practices and mindfulness.',
     hasDownload: true,
     downloadType: 'pdf',
-    downloadHref: 'pdfmodulo3.1.pdf',
+    downloadHref: 'pdfs/pdfmodulo3.1.pdf',
     downloadTitle: 'Prayer as a Path of Faith',
     downloadMeta: 'PDF · Lesson 1 material',
     videoHTML: `<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/VTTyERc0zUI?rel=0&modestbranding=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
@@ -705,13 +705,13 @@ function renderLesson(idx) {
     dlSection.style.display = 'block';
     if (lesson.downloadType === 'pdf') {
       dlContent.innerHTML = `
-        <a href="${lesson.downloadHref}" class="download-card" target="_blank" rel="noopener">
+        <a href="${lesson.downloadHref}" class="download-card" download target="_blank" rel="noopener">
           <div class="download-icon">📄</div>
           <div class="download-info">
             <div class="download-title">${lesson.downloadTitle}</div>
             <div class="download-meta">${lesson.downloadMeta}</div>
           </div>
-          <div class="download-btn">↓ Open PDF</div>
+          <div class="download-btn">↓ Download PDF</div>
         </a>`;
     } else if (lesson.downloadType === 'link') {
       dlContent.innerHTML = `
