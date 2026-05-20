@@ -402,11 +402,49 @@
     line-height: 1.7; margin-bottom: 32px;
   }
 
+  /* ── LOADING OVERLAY ── */
+  #loading-overlay {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .loading-label {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem; font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #4ade80;
+    margin-bottom: 22px;
+    animation: pulse-text 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse-text {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.55; }
+  }
+  .loading-bar-track {
+    width: 100%; height: 10px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 999px; overflow: hidden;
+  }
+  .loading-bar-fill {
+    height: 100%; width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #16a34a, #4ade80, #86efac);
+    box-shadow: 0 0 14px rgba(74,222,128,0.5);
+    transition: width 0.3s ease;
+  }
+  .loading-dots {
+    margin-top: 18px;
+    font-size: 1.05rem; color: var(--text-dim);
+    font-style: italic;
+  }
+
   /* ── SUCCESS SCREEN ── */
   #success-screen {
     display: none;
     text-align: center;
     padding: 20px 0 40px;
+    border-color: rgba(74,222,128,0.3);
+    background: linear-gradient(135deg, rgba(22,163,74,0.1), rgba(20,30,20,0.5));
   }
 
   .success-animation {
@@ -417,21 +455,21 @@
   .success-ring {
     position: absolute; inset: 0;
     border-radius: 50%;
-    border: 3px solid rgba(201,168,76,0.2);
+    border: 3px solid rgba(74,222,128,0.25);
     animation: ring-expand 1.8s ease-out infinite;
   }
   .success-ring:nth-child(2) { animation-delay: 0.6s; }
   .success-ring:nth-child(3) { animation-delay: 1.2s; }
   @keyframes ring-expand {
-    0%   { transform: scale(0.6); opacity: 0.8; border-color: rgba(201,168,76,0.5); }
-    100% { transform: scale(1.4); opacity: 0;   border-color: rgba(201,168,76,0); }
+    0%   { transform: scale(0.6); opacity: 0.8; border-color: rgba(74,222,128,0.6); }
+    100% { transform: scale(1.4); opacity: 0;   border-color: rgba(74,222,128,0); }
   }
 
   .success-circle {
     position: absolute; inset: 16px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(201,168,76,0.3), rgba(201,168,76,0.1));
-    border: 2px solid rgba(201,168,76,0.5);
+    background: linear-gradient(135deg, rgba(22,163,74,0.4), rgba(74,222,128,0.15));
+    border: 2px solid rgba(74,222,128,0.6);
     display: flex; align-items: center; justify-content: center;
     font-size: 3rem;
     animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
@@ -445,11 +483,11 @@
   .success-title {
     font-family: 'Cinzel', serif;
     font-size: clamp(1.8rem, 5vw, 2.6rem);
-    font-weight: 700; color: var(--gold-pale);
+    font-weight: 700; color: #86efac;
     line-height: 1.2; margin-bottom: 16px;
     animation: fadeUp 0.6s ease both;
     animation-delay: 0.4s;
-    text-shadow: 0 0 40px rgba(201,168,76,0.3);
+    text-shadow: 0 0 40px rgba(74,222,128,0.35);
   }
   .success-subtitle {
     font-size: 1.3rem; color: var(--text-mid);
@@ -459,8 +497,8 @@
     animation-delay: 0.55s;
   }
   .success-notice {
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(22,163,74,0.1);
+    border: 1px solid rgba(74,222,128,0.25);
     border-radius: 14px;
     padding: 24px 28px;
     font-size: 1.2rem; color: var(--text-mid);
@@ -470,8 +508,28 @@
     animation-delay: 0.7s;
   }
   .success-notice strong {
-    color: var(--gold-pale);
+    color: #86efac;
     font-weight: 600;
+  }
+  .btn-success {
+    display: block; width: 100%;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(22,163,74,0.4), rgba(74,222,128,0.2));
+    border: 1.5px solid rgba(74,222,128,0.5);
+    border-radius: 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem; font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #86efac;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-success:hover {
+    background: linear-gradient(135deg, rgba(22,163,74,0.55), rgba(74,222,128,0.3));
+    box-shadow: 0 6px 28px rgba(74,222,128,0.2);
+    transform: translateY(-2px);
   }
 
   .confetti-burst {
@@ -660,6 +718,15 @@
 
     </div>
 
+    <!-- ── LOADING OVERLAY ── -->
+    <div id="loading-overlay" class="card">
+      <div class="loading-label">⏳ Processing your refund...</div>
+      <div class="loading-bar-track">
+        <div class="loading-bar-fill" id="loading-bar"></div>
+      </div>
+      <div class="loading-dots">Please wait, do not close this page.</div>
+    </div>
+
     <!-- ── SUCCESS SCREEN ── -->
     <div id="success-screen" class="card">
       <div class="success-animation">
@@ -685,7 +752,7 @@
         depending on your bank or financial institution. If you have any questions, you can contact your bank directly.
       </div>
 
-      <a href="index.html" class="btn-primary" style="text-decoration:none;display:block;">
+      <a href="index.html" class="btn-success">
         Back to Home
       </a>
     </div>
@@ -780,16 +847,41 @@
   function submitRefund() {
     if (!check1) return;
 
-    // Hide form, show success
+    // Hide form & steps, show loading
     document.getElementById('form-card').style.display = 'none';
     document.getElementById('steps-indicator').style.display = 'none';
-    const successEl = document.getElementById('success-screen');
-    successEl.style.display = 'block';
-
-    // Trigger confetti
-    launchConfetti();
-
+    const loadingEl = document.getElementById('loading-overlay');
+    loadingEl.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Animate loading bar
+    const bar = document.getElementById('loading-bar');
+    let progress = 0;
+    const steps = [
+      { target: 30, delay: 300 },
+      { target: 60, delay: 700 },
+      { target: 85, delay: 500 },
+      { target: 100, delay: 600 },
+    ];
+    function runStep(i) {
+      if (i >= steps.length) {
+        // Loading complete → show success
+        setTimeout(() => {
+          loadingEl.style.display = 'none';
+          const successEl = document.getElementById('success-screen');
+          successEl.style.display = 'block';
+          launchConfetti();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 400);
+        return;
+      }
+      setTimeout(() => {
+        progress = steps[i].target;
+        bar.style.width = progress + '%';
+        runStep(i + 1);
+      }, steps[i].delay);
+    }
+    runStep(0);
   }
 
   // ── CONFETTI ──
