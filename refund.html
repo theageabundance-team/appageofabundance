@@ -844,8 +844,11 @@
   }
 
   // ── SUBMIT ──
-  function submitRefund() {
+  async function submitRefund() {
     if (!check1) return;
+
+    const emailVal   = document.getElementById('email-input').value.trim();
+    const detailsVal = document.getElementById('reason-detail').value.trim();
 
     // Hide form & steps, show loading
     document.getElementById('form-card').style.display = 'none';
@@ -854,34 +857,48 @@
     loadingEl.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    // Save to Supabase in parallel with the loading animation
+    async function saveToSupabase() {
+      try {
+        await initSupabase();
+        if (sb()) {
+          await sb().from('refund_requests').insert({
+            email:   emailVal || getUserEmail() || null,
+            reason:  selectedReason,
+            details: detailsVal || null,
+          });
+        }
+      } catch(e) {
+        console.warn('[Refund] Supabase save failed', e);
+      }
+    }
+
     // Animate loading bar
     const bar = document.getElementById('loading-bar');
-    let progress = 0;
     const steps = [
       { target: 30, delay: 300 },
       { target: 60, delay: 700 },
       { target: 85, delay: 500 },
       { target: 100, delay: 600 },
     ];
-    function runStep(i) {
-      if (i >= steps.length) {
-        // Loading complete → show success
-        setTimeout(() => {
-          loadingEl.style.display = 'none';
-          const successEl = document.getElementById('success-screen');
-          successEl.style.display = 'block';
-          launchConfetti();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 400);
-        return;
-      }
-      setTimeout(() => {
-        progress = steps[i].target;
-        bar.style.width = progress + '%';
-        runStep(i + 1);
-      }, steps[i].delay);
-    }
-    runStep(0);
+
+    const [_saved] = await Promise.all([
+      saveToSupabase(),
+      new Promise(resolve => {
+        function runStep(i) {
+          if (i >= steps.length) { setTimeout(resolve, 400); return; }
+          setTimeout(() => { bar.style.width = steps[i].target + '%'; runStep(i + 1); }, steps[i].delay);
+        }
+        runStep(0);
+      })
+    ]);
+
+    // Show success
+    loadingEl.style.display = 'none';
+    const successEl = document.getElementById('success-screen');
+    successEl.style.display = 'block';
+    launchConfetti();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // ── CONFETTI ──
