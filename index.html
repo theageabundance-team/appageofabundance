@@ -1184,14 +1184,14 @@ function cardHTML(p,key,i){
   const accessAction = p.player
     ? `navigateTo('${p.player}')`
     : `openModal(${i},'my')`;
-  return `<div class="product-card">
+  return `<div class="product-card" onclick="${accessAction}" style="cursor:pointer;">
     <div class="card-img-wrap">
       <img src="${p.img}" alt="${p.title}" loading="lazy"/>
       <div class="card-badges">
         ${p.available?'<span class="badge badge-green" style="font-size:0.68rem;padding:3px 9px;">✓ Available</span>':''}
         ${p.featured?'<span class="badge badge-orange" style="font-size:0.68rem;padding:3px 9px;">Featured</span>':''}
       </div>
-      <button class="card-fav" id="${fid}" onclick="toggleFav('${fid}')">♡</button>
+      <button class="card-fav" id="${fid}" onclick="event.stopPropagation();toggleFav('${fid}')">♡</button>
     </div>
     <div class="card-body">
       <span class="cat-pill ${p.catClass}">${p.cat}</span>
@@ -1203,8 +1203,8 @@ function cardHTML(p,key,i){
         <span>🕐 ${p.dur}</span>
       </div>
       <div class="card-actions">
-        <button class="card-btn card-btn-access" onclick="${accessAction}">▶ Access</button>
-        <button class="card-btn card-btn-details" onclick="openModal(${i},'my')">⊙ View Details</button>
+        <button class="card-btn card-btn-access" onclick="event.stopPropagation();${accessAction}">▶ Access</button>
+        <button class="card-btn card-btn-details" onclick="event.stopPropagation();openModal(${i},'my')">⊙ View Details</button>
       </div>
     </div>
   </div>`;
