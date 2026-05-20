@@ -522,6 +522,26 @@
       color: var(--gold); letter-spacing: 0.06em;
     }
     .expand-card .card-body { padding: 12px 12px 14px; }
+    .expand-card-danger {
+      border-color: rgba(200,60,60,0.35);
+      background: linear-gradient(160deg, rgba(100,10,10,0.55), var(--bg3) 60%);
+    }
+    .expand-card-danger:hover {
+      border-color: rgba(220,80,80,0.55);
+      box-shadow: 0 20px 50px rgba(180,30,30,0.3);
+    }
+    .card-btn-danger {
+      width: 100%; padding: 10px; border-radius: 7px;
+      background: linear-gradient(135deg, rgba(180,40,40,0.45), rgba(140,20,20,0.3));
+      border: 1px solid rgba(210,70,70,0.5);
+      color: #ffb3b3; font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: all 0.18s; margin-top: 8px; display: block;
+    }
+    .card-btn-danger:hover {
+      background: linear-gradient(135deg, rgba(200,50,50,0.6), rgba(160,30,30,0.4));
+      box-shadow: 0 4px 16px rgba(180,40,40,0.3);
+    }
     .btn-unlock {
       width: 100%; padding: 10px; border-radius: 7px;
       background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.12));
@@ -1040,7 +1060,7 @@ const DATA = {
 
 const EXPAND_DATA = [
   {title:"Vision Board Academy",desc:"Learn to create powerful vision boards that accelerate your manifestation journey and align your desires with divine purpose.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"312",dur:"1h",img:"images/visionboard.png",player:"player-vision-board.html"},
-  {title:"Refund Request",desc:"Official procedure to request a refund for your program. Complete the process in a few simple steps.",cat:"Support",catClass:"cat-premium",rating:"5.0",count:"—",dur:"5min",img:"images/bussola.jpeg",player:"refund.html"},
+  {title:"Refund Request",desc:"Official procedure to request a refund for your program. Complete the process in a few simple steps.",cat:"Support",catClass:"cat-premium",rating:"5.0",count:"—",dur:"5min",img:"images/%C2%BFNecesita%20un%20reembolso.png",player:"refund.html",danger:true,btnText:"Request Refund"},
   {title:"The Whisper of Faith",desc:"Unlock Divine Blessings and Abundance through sacred practices and ancient wisdom.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"891",dur:"4h",img:"images/whisperfaith.png",player:"player-whisper-faith.html"},
   {title:"21-Day Manifestation Challenge",desc:"Your life will be transformed in 21 days through focused divine intention and daily practice.",cat:"Mindset",catClass:"cat-mindset",rating:"5.0",count:"745",dur:"21d",img:"images/21daymanifestation.png",player:"player-21-days.html"},
 ];
@@ -1205,7 +1225,10 @@ function navigateTo(url) {
 // Render Expand Your Journey cards
 function expandCardHTML(p,i){
   const hasPlayer = !!p.player;
-  return `<div class="expand-card" ${hasPlayer ? `onclick="navigateTo('${p.player}')" style="cursor:pointer;"` : ''}>
+  const dangerClass = p.danger ? ' expand-card-danger' : '';
+  const btnLabel = p.btnText || 'Access';
+  const btnClass = p.danger ? 'card-btn card-btn-danger' : 'card-btn card-btn-access';
+  return `<div class="expand-card${dangerClass}" ${hasPlayer ? `onclick="navigateTo('${p.player}')" style="cursor:pointer;"` : ''}>
     <div class="card-img-wrap">
       <img src="${p.img}" alt="${p.title}" loading="lazy"/>
 
@@ -1220,7 +1243,7 @@ function expandCardHTML(p,i){
         <span>🕐 ${p.dur}</span>
       </div>
       ${hasPlayer
-        ? `<button class="card-btn card-btn-access" onclick="event.stopPropagation();navigateTo('${p.player}')">▶ Access</button>`
+        ? `<button class="${btnClass}" onclick="event.stopPropagation();navigateTo('${p.player}')">▶ ${btnLabel}</button>`
         : `<button class="btn-unlock">✨ Coming Soon</button>`}
     </div>
   </div>`;
