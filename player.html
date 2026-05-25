@@ -767,6 +767,20 @@ function renderLesson(idx) {
 
   // Video
   document.getElementById('video-container').innerHTML = lesson.videoHTML;
+  // Fix: force iframe src if onload race condition left it stuck on about:blank
+  (function() {
+    var iframe = document.querySelector('#video-container iframe');
+    if (!iframe) return;
+    if (!iframe.src || iframe.src === 'about:blank') {
+      var onloadStr = iframe.getAttribute('onload') || '';
+      var match = onloadStr.match(/'(https:\/\/scripts\.converteai\.net[^']+embed\.html)'/);
+      if (match) {
+        iframe.onload = null;
+        iframe.removeAttribute('onload');
+        iframe.src = match[1] + (location.search || '?') + '&vl=' + encodeURIComponent(location.href);
+      }
+    }
+  })();
 
   // Header
   document.getElementById('lesson-eyebrow').textContent = lesson.eyebrow;
