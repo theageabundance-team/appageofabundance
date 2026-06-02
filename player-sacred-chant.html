@@ -775,6 +775,16 @@ function renderLesson(idx) {
           <audio class="audio-player" controls src="${lesson.downloadHref}">
             Your browser does not support the audio element.
           </audio>
+          <div style="margin-top:14px;">
+            <a href="${lesson.downloadHref}" download class="download-card" style="display:flex;align-items:center;gap:16px;text-decoration:none;">
+              <div class="download-icon">⬇️</div>
+              <div class="download-info">
+                <div class="download-title">${lesson.downloadTitle}</div>
+                <div class="download-meta">Download MP3 to your device</div>
+              </div>
+              <div class="download-btn">↓ Download</div>
+            </a>
+          </div>
         </div>`;
     } else if (lesson.downloadType === 'link') {
       dlContent.innerHTML = `
